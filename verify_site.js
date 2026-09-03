@@ -4,7 +4,7 @@ const path = require('path');
 const htmlPath = path.join(__dirname, 'index.html');
 const html = fs.readFileSync(htmlPath, 'utf8');
 
-console.log('--- AUDITING TRISHULASTRO 3D WEBGL PLANETARY BUILD ---');
+console.log('--- AUDITING TRISHULASTRO BUILD ---');
 let errors = [];
 
 // 1. Check title and branding
@@ -78,16 +78,8 @@ requiredGrahas.forEach(graha => {
   }
 });
 
-// 7. Check 3D Canvas
-if (!html.includes('id="planet-canvas"')) {
-  errors.push('Missing planet-canvas element');
-}
-if (!html.includes('init3DPlanet')) {
-  errors.push('Missing init3DPlanet engine');
-}
-
 if (errors.length === 0) {
-  console.log('\n🎉 3D ROTATING PLANETARY ENGINE & SITE AUDIT PASSED 100%!');
+  console.log('\n🎉 ALL PLANETS & SITE AUDIT PASSED 100%!');
   process.exit(0);
 } else {
   console.error('\n❌ AUDIT FAILURES:');

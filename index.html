@@ -12,9 +12,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&family=Prata&display=swap" rel="stylesheet">
 
-  <!-- Three.js Local High-Performance 3D Engine -->
-  <script src="assets/three.min.js"></script>
-
   <!-- Blocking entrance animation setup -->
   <script>
     (function(){try{
@@ -47,7 +44,7 @@
       --card-bg:rgba(7, 18, 38, 0.76);
       --card-border:rgba(255, 255, 255, 0.12);
       --card-border-hover:rgba(121, 220, 232, 0.45);
-      --graha-aura: rgba(121, 220, 232, 0.18);
+      --graha-aura: rgba(121, 220, 232, 0.22);
     }
     @supports (height:100dvh){
       :root{
@@ -172,7 +169,7 @@
     }
 
     /* ==========================================================================
-       3. HERO STAGE (WITH 3D WEBGL ROTATING PLANETARY HORIZON)
+       3. HERO STAGE (CINEMATIC VIDEOS & REAL-TIME ROTATING HORIZON)
        ========================================================================== */
     .hero-stage{position:relative; width:100%; height:100vh; min-height:100vh; overflow:hidden; isolation:isolate}
 
@@ -180,18 +177,41 @@
       background-image:radial-gradient(circle at 50% 20%, rgba(14,34,68,0.7) 0%, #030c18 80%), url('assets/deep_space_bg.jpg');
       background-size:cover; background-position:center; background-repeat:no-repeat}
 
-    /* WEBGL 3D ROTATING PLANET CANVAS (HORIZON VIEW) */
-    .planet-canvas{position:absolute; inset:0; width:100%; height:100%; display:block; z-index:1; pointer-events:none}
+    /* PHOTOREALISTIC VIDEO LAYERS (Venus & Mars) */
+    .sky video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+      opacity:0; transition:opacity 1.1s cubic-bezier(.4,0,.2,1); pointer-events:none; z-index:1}
+    .sky video.is-active{opacity:1; z-index:2}
+
+    /* SMOOTH ROTATING PLANETARY HORIZON CANVAS (For Jupiter, Saturn, Sun, Mercury, Moon) */
+    .horizon-canvas{position:absolute; inset:0; width:100%; height:100%; display:block;
+      opacity:0; transition:opacity 1.1s cubic-bezier(.4,0,.2,1); pointer-events:none; z-index:1}
+    .horizon-canvas.is-active{opacity:1; z-index:2}
 
     /* CELESTIAL GRAHA AURA LIGHTING */
     .graha-aura{position:absolute; top:calc(280 * var(--u)); left:50%;
       transform:translate(-50%, -50%); width:min(calc(800 * var(--u)), 90vw);
       height:min(calc(420 * var(--u)), 50vh);
       background:radial-gradient(ellipse at center, var(--graha-aura) 0%, transparent 72%);
-      filter:blur(calc(45 * var(--u))); pointer-events:none; z-index:2;
+      filter:blur(calc(45 * var(--u))); pointer-events:none; z-index:3;
       transition:background 0.8s ease}
 
-    .ui{position:absolute; inset:0; z-index:3; pointer-events:none}
+    .ui{position:absolute; inset:0; z-index:4; pointer-events:none}
+
+    /* ALL 7 GRAHAS QUICK-SELECTOR PILL BAR (Ensures all planets are immediately accessible) */
+    .graha-bar{position:absolute; top:calc(122 * var(--u)); left:50%; transform:translateX(-50%);
+      display:flex; align-items:center; gap:calc(8 * var(--u)); padding:calc(4 * var(--u)) calc(8 * var(--u));
+      background:rgba(4, 16, 31, 0.72); border:1px solid rgba(255,255,255,0.12);
+      border-radius:calc(24 * var(--u)); backdrop-filter:blur(calc(12 * var(--u)));
+      -webkit-backdrop-filter:blur(calc(12 * var(--u))); pointer-events:auto; z-index:10;
+      box-shadow:0 calc(8 * var(--u)) calc(24 * var(--u)) rgba(0,0,0,0.5)}
+    .graha-pill{background:none; border:none; color:rgba(255,255,255,0.72);
+      font-size:calc(12.5 * var(--u)); font-weight:500; padding:calc(6 * var(--u)) calc(12 * var(--u));
+      border-radius:calc(18 * var(--u)); cursor:pointer; display:inline-flex; align-items:center;
+      gap:calc(5 * var(--u)); transition:all .25s; font-family:var(--font-body); white-space:nowrap}
+    .graha-pill:hover{color:#fff; background:rgba(255,255,255,0.08)}
+    .graha-pill.is-active{background:rgba(121, 220, 232, 0.18); color:var(--cyan);
+      border:1px solid rgba(121, 220, 232, 0.45); box-shadow:0 0 calc(12 * var(--u)) rgba(121, 220, 232, 0.3)}
+    .graha-pill span{font-size:calc(14 * var(--u)); line-height:1}
 
     /* SIDE PLANET BUTTONS WITH 3D SPHERICAL SHADING */
     .planet{position:absolute; z-index:-1; padding:0; border:0; background:none;
@@ -199,7 +219,7 @@
       pointer-events:auto; border-radius:50%; overflow:hidden;
       box-shadow:0 0 calc(22 * var(--u)) rgba(0,0,0,0.7);
       transition:transform .45s cubic-bezier(.22,1,.36,1)}
-    .planet img{display:none; width:100%; height:auto; border-radius:50%; object-fit:cover}
+    .planet img{display:none; width:100%; height:100%; border-radius:50%; object-fit:cover}
     .planet img.is-shown{display:block}
 
     /* TACTILE 3D SPHERICAL GLASS OVERLAY FOR BUTTON ORBS */
@@ -461,6 +481,7 @@
     @media (max-width:1030px), (max-height:620px){
       .top-ribbon{display:none}
       .navbar{top:0}
+      .graha-bar{top:calc(100 * var(--u)); max-width:92vw; overflow-x:auto}
       .navrow{left:calc(25 * var(--u)); right:calc(25 * var(--u))}
       .burger{display:flex}
       .links{position:absolute; top:calc(96 * var(--u)); right:0; z-index:5;
@@ -598,16 +619,39 @@
   </header>
 
   <!-- ==========================================================================
-       HERO SECTION (REAL 3D ROTATING PLANETARY HORIZON)
+       HERO SECTION (ORIGINAL CINEMATIC VIDEOS & REAL ROTATING HORIZON)
        ========================================================================== -->
   <section class="hero-stage" id="hero">
     <div class="sky">
-      <!-- WebGL 3D Rotating Planet Canvas (Curved Horizon Perspective) -->
-      <canvas id="planet-canvas" class="planet-canvas"></canvas>
+      <!-- VENUS (Original 4K Photorealistic Video Loop) -->
+      <video data-planet="venus" class="is-active" autoplay muted loop playsinline preload="auto"
+             src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202422_b211cd74-013b-4dd3-bfd0-64491d8696fa.mp4"
+             poster="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_cf55d1d8-7b59-4a64-80da-d72052ae974e.png"
+             aria-hidden="true"></video>
+
+      <!-- MARS (Original 4K Photorealistic Video Loop) -->
+      <video data-planet="mars" muted loop playsinline preload="none"
+             data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202422_51eae59a-2459-4c84-907c-cc5edfe5fea7.mp4"
+             poster="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_0ba6de7c-285d-43dc-b7ab-8c54c73707cb.png"
+             aria-hidden="true"></video>
+
+      <!-- ROTATING 3D HORIZON CANVAS (For Jupiter, Saturn, Sun, Mercury, Moon) -->
+      <canvas id="horizon-canvas" class="horizon-canvas"></canvas>
     </div>
 
     <!-- Radiant Atmospheric Corona behind Hero Title -->
     <div class="graha-aura" id="graha-aura"></div>
+
+    <!-- ALL 7 GRAHAS QUICK-SELECTOR BAR (Directly Accessible) -->
+    <nav class="graha-bar" id="graha-bar" aria-label="Direct Graha Selector">
+      <button type="button" class="graha-pill is-active" data-graha="venus"><span>♀</span> Venus</button>
+      <button type="button" class="graha-pill" data-graha="mars"><span>♂</span> Mars</button>
+      <button type="button" class="graha-pill" data-graha="jupiter"><span>♃</span> Jupiter</button>
+      <button type="button" class="graha-pill" data-graha="saturn"><span>♄</span> Saturn</button>
+      <button type="button" class="graha-pill" data-graha="sun"><span>☉</span> Sun</button>
+      <button type="button" class="graha-pill" data-graha="mercury"><span>☿</span> Mercury</button>
+      <button type="button" class="graha-pill" data-graha="moon"><span>☽</span> Moon</button>
+    </nav>
 
     <div class="ui">
       <div class="copy">
@@ -618,26 +662,26 @@
         <p class="col lede">Governs romance, wealth, luxury, and artistic magnetism. An auspicious Venus <br>bestows fine aesthetics, marital harmony, and charm. Book your session to unlock <br>your planetary destiny.</p>
         
         <div class="col cta">
-          <!-- Left Planet Button Slot (Tactile 3D Glass Orbs) -->
+          <!-- Left Planet Button Slot (Circular Glass Orbs) -->
           <button class="planet planet-l" type="button" data-slot="l" aria-label="Show Planet">
-            <img data-planet="venus" alt="" src="assets/textures/venus.jpg">
-            <img data-planet="mars" alt="" src="assets/textures/mars.jpg">
-            <img data-planet="jupiter" alt="" src="assets/textures/jupiter.jpg">
-            <img data-planet="saturn" alt="" src="assets/textures/saturn.jpg">
-            <img data-planet="sun" alt="" src="assets/textures/sun.jpg">
-            <img data-planet="mercury" alt="" src="assets/textures/mercury.jpg">
-            <img data-planet="moon" alt="" src="assets/textures/moon.jpg">
+            <img data-planet="venus" alt="Venus" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202012_640b239a-d08a-4200-adb2-741bbe129ac8.png">
+            <img data-planet="mars" alt="Mars" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202018_3d559490-f613-4ed7-a3bb-3b7e9fc90fb8.png">
+            <img data-planet="jupiter" alt="Jupiter" src="assets/jupiter.jpg">
+            <img data-planet="saturn" alt="Saturn" src="assets/saturn.jpg">
+            <img data-planet="sun" alt="Sun" src="assets/sun.jpg">
+            <img data-planet="mercury" alt="Mercury" src="assets/mercury.jpg">
+            <img data-planet="moon" alt="Moon" src="assets/moon.jpg">
           </button>
 
-          <!-- Right Planet Button Slot (Tactile 3D Glass Orbs) -->
+          <!-- Right Planet Button Slot (Circular Glass Orbs) -->
           <button class="planet planet-r" type="button" data-slot="r" aria-label="Show Planet">
-            <img data-planet="venus" alt="" src="assets/textures/venus.jpg">
-            <img data-planet="mars" alt="" src="assets/textures/mars.jpg">
-            <img data-planet="jupiter" alt="" src="assets/textures/jupiter.jpg">
-            <img data-planet="saturn" alt="" src="assets/textures/saturn.jpg">
-            <img data-planet="sun" alt="" src="assets/textures/sun.jpg">
-            <img data-planet="mercury" alt="" src="assets/textures/mercury.jpg">
-            <img data-planet="moon" alt="" src="assets/textures/moon.jpg">
+            <img data-planet="venus" alt="Venus" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202012_640b239a-d08a-4200-adb2-741bbe129ac8.png">
+            <img data-planet="mars" alt="Mars" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202018_3d559490-f613-4ed7-a3bb-3b7e9fc90fb8.png">
+            <img data-planet="jupiter" alt="Jupiter" src="assets/jupiter.jpg">
+            <img data-planet="saturn" alt="Saturn" src="assets/saturn.jpg">
+            <img data-planet="sun" alt="Sun" src="assets/sun.jpg">
+            <img data-planet="mercury" alt="Mercury" src="assets/mercury.jpg">
+            <img data-planet="moon" alt="Moon" src="assets/moon.jpg">
           </button>
 
           <!-- Primary Action Button -->
@@ -773,7 +817,7 @@
               <span class="amount" data-usd="$55" data-inr="₹1,999">$55</span>
               <span class="duration">30 Minutes Session</span>
             </div>
-            <button class="btn-pill trigger-book-pkg" data-service="Planetary Gemstones & Remedies ($55)" type="button">Book Remedy Session</button>
+            <button class="btn-pill trigger-book-gem" data-service="Planetary Gemstones & Remedies ($55)" type="button">Book Remedy Session</button>
           </div>
         </article>
 
@@ -1360,7 +1404,7 @@
   <div class="toast-pill" id="toast-pill"></div>
 
   <!-- ==========================================================================
-       JAVASCRIPT DRIVER: REAL 3D PLANET ENGINE & SITE LOGIC
+       JAVASCRIPT DRIVER: CINEMATIC VIDEOS, ROTATING HORIZON & SITE LOGIC
        ========================================================================== -->
   <script>
     /* ══════════════════════════════════════════════════════════════════
@@ -1398,7 +1442,7 @@
     })();
 
     /* ══════════════════════════════════════════════════════════════════
-       PLANET DEFINITIONS (7 VEDIC GRAHAS CONFIGURED)
+       PLANET DEFINITIONS (ALL 7 VEDIC GRAHAS CONFIGURED)
        ══════════════════════════════════════════════════════════════════ */
     const ORDER = ['venus', 'mars', 'jupiter', 'saturn', 'sun', 'mercury', 'moon'];
 
@@ -1406,183 +1450,161 @@
       venus: {
         name: 'VENUS',
         sanskrit: 'शुक्र ग्रह (SHUKRA)',
+        isVideo: true,
         texture: 'assets/textures/venus.jpg',
         aura: 'rgba(121, 220, 232, 0.22)',
-        glowHex: 0x79dce8,
+        rimColor: 'rgba(121, 220, 232, 0.85)',
         lede: "Governs romance, wealth, luxury, and artistic magnetism. An auspicious Venus <br>bestows fine aesthetics, marital harmony, and charm. Book your session to unlock <br>your planetary destiny."
       },
       mars: {
         name: 'MARS',
         sanskrit: 'मंगल ग्रह (MANGAL)',
+        isVideo: true,
         texture: 'assets/textures/mars.jpg',
         aura: 'rgba(255, 107, 74, 0.24)',
-        glowHex: 0xff6b4a,
+        rimColor: 'rgba(255, 107, 74, 0.85)',
         lede: "The planet of courage, ambition, decisive action, and victory over obstacles. <br>Channeling Mangal grants unstoppable willpower and executive leadership. <br>Book your session to align your vitality."
       },
       jupiter: {
         name: 'JUPITER',
         sanskrit: 'बृहस्पति ग्रह (GURU)',
+        isVideo: false,
         texture: 'assets/textures/jupiter.jpg',
+        horizonBg: 'assets/jupiter_horizon.jpg',
         aura: 'rgba(245, 199, 103, 0.26)',
-        glowHex: 0xf5c767,
+        rimColor: 'rgba(245, 199, 103, 0.85)',
         lede: "The supreme cosmic benefic of divine wisdom, good fortune, and spiritual wealth. <br>Guru protects against misfortune and expands prosperity and intellect. <br>Book your session to receive divine guidance."
       },
       saturn: {
         name: 'SATURN',
         sanskrit: 'शनि ग्रह (SHANI)',
+        isVideo: false,
         texture: 'assets/textures/saturn.jpg',
         aura: 'rgba(110, 140, 230, 0.24)',
-        glowHex: 0x6e8ce6,
+        rimColor: 'rgba(110, 140, 230, 0.85)',
+        hasRings: true,
         lede: "The lord of karma, perseverance, discipline, and enduring legacy. Shani rewards <br>integrity and resilience, turning trials into unshakeable mastery. <br>Book your session to balance your karma."
       },
       sun: {
         name: 'THE SUN',
         sanskrit: 'सूर्य ग्रह (SURYA)',
+        isVideo: false,
         texture: 'assets/textures/sun.jpg',
         aura: 'rgba(255, 200, 70, 0.28)',
-        glowHex: 0xffa834,
+        rimColor: 'rgba(255, 190, 60, 0.95)',
         lede: "The king of the celestial forces, representing soul radiance, executive power, <br>and vitality. Surya commands royal stature and administrative victory. <br>Book your session to awaken your true purpose."
       },
       mercury: {
         name: 'MERCURY',
         sanskrit: 'बुध ग्रह (BUDHA)',
+        isVideo: false,
         texture: 'assets/textures/mercury.jpg',
         aura: 'rgba(95, 225, 180, 0.22)',
-        glowHex: 0x5fe1b4,
+        rimColor: 'rgba(95, 225, 180, 0.85)',
         lede: "The swift celestial messenger of commerce, razor-sharp intellect, and eloquence. <br>Budha empowers traders, writers, and analysts with brilliant insight. <br>Book your session to optimize your career path."
       },
       moon: {
         name: 'THE MOON',
         sanskrit: 'चन्द्र ग्रह (CHANDRA)',
+        isVideo: false,
         texture: 'assets/textures/moon.jpg',
         aura: 'rgba(240, 245, 255, 0.25)',
-        glowHex: 0xdfe8ff,
+        rimColor: 'rgba(220, 235, 255, 0.88)',
         lede: "The ruler of the subconscious mind, divine intuition, and emotional peace. <br>Chandra brings serene tranquility, psychic clarity, and fertile imagination. <br>Book your session to restore inner harmony."
       }
     };
 
     /* ══════════════════════════════════════════════════════════════════
-       THREE.JS REAL 3D ROTATING PLANETARY HORIZON ENGINE
+       ROTATING HORIZON ENGINE (HTML5 CANVAS FOR JUPITER, SATURN, ETC.)
        ══════════════════════════════════════════════════════════════════ */
-    let scene, camera, renderer, planetMesh, atmoMesh, saturnRingMesh;
-    const canvas = document.getElementById('planet-canvas');
-    const texLoader = new THREE.TextureLoader();
-    const texturesCache = {};
+    const sky = document.querySelector('.sky');
+    const clips = sky.querySelectorAll('video[data-planet]');
+    const horizonCanvas = document.getElementById('horizon-canvas');
+    const hCtx = horizonCanvas.getContext('2d');
 
-    // Preload textures
-    Object.keys(PLANETS).forEach(key => {
-      texLoader.load(PLANETS[key].texture, tex => {
-        tex.wrapS = THREE.RepeatWrapping;
-        tex.wrapT = THREE.ClampToEdgeWrapping;
-        texturesCache[key] = tex;
-      });
+    const loadedTextures = {};
+    Object.keys(PLANETS).forEach(k => {
+      if (PLANETS[k].texture) {
+        const img = new Image();
+        img.src = PLANETS[k].texture;
+        loadedTextures[k] = img;
+      }
     });
 
-    function init3DPlanet() {
-      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.setSize(window.innerWidth, window.innerHeight);
+    let current = null;
+    let canvasOffset = 0;
+    let animId = null;
 
-      scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-      camera.position.set(0, 0, 10);
+    function resizeCanvas() {
+      horizonCanvas.width = window.innerWidth;
+      horizonCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-      // Deep celestial lighting
-      const ambLight = new THREE.AmbientLight(0xffffff, 0.42);
-      scene.add(ambLight);
+    function renderHorizonFrame() {
+      if (!current || PLANETS[current].isVideo) return;
 
-      const sunLight = new THREE.DirectionalLight(0xffffff, 1.45);
-      sunLight.position.set(6, 12, 8);
-      scene.add(sunLight);
+      const w = horizonCanvas.width;
+      const h = horizonCanvas.height;
+      hCtx.clearRect(0, 0, w, h);
 
-      // Planet Sphere Geometry: placed below viewport so only top horizon curves up
-      const radius = 9.2;
-      const sphereGeo = new THREE.SphereGeometry(radius, 64, 64);
+      const pData = PLANETS[current];
+      const tex = loadedTextures[current];
 
-      const planetMat = new THREE.MeshStandardMaterial({
-        map: texturesCache['venus'] || null,
-        roughness: 0.65,
-        metalness: 0.05
-      });
+      // Apex curves up to ~62% from top (38% from bottom), identical to Venus
+      const apexY = h * 0.62;
+      const r = Math.max(w * 0.85, h * 1.35);
+      const cx = w / 2;
+      const cy = apexY + r;
 
-      planetMesh = new THREE.Mesh(sphereGeo, planetMat);
-      planetMesh.position.set(0, -9.8, 0); // Positioned so apex is at ~38% from bottom
-      planetMesh.rotation.z = THREE.MathUtils.degToRad(-8);
-      planetMesh.rotation.x = THREE.MathUtils.degToRad(14);
-      scene.add(planetMesh);
+      // Draw planet surface inside the curved horizon arc
+      hCtx.save();
+      hCtx.beginPath();
+      hCtx.arc(cx, cy, r, 0, Math.PI * 2);
+      hCtx.clip();
 
-      // Atmospheric Rim Glow Mesh
-      const atmoGeo = new THREE.SphereGeometry(radius * 1.018, 64, 64);
-      const atmoMat = new THREE.ShaderMaterial({
-        vertexShader: `
-          varying vec3 vNormal;
-          void main() {
-            vNormal = normalize(normalMatrix * normal);
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-          }
-        `,
-        fragmentShader: `
-          varying vec3 vNormal;
-          uniform vec3 glowColor;
-          void main() {
-            float intensity = pow(0.72 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.8);
-            gl_FragColor = vec4(glowColor, intensity * 0.95);
-          }
-        `,
-        uniforms: {
-          glowColor: { value: new THREE.Color(0x79dce8) }
-        },
-        blending: THREE.AdditiveBlending,
-        side: THREE.BackSide,
-        transparent: true
-      });
+      if (tex && tex.complete && tex.naturalWidth > 0) {
+        canvasOffset += 0.35; // Smooth continuous 3D rotation across the horizon
+        const tw = r * 2.8;
+        const th = r * 1.4;
+        const wrapX = canvasOffset % tw;
+        const drawY = cy - r;
 
-      atmoMesh = new THREE.Mesh(atmoGeo, atmoMat);
-      atmoMesh.position.copy(planetMesh.position);
-      scene.add(atmoMesh);
-
-      // Saturn Ring Mesh
-      const ringGeo = new THREE.RingGeometry(radius * 1.25, radius * 2.1, 64);
-      const ringMat = new THREE.MeshBasicMaterial({
-        map: texLoader.load('assets/textures/saturn_ring_color.jpg'),
-        alphaMap: texLoader.load('assets/textures/saturn_ring.png'),
-        side: THREE.DoubleSide,
-        transparent: true,
-        opacity: 0.85
-      });
-      saturnRingMesh = new THREE.Mesh(ringGeo, ringMat);
-      saturnRingMesh.position.copy(planetMesh.position);
-      saturnRingMesh.rotation.x = THREE.MathUtils.degToRad(75);
-      saturnRingMesh.rotation.y = THREE.MathUtils.degToRad(12);
-      saturnRingMesh.visible = false;
-      scene.add(saturnRingMesh);
-
-      // Continuous 3D Axial Rotation Animation Loop
-      function animate() {
-        requestAnimationFrame(animate);
-        if (planetMesh) {
-          planetMesh.rotation.y += 0.001; // Constant smooth 3D rotation
+        // Seamless tile wrap for continuous planetary surface rotation
+        hCtx.drawImage(tex, cx - tw/2 - wrapX, drawY, tw, th);
+        hCtx.drawImage(tex, cx + tw/2 - wrapX, drawY, tw, th);
+        if (wrapX > 0) {
+          hCtx.drawImage(tex, cx - tw*1.5 - wrapX, drawY, tw, th);
         }
-        if (saturnRingMesh && saturnRingMesh.visible) {
-          saturnRingMesh.rotation.z += 0.0003;
-        }
-        renderer.render(scene, camera);
+
+        // Spherical sunlight gradient (realistic space illumination)
+        const shadeGrad = hCtx.createRadialGradient(cx, cy - r * 0.96, r * 0.04, cx, cy, r);
+        shadeGrad.addColorStop(0, 'rgba(255, 255, 255, 0.16)');
+        shadeGrad.addColorStop(0.35, 'rgba(0, 0, 0, 0)');
+        shadeGrad.addColorStop(0.72, 'rgba(3, 12, 24, 0.58)');
+        shadeGrad.addColorStop(1, 'rgba(1, 5, 12, 0.96)');
+        hCtx.fillStyle = shadeGrad;
+        hCtx.fillRect(cx - r, cy - r, r * 2, r * 2);
       }
-      animate();
+      hCtx.restore();
 
-      window.addEventListener('resize', () => {
-        if (!camera || !renderer) return;
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      });
+      // Atmospheric Rim Glow along the top curve
+      hCtx.save();
+      hCtx.beginPath();
+      hCtx.arc(cx, cy, r, Math.PI * 1.15, Math.PI * 1.85);
+      hCtx.strokeStyle = pData.rimColor || 'rgba(121, 220, 232, 0.85)';
+      hCtx.lineWidth = 4.5;
+      hCtx.shadowColor = pData.rimColor || 'rgba(121, 220, 232, 0.85)';
+      hCtx.shadowBlur = 26;
+      hCtx.stroke();
+      hCtx.restore();
+
+      animId = requestAnimationFrame(renderHorizonFrame);
     }
 
-    // Initialize 3D Engine
-    init3DPlanet();
-
     /* ══════════════════════════════════════════════════════════════════
-       PLANET SWITCHER LOGIC
+       PLANET SWITCHER LOGIC (FULL 7-PLANET CYCLE & INSTANT SELECTOR)
        ══════════════════════════════════════════════════════════════════ */
     const titleLine = document.querySelector('h1.title .ent-line');
     const ledeEl = document.querySelector('p.lede');
@@ -1591,36 +1613,54 @@
     const labelL = document.querySelector('.label.label-l');
     const labelR = document.querySelector('.label.label-r');
     const grahaAura = document.getElementById('graha-aura');
+    const grahaPills = document.querySelectorAll('.graha-pill');
 
-    let current = null;
+    function warm(planet) {
+      if (!planet) return;
+      const clip = sky.querySelector(`video[data-planet="${planet}"]`);
+      if (clip && !clip.getAttribute('src') && clip.dataset.src) {
+        clip.preload = 'auto';
+        clip.src = clip.dataset.src;
+        clip.load();
+      }
+    }
 
     function show(next) {
       if (!PLANETS[next] || current === next) return;
 
       const pData = PLANETS[next];
 
-      // Update 3D Texture on the rotating planetary sphere
-      if (planetMesh) {
-        if (texturesCache[next]) {
-          planetMesh.material.map = texturesCache[next];
-          planetMesh.material.needsUpdate = true;
-        } else {
-          texLoader.load(pData.texture, tex => {
-            tex.wrapS = THREE.RepeatWrapping;
-            tex.wrapT = THREE.ClampToEdgeWrapping;
-            texturesCache[next] = tex;
-            planetMesh.material.map = tex;
-            planetMesh.material.needsUpdate = true;
-          });
-        }
-      }
+      // Handle video vs canvas playback
+      if (pData.isVideo) {
+        // Stop canvas animation loop
+        if (animId) cancelAnimationFrame(animId);
+        horizonCanvas.classList.remove('is-active');
 
-      // Update 3D Atmosphere Glow Color & Saturn Rings
-      if (atmoMesh && atmoMesh.material.uniforms) {
-        atmoMesh.material.uniforms.glowColor.value.setHex(pData.glowHex);
-      }
-      if (saturnRingMesh) {
-        saturnRingMesh.visible = (next === 'saturn');
+        // Activate corresponding video
+        clips.forEach(clip => {
+          if (clip.dataset.planet === next) {
+            if (!clip.getAttribute('src') && clip.dataset.src) {
+              clip.src = clip.dataset.src;
+              clip.load();
+            }
+            clip.play().catch(() => {});
+            clip.classList.add('is-active');
+          } else {
+            clip.classList.remove('is-active');
+            clip.pause();
+          }
+        });
+      } else {
+        // Deactivate all videos
+        clips.forEach(clip => {
+          clip.classList.remove('is-active');
+          clip.pause();
+        });
+
+        // Activate and run smooth rotating canvas horizon
+        horizonCanvas.classList.add('is-active');
+        if (animId) cancelAnimationFrame(animId);
+        animId = requestAnimationFrame(renderHorizonFrame);
       }
 
       // Update Typography & Texts
@@ -1634,26 +1674,38 @@
         grahaAura.style.background = `radial-gradient(ellipse at center, ${pData.aura} 0%, transparent 72%)`;
       }
 
-      // Update Orbital Slots
-      const rest = ORDER.filter(p => p !== next);
-      const slots = [
-        { btn: btnL, label: labelL, planetKey: rest[0] },
-        { btn: btnR, label: labelR, planetKey: rest[1] }
-      ];
-
-      slots.forEach(({ btn, label, planetKey }) => {
-        btn.dataset.planet = planetKey;
-        btn.setAttribute('aria-label', `Show ${PLANETS[planetKey].name}`);
-        label.textContent = PLANETS[planetKey].name;
-
-        btn.querySelectorAll('img[data-planet]').forEach(img => {
-          if (img.dataset.planet === planetKey) {
-            img.classList.add('is-shown');
-          } else {
-            img.classList.remove('is-shown');
-          }
-        });
+      // Synchronize Graha Quick-Selector Bar
+      grahaPills.forEach(pill => {
+        pill.classList.toggle('is-active', pill.dataset.graha === next);
       });
+
+      // Full 7-Graha Two-Way Cycle for Left & Right Buttons
+      const currIdx = ORDER.indexOf(next);
+      const prevIdx = (currIdx - 1 + ORDER.length) % ORDER.length;
+      const nextIdx = (currIdx + 1) % ORDER.length;
+
+      const prevPlanet = ORDER[prevIdx];
+      const nextPlanet = ORDER[nextIdx];
+
+      // Left Button: Previous Planet in order
+      btnL.dataset.planet = prevPlanet;
+      btnL.setAttribute('aria-label', `Show ${PLANETS[prevPlanet].name}`);
+      labelL.textContent = PLANETS[prevPlanet].name;
+      btnL.querySelectorAll('img[data-planet]').forEach(img => {
+        img.classList.toggle('is-shown', img.dataset.planet === prevPlanet);
+      });
+
+      // Right Button: Next Planet in order
+      btnR.dataset.planet = nextPlanet;
+      btnR.setAttribute('aria-label', `Show ${PLANETS[nextPlanet].name}`);
+      labelR.textContent = PLANETS[nextPlanet].name;
+      btnR.querySelectorAll('img[data-planet]').forEach(img => {
+        img.classList.toggle('is-shown', img.dataset.planet === nextPlanet);
+      });
+
+      // Preload next planets
+      warm(prevPlanet);
+      warm(nextPlanet);
 
       current = next;
     }
@@ -1661,7 +1713,13 @@
     btnL.addEventListener('click', function() { show(this.dataset.planet); });
     btnR.addEventListener('click', function() { show(this.dataset.planet); });
 
-    // Initial Planet: Venus (3D Rotating Horizon)
+    grahaPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        show(pill.dataset.graha);
+      });
+    });
+
+    // Initial Planet: Venus (Original Cinematic Video)
     show('venus');
 
     /* ══════════════════════════════════════════════════════════════════
@@ -1851,7 +1909,6 @@
     document.getElementById('booking-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const name = document.getElementById('client-name').value.trim();
-      const service = document.getElementById('consult-service').value.split('(')[0].trim();
       const ref = 'TA-' + Math.floor(10000 + Math.random() * 90000);
       closeBookingModal();
       showToast(`Divine Pass #${ref} generated for ${name}! Details dispatched via WhatsApp/Email.`);
