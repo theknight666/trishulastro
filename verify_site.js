@@ -4,7 +4,7 @@ const path = require('path');
 const htmlPath = path.join(__dirname, 'index.html');
 const html = fs.readFileSync(htmlPath, 'utf8');
 
-console.log('--- AUDITING TRISHULASTRO STARRY NIGHT & SEPARATE PLANETS BUILD ---');
+console.log('--- AUDITING TRISHULASTRO TRANSPARENT PNG PLANETS BUILD ---');
 let errors = [];
 
 // 1. Check title and branding
@@ -78,16 +78,21 @@ requiredGrahas.forEach(graha => {
   }
 });
 
-// 7. Check Starry night animation canvas & separate planet stage
-if (!html.includes('id="starry-canvas"')) {
-  errors.push('Missing starry-canvas element');
-}
-if (!html.includes('id="planet-stage"')) {
-  errors.push('Missing planet-stage element');
-}
+// 7. Check all 7 transparent PNG files are used
+const transparentFiles = [
+  'venus_trans.png', 'mars_trans.png', 'jupiter_trans.png',
+  'saturn_trans.png', 'sun_trans.png', 'mercury_trans.png', 'moon_trans.png'
+];
+transparentFiles.forEach(f => {
+  if (!html.includes(`assets/${f}`)) {
+    errors.push(`Missing transparent PNG reference: assets/${f}`);
+  } else {
+    console.log(`  ✓ Using transparent PNG: assets/${f}`);
+  }
+});
 
 if (errors.length === 0) {
-  console.log('\n🎉 STARRY NIGHT ANIMATION & SEPARATE PLANETS AUDIT PASSED 100%!');
+  console.log('\n🎉 ALL 7 TRANSPARENT PLANET PNGS AUDIT PASSED 100%!');
   process.exit(0);
 } else {
   console.error('\n❌ AUDIT FAILURES:');

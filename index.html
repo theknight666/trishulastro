@@ -177,58 +177,50 @@
     .sky{position:absolute; inset:0; z-index:0; background:#030a16}
     .starry-canvas{position:absolute; inset:0; width:100%; height:100%; display:block; z-index:0}
 
-    /* SEPARATE PLANET HORIZON STAGE (FOREGROUND PLANET LAYER) */
+    /* SEPARATE PLANET HORIZON STAGE (TRUE TRANSPARENT PNG PLANETS) */
     :root {
-      --horizon-d: max(130vw, calc(100vh * 1.35));
+      --planet-size: max(115vw, calc(100vh * 1.32));
     }
 
     .planet-stage{position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden;
       display:flex; justify-content:center; align-items:flex-end}
 
     .planet-horizon-img{
-      position:absolute; bottom:0; left:0; width:100%; height:100%;
-      object-fit:cover; object-position:center bottom;
-      mix-blend-mode:screen;
-      opacity:0; transition:opacity .85s cubic-bezier(.4,0,.2,1), transform .85s cubic-bezier(.4,0,.2,1);
-      transform:translateY(16px) scale(0.985);
+      position:absolute;
+      width:var(--planet-size);
+      height:var(--planet-size);
+      left:50%;
+      bottom:calc(38vh - var(--planet-size));
+      transform:translateX(-50%) translateY(16px) scale(0.985);
+      object-fit:contain;
+      opacity:0;
+      transition:opacity .75s cubic-bezier(.4,0,.2,1), transform .75s cubic-bezier(.4,0,.2,1);
       will-change:opacity, transform;
+      filter:drop-shadow(0 -10px 35px var(--graha-aura));
     }
     .planet-horizon-img.is-active{
-      opacity:1; transform:translateY(0) scale(1);
-    }
-
-    /* Spherical planets: calibrated so apex lands right below BOOK SESSION button (38vh from bottom) */
-    .planet-horizon-img.is-spherical{
-      width:var(--horizon-d); height:var(--horizon-d);
-      left:50%;
-      object-fit:contain;
-    }
-    .planet-horizon-img.is-spherical.is-active{
       opacity:1; transform:translateX(-50%) translateY(0) scale(1);
     }
 
-    /* Saturn: Globe apex aligned at 38vh, majestic rings arching around the sides */
+    /* Saturn: rings arch around the sides, globe apex calibrated at 38vh */
     .planet-horizon-img.planet-saturn{
-      bottom:calc(38vh - (var(--horizon-d) * 0.78));
-      transform:translateX(-50%) translateY(16px) scale(0.985);
+      bottom:calc(38vh - (var(--planet-size) * 0.78));
     }
 
-    /* The Sun: Solar limb apex aligned at 38vh */
+    /* The Sun: solar corona apex calibrated at 38vh */
     .planet-horizon-img.planet-sun{
-      bottom:calc(38vh - (var(--horizon-d) * 0.955));
-      transform:translateX(-50%) translateY(16px) scale(0.985);
+      bottom:calc(38vh - (var(--planet-size) * 0.96));
+      filter:drop-shadow(0 -15px 50px rgba(255, 150, 45, 0.4));
     }
 
-    /* The Moon: Lunar limb apex aligned at 38vh */
-    .planet-horizon-img.planet-moon{
-      bottom:calc(38vh - (var(--horizon-d) * 0.99));
-      transform:translateX(-50%) translateY(16px) scale(0.985);
-    }
-
-    /* Mercury: Terrestrial limb apex aligned at 38vh */
+    /* Mercury: terrestrial limb calibrated at 38vh */
     .planet-horizon-img.planet-mercury{
-      bottom:calc(38vh - (var(--horizon-d) * 0.94));
-      transform:translateX(-50%) translateY(16px) scale(0.985);
+      bottom:calc(38vh - (var(--planet-size) * 0.94));
+    }
+
+    /* The Moon: lunar limb calibrated at 38vh */
+    .planet-horizon-img.planet-moon{
+      bottom:calc(38vh - (var(--planet-size) * 0.98));
     }
 
     /* CELESTIAL GRAHA AURA LIGHTING */
@@ -671,22 +663,22 @@
       <canvas id="starry-canvas" class="starry-canvas"></canvas>
     </div>
 
-    <!-- SEPARATE HIGH QUALITY STATIC PLANET IMAGES (Layered on top of starry sky) -->
+    <!-- SEPARATE HIGH QUALITY TRANSPARENT PNG PLANETS (Layered on top of galaxy starfield) -->
     <div class="planet-stage" id="planet-stage">
-      <!-- 1. VENUS (Pristine High-Res Curved Horizon) -->
-      <img class="planet-horizon-img is-active" data-planet="venus" src="assets/venus_horizon.png" alt="Venus Horizon">
-      <!-- 2. MARS (Pristine High-Res Curved Horizon) -->
-      <img class="planet-horizon-img" data-planet="mars" src="assets/mars_horizon.png" alt="Mars Horizon">
-      <!-- 3. JUPITER (Pristine High-Res Curved Horizon) -->
-      <img class="planet-horizon-img" data-planet="jupiter" src="assets/jupiter_horizon.jpg" alt="Jupiter Horizon">
-      <!-- 4. SATURN (Pristine Curved Celestial Horizon) -->
-      <img class="planet-horizon-img is-spherical planet-saturn" data-planet="saturn" src="assets/saturn.jpg" alt="Saturn Horizon">
-      <!-- 5. THE SUN (Pristine Curved Solar Horizon) -->
-      <img class="planet-horizon-img is-spherical planet-sun" data-planet="sun" src="assets/sun.jpg" alt="The Sun Horizon">
-      <!-- 6. MERCURY (Pristine Curved Terrestrial Horizon) -->
-      <img class="planet-horizon-img is-spherical planet-mercury" data-planet="mercury" src="assets/mercury.jpg" alt="Mercury Horizon">
-      <!-- 7. THE MOON (Pristine Curved Lunar Horizon) -->
-      <img class="planet-horizon-img is-spherical planet-moon" data-planet="moon" src="assets/moon.jpg" alt="The Moon Horizon">
+      <!-- 1. VENUS (Transparent PNG) -->
+      <img class="planet-horizon-img is-active" data-planet="venus" src="assets/venus_trans.png" alt="Venus Transparent">
+      <!-- 2. MARS (Transparent PNG) -->
+      <img class="planet-horizon-img" data-planet="mars" src="assets/mars_trans.png" alt="Mars Transparent">
+      <!-- 3. JUPITER (Transparent PNG) -->
+      <img class="planet-horizon-img" data-planet="jupiter" src="assets/jupiter_trans.png" alt="Jupiter Transparent">
+      <!-- 4. SATURN (Transparent PNG with rings) -->
+      <img class="planet-horizon-img planet-saturn" data-planet="saturn" src="assets/saturn_trans.png" alt="Saturn Transparent">
+      <!-- 5. THE SUN (Transparent PNG with glowing corona) -->
+      <img class="planet-horizon-img planet-sun" data-planet="sun" src="assets/sun_trans.png" alt="The Sun Transparent">
+      <!-- 6. MERCURY (Transparent PNG) -->
+      <img class="planet-horizon-img planet-mercury" data-planet="mercury" src="assets/mercury_trans.png" alt="Mercury Transparent">
+      <!-- 7. THE MOON (Transparent PNG) -->
+      <img class="planet-horizon-img planet-moon" data-planet="moon" src="assets/moon_trans.png" alt="The Moon Transparent">
     </div>
 
     <!-- Radiant Atmospheric Corona behind Hero Title -->
@@ -1492,7 +1484,7 @@
     })();
 
     /* ══════════════════════════════════════════════════════════════════
-       DYNAMIC STARRY NIGHT ANIMATION ENGINE (BACKGROUND LAYER)
+       DYNAMIC STARRY NIGHT & GALAXY ANIMATION ENGINE (BACKGROUND LAYER)
        ══════════════════════════════════════════════════════════════════ */
     const starCanvas = document.getElementById('starry-canvas');
     const sCtx = starCanvas.getContext('2d');
@@ -1504,18 +1496,18 @@
     window.addEventListener('resize', resizeStarryCanvas);
     resizeStarryCanvas();
 
-    // 260 Multi-depth celestial stars
-    const starCount = 260;
+    // 340 Multi-depth galaxy stars across entire cosmic viewport
+    const starCount = 340;
     const stars = [];
     for (let i = 0; i < starCount; i++) {
       stars.push({
         x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight * 0.85,
-        r: Math.random() < 0.8 ? (Math.random() * 1.1 + 0.4) : (Math.random() * 1.8 + 1.2),
-        alpha: Math.random() * 0.75 + 0.25,
-        speed: Math.random() * 0.022 + 0.006,
+        y: Math.random() * window.innerHeight,
+        r: Math.random() < 0.8 ? (Math.random() * 1.2 + 0.4) : (Math.random() * 2.0 + 1.2),
+        alpha: Math.random() * 0.8 + 0.2,
+        speed: Math.random() * 0.025 + 0.008,
         phase: Math.random() * Math.PI * 2,
-        color: Math.random() < 0.2 ? '#9feaff' : (Math.random() < 0.15 ? '#ffd89e' : '#ffffff')
+        color: Math.random() < 0.25 ? '#a8eeff' : (Math.random() < 0.2 ? '#ffe2a8' : '#ffffff')
       });
     }
 
@@ -1524,18 +1516,18 @@
     function spawnMeteor() {
       meteor = {
         x: Math.random() * (starCanvas.width * 0.6) + (starCanvas.width * 0.1),
-        y: Math.random() * (starCanvas.height * 0.28),
-        len: Math.random() * 120 + 80,
-        speed: Math.random() * 14 + 10,
+        y: Math.random() * (starCanvas.height * 0.35),
+        len: Math.random() * 140 + 90,
+        speed: Math.random() * 15 + 11,
         angle: Math.PI / 4 + (Math.random() * 0.2 - 0.1),
         alpha: 1,
         life: 0,
-        maxLife: Math.random() * 25 + 20
+        maxLife: Math.random() * 26 + 22
       };
     }
     setInterval(() => {
-      if (!meteor && Math.random() < 0.75) spawnMeteor();
-    }, 5500);
+      if (!meteor && Math.random() < 0.8) spawnMeteor();
+    }, 5000);
 
     function renderStarryNight() {
       requestAnimationFrame(renderStarryNight);
@@ -1544,16 +1536,16 @@
       const w = starCanvas.width;
       const h = starCanvas.height;
 
-      // Deep celestial radial background
-      const bgGrad = sCtx.createRadialGradient(w / 2, h * 0.22, 60, w / 2, h * 0.3, Math.max(w, h) * 0.85);
-      bgGrad.addColorStop(0, '#0c2344');
-      bgGrad.addColorStop(0.35, '#061328');
-      bgGrad.addColorStop(0.75, '#030a16');
-      bgGrad.addColorStop(1, '#01040a');
+      // Deep celestial galaxy gradient
+      const bgGrad = sCtx.createRadialGradient(w / 2, h * 0.25, 60, w / 2, h * 0.35, Math.max(w, h) * 0.9);
+      bgGrad.addColorStop(0, '#0e2a52');
+      bgGrad.addColorStop(0.35, '#071630');
+      bgGrad.addColorStop(0.75, '#030c18');
+      bgGrad.addColorStop(1, '#01050d');
       sCtx.fillStyle = bgGrad;
       sCtx.fillRect(0, 0, w, h);
 
-      // Render twinkling stars
+      // Render twinkling galaxy stars
       stars.forEach(s => {
         s.phase += s.speed;
         const twinkle = s.alpha * (0.65 + 0.35 * Math.sin(s.phase));
@@ -1588,9 +1580,9 @@
         sCtx.moveTo(tailX, tailY);
         sCtx.lineTo(meteor.x, meteor.y);
         sCtx.strokeStyle = mGrad;
-        sCtx.lineWidth = 1.8;
+        sCtx.lineWidth = 2.0;
         sCtx.shadowColor = '#79dce8';
-        sCtx.shadowBlur = 12;
+        sCtx.shadowBlur = 14;
         sCtx.stroke();
         sCtx.restore();
 
