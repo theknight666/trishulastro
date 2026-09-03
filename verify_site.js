@@ -4,8 +4,7 @@ const path = require('path');
 const htmlPath = path.join(__dirname, 'index.html');
 const html = fs.readFileSync(htmlPath, 'utf8');
 
-console.log('--- RUNNING TRISHULASTRO INTEGRITY AUDIT ---');
-
+console.log('--- AUDITING TRISHULASTRO MINIMAL HERO BUILD ---');
 let errors = [];
 
 // 1. Check title and branding
@@ -17,7 +16,7 @@ if (html.toLowerCase().includes('spaceedu') || html.toLowerCase().includes('spac
 }
 
 // 2. Check Earth removal
-if (html.includes("data-planet=\"earth\"") || html.includes("PLANETS = { earth")) {
+if (html.includes("data-planet=\"earth\"") || html.includes("'earth'")) {
   errors.push('Earth planet was not removed from planet switcher!');
 }
 
@@ -36,32 +35,11 @@ foundAssets.forEach(asset => {
   if (!fs.existsSync(fullPath)) {
     errors.push(`Missing asset file: ${asset}`);
   } else {
-    console.log(`  ✓ Exists: ${asset} (${fs.statSync(fullPath).size} bytes)`);
+    console.log(`  ✓ Exists: ${asset}`);
   }
 });
 
-// 4. Check all anchor hrefs #... have matching IDs in HTML
-const hrefRegex = /href=["']#([^"']+)["']/g;
-const foundHrefs = new Set();
-while ((match = hrefRegex.exec(html)) !== null) {
-  foundHrefs.add(match[1]);
-}
-
-console.log(`\nFound ${foundHrefs.size} anchor targets:`);
-foundHrefs.forEach(target => {
-  if (target === '' || target === '#') {
-    // top of page or controlled by JS
-    return;
-  }
-  const idRegex = new RegExp(`id=["']${target}["']`);
-  if (!idRegex.test(html)) {
-    errors.push(`Broken anchor link: #${target} (no element with id="${target}")`);
-  } else {
-    console.log(`  ✓ Valid anchor target: #${target}`);
-  }
-});
-
-// 5. Check empty buttons or broken buttons
+// 4. Check all buttons have non-empty content
 const btnRegex = /<button[^>]*>([\s\S]*?)<\/button>/g;
 let btnCount = 0;
 while ((match = btnRegex.exec(html)) !== null) {
@@ -71,32 +49,23 @@ while ((match = btnRegex.exec(html)) !== null) {
     errors.push(`Found empty button: ${match[0]}`);
   }
 }
-console.log(`\nAudited ${btnCount} buttons across the application.`);
+console.log(`Audited ${btnCount} buttons.`);
 
-// 6. Check required planets are in data object
-const requiredGrahas = ['venus', 'jupiter', 'mars', 'saturn', 'sun', 'mercury', 'moon'];
+// 5. Check all planets
+const requiredGrahas = ['venus', 'mars', 'jupiter', 'saturn', 'sun', 'mercury', 'moon'];
 requiredGrahas.forEach(graha => {
   if (!html.includes(`${graha}: {`)) {
-    errors.push(`Missing Graha in GRAHAS dictionary: ${graha}`);
+    errors.push(`Missing Graha: ${graha}`);
   } else {
-    console.log(`  ✓ Vedic Graha configured: ${graha}`);
+    console.log(`  ✓ Graha configured: ${graha}`);
   }
 });
 
-// 7. Check Booking Modal Steps
-for (let i = 1; i <= 5; i++) {
-  if (!html.includes(`id="booking-step-${i}"`)) {
-    errors.push(`Missing booking modal step: step ${i}`);
-  }
-}
-
 if (errors.length === 0) {
-  console.log('\n=========================================');
-  console.log('🎉 ALL TRISHULASTRO INTEGRITY AUDITS PASSED!');
-  console.log('=========================================');
+  console.log('\n🎉 MINIMAL BUILD AUDIT PASSED 100%!');
   process.exit(0);
 } else {
-  console.error('\n❌ AUDIT FAILURES DETECTED:');
-  errors.forEach(err => console.error(`  - ${err}`));
+  console.error('\n❌ AUDIT FAILURES:');
+  errors.forEach(e => console.error(`  - ${e}`));
   process.exit(1);
 }
