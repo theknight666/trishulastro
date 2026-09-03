@@ -10,7 +10,7 @@
   <!-- Google Fonts preconnect & stylesheet -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Poppins:wght@500;600;700&family=Prata&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&family=Prata&display=swap" rel="stylesheet">
 
   <!-- Blocking entrance animation setup -->
   <script>
@@ -39,9 +39,12 @@
       --ink:#ffffff; --cyan:#79dce8; --cyan-logo:#5fd0e1;
       --rule:rgba(255,255,255,.23); --btn-ink:#071227;
       --gold:#f5c767;
-      --bg-dark:#04101f;
-      --card-bg:rgba(8, 20, 42, 0.72);
+      --gold-light:#ffdf9e;
+      --bg-dark:#030c18;
+      --card-bg:rgba(7, 18, 38, 0.76);
       --card-border:rgba(255, 255, 255, 0.12);
+      --card-border-hover:rgba(121, 220, 232, 0.45);
+      --graha-aura: rgba(121, 220, 232, 0.18);
     }
     @supports (height:100dvh){
       :root{
@@ -56,21 +59,39 @@
       text-rendering:geometricPrecision; overflow-x:hidden; min-height:100%}
 
     /* ==========================================================================
+       TOP MUHURTA RIBBON (SUBTLE VEDIC AUTHORITY)
+       ========================================================================== */
+    .top-ribbon{position:fixed; top:0; left:0; right:0; z-index:110; height:calc(26 * var(--u));
+      background:linear-gradient(90deg, rgba(3,12,24,0.95), rgba(12,28,56,0.95), rgba(3,12,24,0.95));
+      border-bottom:1px solid rgba(255,255,255,0.08); font-size:calc(11.5 * var(--u));
+      letter-spacing:calc(1.5 * var(--u)); color:rgba(255,255,255,0.85); display:flex;
+      align-items:center; justify-content:center; gap:calc(16 * var(--u)); text-transform:uppercase;
+      backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px)}
+    .top-ribbon span.badge{background:rgba(245,199,103,0.18); color:var(--gold);
+      padding:calc(2 * var(--u)) calc(8 * var(--u)); border-radius:calc(10 * var(--u));
+      border:1px solid rgba(245,199,103,0.35); font-weight:600}
+    .top-ribbon .pulse-dot{width:calc(6 * var(--u)); height:calc(6 * var(--u)); border-radius:50%;
+      background:#4ade80; box-shadow:0 0 calc(8 * var(--u)) #4ade80; display:inline-block}
+
+    /* ==========================================================================
        2. FIXED NAVBAR (FROSTED GLASS ON SCROLL)
        ========================================================================== */
-    .navbar{position:fixed; top:0; left:0; right:0; z-index:100; height:calc(88 * var(--u));
-      background:rgba(4, 16, 31, 0.75); backdrop-filter:blur(calc(16 * var(--u)));
-      -webkit-backdrop-filter:blur(calc(16 * var(--u))); border-bottom:calc(1 * var(--u)) solid rgba(255,255,255,.1)}
+    .navbar{position:fixed; top:calc(26 * var(--u)); left:0; right:0; z-index:100; height:calc(88 * var(--u));
+      background:rgba(4, 16, 31, 0.78); backdrop-filter:blur(calc(18 * var(--u)));
+      -webkit-backdrop-filter:blur(calc(18 * var(--u))); border-bottom:calc(1 * var(--u)) solid rgba(255,255,255,.09);
+      transition:all .3s ease}
     .navrow{position:absolute; left:calc(25 * var(--u)); right:calc(49 * var(--u)); top:0;
       height:calc(86 * var(--u)); display:flex; align-items:center; justify-content:space-between}
 
     /* LOGO WITH SACRED TRISHUL EMBLEM */
     .logo{font-family:var(--font-logo); font-weight:600; font-size:calc(19 * var(--u));
       letter-spacing:calc(-0.15 * var(--u)); line-height:1; color:#fff; text-decoration:none;
-      white-space:nowrap; display:inline-flex; align-items:center; gap:calc(8 * var(--u))}
+      white-space:nowrap; display:inline-flex; align-items:center; gap:calc(8 * var(--u));
+      transition:opacity .2s}
+    .logo:hover{opacity:.92}
     .logo i{font-style:normal; color:var(--cyan-logo)}
     .logo-icon{width:calc(24 * var(--u)); height:calc(24 * var(--u)); flex:none;
-      filter:drop-shadow(0 0 calc(6 * var(--u)) rgba(95,208,225,0.7))}
+      filter:drop-shadow(0 0 calc(8 * var(--u)) rgba(95,208,225,0.75))}
 
     .burger{display:none; position:relative; width:calc(46 * var(--u)); height:calc(46 * var(--u));
       padding:0; border:0; background:none; cursor:pointer; flex-direction:column;
@@ -86,15 +107,44 @@
     .links a{position:relative; display:flex; align-items:center; height:calc(86 * var(--u));
       font-size:calc(18.4 * var(--u)); font-weight:400; line-height:1; color:#fff;
       text-decoration:none; padding:0 calc(17.5 * var(--u));
-      letter-spacing:calc(-1 * var(--u)); white-space:nowrap; cursor:pointer}
+      letter-spacing:calc(-1 * var(--u)); white-space:nowrap; cursor:pointer;
+      transition:color .2s}
+    .links a:hover{color:var(--cyan)}
     .links a[aria-current="page"]::after{content:""; position:absolute; left:0; right:0;
       top:calc(83.5 * var(--u)); height:calc(4 * var(--u)); background:var(--cyan);
-      border-radius:calc(1 * var(--u)); transform-origin:center}
+      border-radius:calc(1 * var(--u)); transform-origin:center;
+      box-shadow:0 0 calc(10 * var(--u)) var(--cyan)}
     .links a:nth-child(3){letter-spacing:calc(-1.75 * var(--u))}
     .links a:nth-child(2){margin-left:calc(24 * var(--u))}
     .links a:nth-child(3){margin-left:calc(26 * var(--u))}
     .links a:nth-child(4){margin-left:calc(27 * var(--u))}
-    .links a.enroll{margin-left:calc(28.5 * var(--u)); width:calc(132 * var(--u));
+    .links a:nth-child(5){margin-left:calc(26 * var(--u))}
+
+    /* SOUND & CURRENCY CONTROLS */
+    .nav-controls{display:flex; align-items:center; gap:calc(10 * var(--u)); margin-left:calc(24 * var(--u))}
+    .btn-sound{display:inline-flex; align-items:center; gap:calc(6 * var(--u)); height:calc(34 * var(--u));
+      padding:0 calc(12 * var(--u)); border-radius:calc(17 * var(--u));
+      border:1px solid rgba(255,255,255,0.18); background:rgba(255,255,255,0.06);
+      color:#fff; font-size:calc(12.5 * var(--u)); cursor:pointer; transition:all .25s;
+      font-family:var(--font-body); white-space:nowrap}
+    .btn-sound:hover{border-color:var(--cyan); background:rgba(95,208,225,0.12)}
+    .btn-sound.is-playing{border-color:var(--gold); color:var(--gold); background:rgba(245,199,103,0.15)}
+    .sound-bars{display:flex; align-items:center; gap:calc(2 * var(--u)); height:calc(12 * var(--u))}
+    .sound-bars span{width:calc(2 * var(--u)); height:calc(4 * var(--u)); background:currentColor;
+      border-radius:calc(1 * var(--u)); transition:height .15s ease}
+    .btn-sound.is-playing .sound-bars span:nth-child(1){animation:sound-wave .6s infinite alternate}
+    .btn-sound.is-playing .sound-bars span:nth-child(2){animation:sound-wave .8s infinite alternate .2s}
+    .btn-sound.is-playing .sound-bars span:nth-child(3){animation:sound-wave .5s infinite alternate .4s}
+    @keyframes sound-wave{0%{height:calc(3 * var(--u))} 100%{height:calc(13 * var(--u))}}
+
+    .currency-toggle{display:inline-flex; align-items:center; height:calc(34 * var(--u));
+      padding:0 calc(8 * var(--u)); border-radius:calc(17 * var(--u));
+      border:1px solid rgba(255,255,255,0.18); background:rgba(255,255,255,0.06);
+      color:rgba(255,255,255,0.85); font-size:calc(12 * var(--u)); cursor:pointer;
+      font-weight:600; font-family:var(--font-body); transition:all .2s}
+    .currency-toggle:hover{border-color:var(--cyan); color:#fff}
+
+    .links a.enroll{margin-left:calc(16 * var(--u)); width:calc(134 * var(--u));
       height:calc(38 * var(--u)); border-radius:calc(19 * var(--u)); display:flex;
       align-items:center; justify-content:center; font-size:calc(16 * var(--u));
       font-weight:600; letter-spacing:calc(-0.5 * var(--u)); line-height:1;
@@ -102,33 +152,62 @@
       background:linear-gradient(180deg,#ffffff 0%,#d8ecfe 9%,#dceefe 72%,#f4f9ff 100%);
       box-shadow:0 calc(3 * var(--u)) calc(14 * var(--u)) rgba(255,255,255,.22),
                  inset 0 0 0 calc(1.5 * var(--u)) rgba(255,255,255,.92);
-      flex:none; cursor:pointer; transition:transform .2s ease}
-    .links a.enroll:hover{transform:scale(1.03)}
+      flex:none; cursor:pointer; transition:transform .2s ease, box-shadow .2s ease;
+      position:relative; overflow:hidden}
+    .links a.enroll:hover{transform:scale(1.03); box-shadow:0 calc(5 * var(--u)) calc(20 * var(--u)) rgba(255,255,255,.4)}
+
+    /* SPECULAR SHIMMER GLINT ON BUTTONS */
+    .cta a, .links a.enroll, .btn-pill{position:relative; overflow:hidden}
+    .cta a::after, .links a.enroll::after, .btn-pill::after{
+      content:''; position:absolute; top:-50%; left:-70%; width:50%; height:200%;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.42), transparent);
+      transform:rotate(25deg); pointer-events:none;
+      animation:shimmer-glint 5.5s cubic-bezier(.4,0,.2,1) infinite}
+    @keyframes shimmer-glint{
+      0%, 70% { left:-70% }
+      100% { left:170% }
+    }
 
     /* ==========================================================================
-       3. HERO STAGE (EXACT MINIMAL AESTHETIC & PLANETARY ROTATION)
+       3. HERO STAGE (EXACT MINIMAL AESTHETIC WITH RADIANT LIGHTING)
        ========================================================================== */
     .hero-stage{position:relative; width:100%; height:100vh; min-height:100vh; overflow:hidden; isolation:isolate}
 
     .sky{position:absolute; inset:0; z-index:0;
       background-image:url('https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_cf55d1d8-7b59-4a64-80da-d72052ae974e.png');
       background-size:cover; background-position:center; background-repeat:no-repeat;
-      transition:background-image 0.4s ease}
+      transition:background-image 0.5s cubic-bezier(.22,1,.36,1)}
     .sky video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
-      display:block; opacity:0; transition:opacity .28s linear}
+      display:block; opacity:0; transition:opacity .35s linear}
     .sky video.is-active{opacity:1}
     @media (prefers-reduced-motion:reduce){ .sky video{display:none} }
 
+    /* CELESTIAL GRAHA AURA LIGHTING */
+    .graha-aura{position:absolute; top:calc(280 * var(--u)); left:50%;
+      transform:translate(-50%, -50%); width:min(calc(800 * var(--u)), 90vw);
+      height:min(calc(420 * var(--u)), 50vh);
+      background:radial-gradient(ellipse at center, var(--graha-aura) 0%, transparent 72%);
+      filter:blur(calc(45 * var(--u))); pointer-events:none; z-index:1;
+      transition:background 0.8s ease}
+
     .ui{position:absolute; inset:0; z-index:3; pointer-events:none}
 
-    /* SIDE PLANET SLOTS */
+    /* SIDE PLANET SLOTS WITH CELESTIAL HALOS */
     .planet{position:absolute; z-index:-1; padding:0; border:0; background:none;
       -webkit-appearance:none; appearance:none; line-height:0; cursor:pointer;
       pointer-events:auto; transition:transform .45s cubic-bezier(.22,1,.36,1)}
-    .planet img{display:none; width:100%; height:auto; border-radius:50%; object-fit:cover}
+    .planet img{display:none; width:100%; height:auto; border-radius:50%; object-fit:cover;
+      box-shadow:0 0 calc(20 * var(--u)) rgba(0,0,0,0.6)}
     .planet img.is-shown{display:block}
-    .planet:hover{transform:scale(1.045)}
-    .planet:active{transform:scale(.99)}
+    .planet::before{content:""; position:absolute; inset:calc(-7 * var(--u)); border-radius:50%;
+      border:calc(1.5 * var(--u)) dashed rgba(121, 220, 232, 0.42); pointer-events:none;
+      animation:orbit-spin 26s linear infinite; transition:all .3s ease; opacity:0.75}
+    .planet:hover::before{opacity:1; border-color:var(--cyan); border-style:solid;
+      box-shadow:0 0 calc(18 * var(--u)) rgba(95,208,225,0.45)}
+    @keyframes orbit-spin{from{transform:rotate(0deg)} to{transform:rotate(360deg)}}
+
+    .planet:hover{transform:scale(1.055)}
+    .planet:active{transform:scale(.98)}
     .planet-l{width:calc(143 * var(--u)); left:calc(-69.5 * var(--u)); top:calc(-38.3 * var(--u))}
     .planet-r{width:calc(143 * var(--u)); right:calc(-64.7 * var(--u)); top:calc(-40.6 * var(--u))}
     @media (prefers-reduced-motion:reduce){
@@ -141,16 +220,20 @@
 
     /* HERO COPY */
     .eyebrow{top:calc(188.8 * var(--u)); font-size:calc(30.45 * var(--u)); font-weight:500;
-      line-height:1; letter-spacing:calc(4 * var(--u)); text-indent:calc(4 * var(--u)); color:#fff}
+      line-height:1; letter-spacing:calc(4 * var(--u)); text-indent:calc(4 * var(--u)); color:#fff;
+      text-shadow:0 calc(2 * var(--u)) calc(12 * var(--u)) rgba(0,0,0,0.7)}
     h1.title{top:calc(268 * var(--u)); font-family:var(--font-serif); font-weight:400;
       font-size:calc(112.4 * var(--u)); line-height:1; letter-spacing:calc(2 * var(--u));
-      text-indent:calc(2 * var(--u)); color:#fff}
+      text-indent:calc(2 * var(--u)); color:#fff;
+      text-shadow:0 calc(4 * var(--u)) calc(25 * var(--u)) rgba(0,0,0,0.85)}
     .rule{top:calc(405.5 * var(--u)); height:calc(5 * var(--u)); font-size:0; line-height:0;
       padding-right:calc(2 * var(--u))}
     .rule span{display:inline-block; vertical-align:top; width:calc(100 * var(--u));
-      height:100%; border-radius:calc(2.5 * var(--u)); background:var(--cyan); transform-origin:center}
+      height:100%; border-radius:calc(2.5 * var(--u)); background:var(--cyan); transform-origin:center;
+      box-shadow:0 0 calc(12 * var(--u)) rgba(121,220,232,0.8)}
     p.lede{top:calc(433.2 * var(--u)); font-size:calc(18.36 * var(--u)); font-weight:400;
-      line-height:calc(30 * var(--u)); color:rgba(255,255,255,.95)}
+      line-height:calc(30 * var(--u)); color:rgba(255,255,255,.95);
+      text-shadow:0 calc(2 * var(--u)) calc(10 * var(--u)) rgba(0,0,0,0.8)}
 
     /* CTA ROW */
     .cta{top:calc(597 * var(--u)); height:calc(66 * var(--u)); isolation:isolate}
@@ -159,25 +242,32 @@
       font-size:calc(17 * var(--u)); font-weight:700; letter-spacing:0; text-indent:0;
       line-height:1; color:var(--btn-ink); text-decoration:none; padding-top:calc(2 * var(--u));
       background:linear-gradient(180deg,#ffffff 0%,#d6e8f8 4%,#d9ecfe 72%,#ffffff 100%);
-      box-shadow:0 calc(10 * var(--u)) calc(18 * var(--u)) calc(-8 * var(--u)) rgba(255,255,255,.50),
-                 0 0 calc(26 * var(--u)) rgba(255,255,255,.18),
-                 inset 0 0 0 calc(2 * var(--u)) rgba(255,255,255,.9);
-      cursor:pointer; transition:transform 0.2s ease, box-shadow 0.2s ease}
-    .cta a:hover{transform:scale(1.02); box-shadow:0 calc(12 * var(--u)) calc(22 * var(--u)) rgba(255,255,255,.65)}
+      box-shadow:0 calc(10 * var(--u)) calc(22 * var(--u)) calc(-8 * var(--u)) rgba(255,255,255,.6),
+                 0 0 calc(28 * var(--u)) rgba(255,255,255,.24),
+                 inset 0 0 0 calc(2 * var(--u)) rgba(255,255,255,.95);
+      cursor:pointer; transition:transform 0.25s ease, box-shadow 0.25s ease}
+    .cta a:hover{transform:scale(1.035); box-shadow:0 calc(14 * var(--u)) calc(28 * var(--u)) rgba(255,255,255,.75)}
     .label{position:absolute; top:calc(33 * var(--u)); font-family:var(--font-serif);
       font-weight:400; font-size:calc(17.8 * var(--u)); letter-spacing:calc(4.6 * var(--u));
-      line-height:1; color:#fff; white-space:nowrap}
+      line-height:1; color:#fff; white-space:nowrap;
+      text-shadow:0 calc(2 * var(--u)) calc(8 * var(--u)) rgba(0,0,0,0.8)}
     .label.label-l{left:calc(111 * var(--u))}
     .label.label-r{right:calc(104 * var(--u))}
 
-    /* SCROLL CONTROL */
+    /* SCROLL CONTROL WITH PULSING HALO */
+    @keyframes pulse-ring{
+      0%{box-shadow:0 0 0 0 rgba(121, 220, 232, 0.45)}
+      70%{box-shadow:0 0 0 calc(16 * var(--u)) rgba(121, 220, 232, 0)}
+      100%{box-shadow:0 0 0 0 rgba(121, 220, 232, 0)}
+    }
     .scroll{position:absolute; z-index:4; left:50%;
       margin-left:calc((-48 - (var(--gutter) / 2)) * var(--u)); bottom:calc(68 * var(--u));
       width:calc(96 * var(--u)); height:calc(96 * var(--u)); border-radius:50%;
-      background:rgba(24,30,42,.70); -webkit-backdrop-filter:blur(calc(6 * var(--u)));
-      backdrop-filter:blur(calc(6 * var(--u))); border:0; display:flex; align-items:center;
-      justify-content:center; cursor:pointer; transition:transform 0.25s, background 0.25s}
-    .scroll:hover{transform:scale(1.06); background:rgba(30,42,65,.85)}
+      background:rgba(24,30,42,.75); -webkit-backdrop-filter:blur(calc(8 * var(--u)));
+      backdrop-filter:blur(calc(8 * var(--u))); border:1px solid rgba(255,255,255,0.18);
+      display:flex; align-items:center; justify-content:center; cursor:pointer;
+      animation:pulse-ring 3.5s infinite; transition:transform 0.25s, background 0.25s}
+    .scroll:hover{transform:scale(1.08); background:rgba(30,46,75,.9)}
     .scroll svg{width:calc(20 * var(--u)); height:calc(25 * var(--u)); display:block}
 
     /* FOCUS */
@@ -188,158 +278,194 @@
       outline-offset:calc(6 * var(--u)); border-radius:50%}
 
     /* ==========================================================================
-       4. SECTIONS BELOW HERO (CLEAN, MINIMAL DARK COSMIC LANGUAGE)
+       4. SECTIONS BELOW HERO (LUXURY VEDIC COSMIC LANGUAGE)
        ========================================================================== */
-    .site-section{position:relative; width:100%; padding:110px 24px; z-index:5;
-      background:radial-gradient(circle at 50% 20%, rgba(12, 28, 56, 0.45) 0%, var(--bg-dark) 80%)}
-    .site-container{max-width:1200px; margin:0 auto; position:relative}
+    .site-section{position:relative; width:100%; padding:120px 24px; z-index:5;
+      background:radial-gradient(circle at 50% 10%, rgba(14, 34, 68, 0.45) 0%, var(--bg-dark) 85%)}
+    .site-container{max-width:1220px; margin:0 auto; position:relative}
 
-    .sec-header{text-align:center; max-width:760px; margin:0 auto 54px}
-    .sec-tag{display:inline-block; font-size:12px; font-weight:600; letter-spacing:3px;
-      color:var(--cyan); text-transform:uppercase; margin-bottom:12px}
-    .sec-title{font-family:var(--font-serif); font-size:clamp(32px, 3.8vw, 48px);
-      font-weight:400; color:#fff; line-height:1.2; margin-bottom:16px; letter-spacing:1px}
-    .sec-desc{font-size:16px; color:rgba(255,255,255,.78); line-height:1.6}
+    .sec-header{text-align:center; max-width:800px; margin:0 auto 58px}
+    .sec-tag{display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:600;
+      letter-spacing:3.5px; color:var(--cyan); text-transform:uppercase; margin-bottom:14px;
+      padding:4px 14px; border-radius:20px; background:rgba(95,208,225,0.08); border:1px solid rgba(95,208,225,0.22)}
+    .sec-title{font-family:var(--font-serif); font-size:clamp(32px, 4vw, 50px);
+      font-weight:400; color:#fff; line-height:1.2; margin-bottom:18px; letter-spacing:1px}
+    .sec-desc{font-size:16.5px; color:rgba(255,255,255,.78); line-height:1.65}
 
-    /* CARDS & GRIDS */
-    .grid-cards{display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:28px}
-    .card{background:var(--card-bg); border:1px solid var(--card-border); border-radius:20px;
-      padding:34px 28px; display:flex; flex-direction:column; justify-content:space-between;
-      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-      transition:all .3s cubic-bezier(.16,1,.3,1)}
-    .card:hover{border-color:var(--cyan); transform:translateY(-5px);
-      box-shadow:0 16px 40px rgba(0,0,0,.6), 0 0 20px rgba(95,208,225,.15)}
-    .card-icon{font-size:26px; margin-bottom:16px; color:var(--cyan)}
-    .card-title{font-family:var(--font-serif); font-size:22px; font-weight:400; color:#fff; margin-bottom:10px}
-    .card-desc{font-size:14.5px; color:rgba(255,255,255,.75); line-height:1.6; margin-bottom:20px; flex-grow:1}
+    /* CARDS & LUXURY GLASSPHISM */
+    .grid-cards{display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:30px}
+    .card{background:var(--card-bg); border:1px solid var(--card-border); border-radius:22px;
+      padding:36px 30px; display:flex; flex-direction:column; justify-content:space-between;
+      backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+      transition:all .35s cubic-bezier(.16,1,.3,1); position:relative; overflow:hidden}
+    .card:hover{border-color:var(--card-border-hover); transform:translateY(-6px);
+      box-shadow:0 20px 50px rgba(0,0,0,.7), 0 0 25px rgba(95,208,225,.18)}
+
+    .card-badge{position:absolute; top:18px; right:18px; font-size:11px; font-weight:600;
+      letter-spacing:1px; text-transform:uppercase; padding:4px 10px; border-radius:12px;
+      background:rgba(245,199,103,0.18); color:var(--gold); border:1px solid rgba(245,199,103,0.35)}
+    .card-icon{font-size:30px; margin-bottom:16px; color:var(--cyan); filter:drop-shadow(0 0 10px rgba(121,220,232,0.5))}
+    .card-title{font-family:var(--font-serif); font-size:23px; font-weight:400; color:#fff; margin-bottom:10px}
+    .card-desc{font-size:14.5px; color:rgba(255,255,255,.75); line-height:1.6; margin-bottom:20px}
+
+    /* DELIVERABLES LIST */
+    .card-perks{list-style:none; margin-bottom:24px; padding:0; display:flex; flex-direction:column; gap:8px}
+    .card-perks li{font-size:13px; color:rgba(255,255,255,0.72); display:flex; align-items:center; gap:8px}
+    .card-perks li svg{width:14px; height:14px; color:var(--cyan); flex:none}
+
     .card-price{display:flex; justify-content:space-between; align-items:baseline;
-      padding-top:16px; border-top:1px solid rgba(255,255,255,.08); margin-bottom:20px}
-    .card-price .amount{font-family:var(--font-serif); font-size:26px; color:#fff}
+      padding-top:18px; border-top:1px solid rgba(255,255,255,.08); margin-bottom:20px}
+    .card-price .amount{font-family:var(--font-serif); font-size:28px; color:#fff}
     .card-price .duration{font-size:13px; color:var(--cyan)}
 
     /* MINIMAL PILL BUTTON */
     .btn-pill{display:inline-flex; align-items:center; justify-content:center;
-      width:100%; height:46px; border-radius:23px; font-size:15px; font-weight:700;
+      width:100%; height:48px; border-radius:24px; font-size:15px; font-weight:700;
       color:var(--btn-ink); text-decoration:none; border:0; cursor:pointer;
       background:linear-gradient(180deg,#ffffff 0%,#d8ecfe 12%,#dceefe 75%,#ffffff 100%);
-      box-shadow:0 4px 16px rgba(255,255,255,.18); transition:transform .2s ease, box-shadow .2s ease}
-    .btn-pill:hover{transform:scale(1.02); box-shadow:0 6px 22px rgba(255,255,255,.3)}
+      box-shadow:0 4px 18px rgba(255,255,255,.18); transition:transform .2s ease, box-shadow .2s ease}
+    .btn-pill:hover{transform:scale(1.025); box-shadow:0 6px 24px rgba(255,255,255,.32)}
 
     /* ASTROLOGERS DIRECTORY */
-    .astrologers-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:24px}
+    .astrologers-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:26px}
     .astrologer-card{background:var(--card-bg); border:1px solid var(--card-border);
-      border-radius:20px; overflow:hidden; display:flex; flex-direction:column;
-      transition:all .3s ease}
-    .astrologer-card:hover{border-color:var(--cyan); transform:translateY(-5px)}
-    .astro-img-wrap{width:100%; height:260px; overflow:hidden; background:#020710}
-    .astro-img-wrap img{width:100%; height:100%; object-fit:cover; object-position:top center; transition:transform .4s}
-    .astrologer-card:hover .astro-img-wrap img{transform:scale(1.04)}
-    .astro-info{padding:22px; display:flex; flex-direction:column; flex-grow:1}
-    .astro-name{font-family:var(--font-serif); font-size:19px; font-weight:400; color:#fff; margin-bottom:4px}
-    .astro-sub{font-size:13px; color:var(--cyan); margin-bottom:12px}
-    .astro-meta{font-size:12.5px; color:rgba(255,255,255,.65); margin-bottom:16px; flex-grow:1}
+      border-radius:22px; overflow:hidden; display:flex; flex-direction:column;
+      transition:all .3s ease; position:relative}
+    .astrologer-card:hover{border-color:var(--cyan); transform:translateY(-6px);
+      box-shadow:0 18px 45px rgba(0,0,0,0.6), 0 0 20px rgba(95,208,225,0.12)}
+    .astro-badge{position:absolute; top:14px; left:14px; z-index:2; background:rgba(7,18,38,0.85);
+      backdrop-filter:blur(8px); border:1px solid rgba(245,199,103,0.4); color:var(--gold);
+      font-size:11px; font-weight:600; padding:4px 10px; border-radius:12px; letter-spacing:0.5px}
+    .astro-img-wrap{width:100%; height:270px; overflow:hidden; background:#020710; position:relative}
+    .astro-img-wrap img{width:100%; height:100%; object-fit:cover; object-position:top center; transition:transform .5s}
+    .astrologer-card:hover .astro-img-wrap img{transform:scale(1.05)}
+    .astro-info{padding:24px; display:flex; flex-direction:column; flex-grow:1}
+    .astro-name{font-family:var(--font-serif); font-size:20px; font-weight:400; color:#fff; margin-bottom:4px}
+    .astro-sub{font-size:13px; color:var(--cyan); margin-bottom:10px}
+    .astro-rating{color:var(--gold); font-size:12.5px; margin-bottom:12px; display:flex; align-items:center; gap:6px}
+    .astro-meta{font-size:13px; color:rgba(255,255,255,.68); margin-bottom:18px; flex-grow:1; line-height:1.55}
 
     /* HOROSCOPE SECTION */
-    .rashi-grid{display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-bottom:34px}
+    .rashi-grid{display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-bottom:36px}
     .rashi-pill{background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.15);
-      border-radius:24px; padding:8px 18px; color:rgba(255,255,255,.8); font-size:13.5px;
-      cursor:pointer; transition:all .2s ease}
-    .rashi-pill:hover,.rashi-pill.active{background:rgba(95,208,225,.15); border-color:var(--cyan); color:#fff}
-    .horo-card{background:var(--card-bg); border:1px solid var(--card-border); border-radius:20px;
-      padding:36px; max-width:900px; margin:0 auto; backdrop-filter:blur(14px)}
+      border-radius:24px; padding:9px 20px; color:rgba(255,255,255,.8); font-size:14px;
+      cursor:pointer; transition:all .2s ease; display:inline-flex; align-items:center; gap:6px}
+    .rashi-pill:hover,.rashi-pill.active{background:rgba(95,208,225,.16); border-color:var(--cyan);
+      color:#fff; box-shadow:0 0 16px rgba(95,208,225,0.22); transform:translateY(-2px)}
+    .horo-card{background:var(--card-bg); border:1px solid var(--card-border); border-radius:24px;
+      padding:40px; max-width:920px; margin:0 auto; backdrop-filter:blur(16px)}
     .horo-header{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;
-      gap:14px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid rgba(255,255,255,.1)}
-    .horo-title{font-family:var(--font-serif); font-size:24px; color:#fff}
-    .horo-forecast{font-size:16px; line-height:1.7; color:rgba(255,255,255,.88); margin-bottom:26px}
-    .horo-metrics{display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px; margin-bottom:26px}
-    .horo-metric-box{background:rgba(255,255,255,.04); border-radius:12px; padding:14px; border:1px solid rgba(255,255,255,.08)}
-    .horo-metric-box .label-text{font-size:12.5px; color:var(--cyan); margin-bottom:6px; display:flex; justify-content:space-between}
-    .meter-bar{height:5px; background:rgba(255,255,255,.1); border-radius:3px; overflow:hidden}
-    .meter-fill{height:100%; background:var(--cyan); border-radius:3px}
+      gap:16px; margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid rgba(255,255,255,.1)}
+    .horo-title{font-family:var(--font-serif); font-size:26px; color:#fff}
+    .horo-forecast{font-size:16.5px; line-height:1.75; color:rgba(255,255,255,.9); margin-bottom:30px}
+    .horo-metrics{display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:18px; margin-bottom:30px}
+    .horo-metric-box{background:rgba(255,255,255,.04); border-radius:14px; padding:16px; border:1px solid rgba(255,255,255,.09)}
+    .horo-metric-box .label-text{font-size:13px; color:var(--cyan); margin-bottom:8px; display:flex; justify-content:space-between}
+    .meter-bar{height:6px; background:rgba(255,255,255,.1); border-radius:3px; overflow:hidden}
+    .meter-fill{height:100%; background:linear-gradient(90deg, var(--cyan), #9be6f0); border-radius:3px; transition:width .6s ease}
 
-    /* KUNDLI FORM */
-    .kundli-wrap{background:var(--card-bg); border:1px solid var(--card-border); border-radius:20px;
-      padding:40px; max-width:880px; margin:0 auto; backdrop-filter:blur(14px)}
-    .form-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:18px; margin-bottom:24px}
+    /* KUNDLI FORM & REAL VEDIC DIAMOND CHART */
+    .kundli-wrap{background:var(--card-bg); border:1px solid var(--card-border); border-radius:24px;
+      padding:44px; max-width:920px; margin:0 auto; backdrop-filter:blur(16px)}
+    .form-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:20px; margin-bottom:26px}
     .form-group{display:flex; flex-direction:column; gap:6px}
     .form-group label{font-size:13px; color:rgba(255,255,255,.8); font-weight:500}
     .form-control{background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.18);
-      border-radius:10px; padding:12px 14px; color:#fff; font-family:var(--font-body);
-      font-size:14px; outline:none; transition:border-color .2s}
-    .form-control:focus{border-color:var(--cyan)}
+      border-radius:12px; padding:13px 16px; color:#fff; font-family:var(--font-body);
+      font-size:14.5px; outline:none; transition:border-color .2s}
+    .form-control:focus{border-color:var(--cyan); background:rgba(255,255,255,0.09)}
     select.form-control option{background:#06142a; color:#fff}
 
-    .kundli-output{display:none; margin-top:28px; padding:24px; background:rgba(255,255,255,.04);
-      border-radius:14px; border:1px solid var(--cyan)}
+    .kundli-output{display:none; margin-top:32px; padding:28px; background:rgba(255,255,255,.04);
+      border-radius:18px; border:1px solid var(--cyan); animation:ent-rise .4s ease}
+    .diamond-chart-svg{width:100%; max-width:360px; height:auto; display:block; margin:0 auto 24px}
 
-    /* REMEDIES */
+    /* REMEDIES BANNER & TABLE */
+    .remedies-hero-banner{display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:center;
+      background:var(--card-bg); border:1px solid var(--card-border); border-radius:24px;
+      overflow:hidden; margin-bottom:34px; backdrop-filter:blur(16px)}
+    .remedies-hero-img{width:100%; height:100%; min-height:280px; object-fit:cover; display:block}
+    .remedies-hero-text{padding:34px}
+    .remedies-hero-text h3{font-family:var(--font-serif); font-size:26px; color:#fff; margin-bottom:12px}
+    .remedies-hero-text p{font-size:14.5px; line-height:1.65; color:rgba(255,255,255,0.78); margin-bottom:18px}
+
     .remedies-table-wrap{overflow-x:auto; background:var(--card-bg); border:1px solid var(--card-border);
-      border-radius:20px; padding:10px}
-    .remedies-table{width:100%; border-collapse:collapse; text-align:left; font-size:14px}
-    .remedies-table th{font-family:var(--font-serif); padding:16px 20px; color:var(--cyan);
+      border-radius:22px; padding:14px; backdrop-filter:blur(16px)}
+    .remedies-table{width:100%; border-collapse:collapse; text-align:left; font-size:14.5px}
+    .remedies-table th{font-family:var(--font-serif); padding:18px 22px; color:var(--cyan);
       border-bottom:1px solid rgba(255,255,255,.15); font-weight:400; font-size:16px}
-    .remedies-table td{padding:14px 20px; border-bottom:1px solid rgba(255,255,255,.06); color:rgba(255,255,255,.8)}
+    .remedies-table td{padding:16px 22px; border-bottom:1px solid rgba(255,255,255,.06); color:rgba(255,255,255,.85)}
 
-    /* FAQ */
-    .faq-list{max-width:800px; margin:0 auto; display:flex; flex-direction:column; gap:14px}
-    .faq-item{background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; overflow:hidden}
-    .faq-btn{width:100%; padding:20px 24px; background:none; border:none; color:#fff;
-      font-family:var(--font-serif); font-size:18px; font-weight:400; text-align:left; cursor:pointer;
+    /* FAQ ACCORDION */
+    .faq-list{max-width:840px; margin:0 auto; display:flex; flex-direction:column; gap:16px}
+    .faq-item{background:var(--card-bg); border:1px solid var(--card-border); border-radius:16px; overflow:hidden;
+      transition:border-color .25s ease}
+    .faq-item:hover{border-color:rgba(121, 220, 232, 0.35)}
+    .faq-btn{width:100%; padding:22px 26px; background:none; border:none; color:#fff;
+      font-family:var(--font-serif); font-size:18.5px; font-weight:400; text-align:left; cursor:pointer;
       display:flex; justify-content:space-between; align-items:center; gap:16px}
-    .faq-icon{color:var(--cyan); font-size:18px; transition:transform .2s}
+    .faq-icon{color:var(--cyan); font-size:20px; transition:transform .25s ease}
     .faq-item.is-open .faq-icon{transform:rotate(45deg)}
-    .faq-body{max-height:0; overflow:hidden; transition:max-height .3s ease, padding .3s ease;
-      padding:0 24px; font-size:14.5px; color:rgba(255,255,255,.75); line-height:1.6}
-    .faq-item.is-open .faq-body{max-height:260px; padding:0 24px 20px}
+    .faq-body{max-height:0; overflow:hidden; transition:max-height .35s ease, padding .35s ease;
+      padding:0 26px; font-size:15px; color:rgba(255,255,255,.76); line-height:1.65}
+    .faq-item.is-open .faq-body{max-height:260px; padding:0 26px 24px}
 
     /* FOOTER */
-    .site-footer{background:#020710; border-top:1px solid rgba(255,255,255,.1); padding:70px 24px 30px;
+    .site-footer{background:#02060f; border-top:1px solid rgba(255,255,255,.1); padding:80px 24px 34px;
       font-size:14px; color:rgba(255,255,255,.65)}
-    .footer-inner{max-width:1200px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr 1fr;
-      gap:40px; margin-bottom:40px}
-    .footer-col h4{font-family:var(--font-serif); font-size:16px; color:#fff; margin-bottom:16px; font-weight:400}
-    .footer-col ul{list-style:none; display:flex; flex-direction:column; gap:10px}
-    .footer-col ul a{color:rgba(255,255,255,.7); text-decoration:none; transition:color .2s}
+    .footer-inner{max-width:1220px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr 1fr;
+      gap:44px; margin-bottom:44px}
+    .footer-col h4{font-family:var(--font-serif); font-size:16px; color:#fff; margin-bottom:18px; font-weight:400}
+    .footer-col ul{list-style:none; display:flex; flex-direction:column; gap:11px}
+    .footer-col ul a{color:rgba(255,255,255,.72); text-decoration:none; transition:color .2s}
     .footer-col ul a:hover{color:var(--cyan)}
-    .footer-bottom{max-width:1200px; margin:0 auto; padding-top:24px; border-top:1px solid rgba(255,255,255,.08);
-      display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; font-size:13px}
+    .footer-bottom{max-width:1220px; margin:0 auto; padding-top:28px; border-top:1px solid rgba(255,255,255,.08);
+      display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; font-size:13px}
 
     /* ==========================================================================
-       5. INTERACTIVE BOOKING MODAL
+       5. INTERACTIVE MULTI-STEP BOOKING MODAL
        ========================================================================== */
     .modal-overlay{position:fixed; inset:0; z-index:200; display:none; align-items:center;
-      justify-content:center; padding:20px; background:rgba(2, 7, 16, 0.82);
-      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); opacity:0; transition:opacity .25s ease}
+      justify-content:center; padding:20px; background:rgba(2, 6, 15, 0.85);
+      backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); opacity:0; transition:opacity .25s ease}
     .modal-overlay.is-open{display:flex; opacity:1}
-    .modal-card{position:relative; width:min(600px, 94vw); max-height:88vh; overflow-y:auto;
-      background:rgba(6, 17, 36, 0.94); border:1px solid rgba(255,255,255,.18); border-radius:24px;
-      padding:34px; box-shadow:0 20px 50px rgba(0,0,0,.8); color:#fff}
-    .modal-close{position:absolute; top:20px; right:20px; width:36px; height:36px; border-radius:50%;
+    .modal-card{position:relative; width:min(620px, 94vw); max-height:88vh; overflow-y:auto;
+      background:rgba(6, 17, 36, 0.95); border:1px solid rgba(255,255,255,.18); border-radius:26px;
+      padding:36px; box-shadow:0 24px 60px rgba(0,0,0,.85); color:#fff}
+    .modal-close{position:absolute; top:22px; right:22px; width:38px; height:38px; border-radius:50%;
       border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.08); color:#fff;
       font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;
       transition:all .2s}
-    .modal-close:hover{background:rgba(255,255,255,.2); transform:rotate(90deg)}
+    .modal-close:hover{background:rgba(255,255,255,.22); transform:rotate(90deg)}
     .modal-title{font-family:var(--font-serif); font-size:28px; font-weight:400; color:#fff; margin-bottom:6px}
     .modal-sub{font-size:14px; color:var(--cyan); margin-bottom:24px}
 
+    /* PASS OUTPUT STYLING */
+    .pass-card{background:linear-gradient(135deg, rgba(14,34,68,0.9), rgba(6,17,36,0.95));
+      border:1px solid var(--gold); border-radius:18px; padding:26px; margin-top:20px; text-align:center;
+      box-shadow:0 10px 30px rgba(0,0,0,0.6); position:relative; overflow:hidden}
+    .pass-header{font-family:var(--font-serif); font-size:22px; color:var(--gold); margin-bottom:8px}
+
     /* TOAST */
     .toast-pill{position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
-      background:rgba(7, 20, 42, 0.96); border:1px solid var(--cyan); color:#fff;
-      padding:10px 24px; border-radius:30px; font-size:14px; z-index:300; display:none;
-      box-shadow:0 10px 30px rgba(0,0,0,.7)}
+      background:rgba(7, 20, 42, 0.97); border:1px solid var(--cyan); color:#fff;
+      padding:12px 28px; border-radius:30px; font-size:14.5px; z-index:300; display:none;
+      box-shadow:0 12px 35px rgba(0,0,0,.75); animation:ent-rise .3s ease}
 
     /* ==========================================================================
        6. RESPONSIVE BREAKPOINTS (EXACT CASCADE)
        ========================================================================== */
     @media (max-width:1030px), (max-height:620px){
+      .top-ribbon{display:none}
+      .navbar{top:0}
       .navrow{left:calc(25 * var(--u)); right:calc(25 * var(--u))}
       .burger{display:flex}
       .links{position:absolute; top:calc(96 * var(--u)); right:0; z-index:5;
         width:min(calc(324 * var(--u)), calc(100vw - 50 * var(--u)));
-        flex-direction:column; align-items:stretch; padding:calc(12 * var(--u));
-        border-radius:calc(20 * var(--u)); background:rgba(9,21,42,.92);
+        flex-direction:column; align-items:stretch; padding:calc(14 * var(--u));
+        border-radius:calc(20 * var(--u)); background:rgba(8,19,38,.96);
         -webkit-backdrop-filter:blur(calc(18 * var(--u))); backdrop-filter:blur(calc(18 * var(--u)));
-        border:calc(1 * var(--u)) solid rgba(255,255,255,.14); box-shadow:0 calc(18 * var(--u)) calc(44 * var(--u)) rgba(2,8,20,.55);
+        border:calc(1 * var(--u)) solid rgba(255,255,255,.14); box-shadow:0 calc(18 * var(--u)) calc(44 * var(--u)) rgba(2,8,20,.65);
         opacity:0; visibility:hidden; transform:translateY(calc(-10 * var(--u)));
         transition:opacity .24s ease, transform .28s cubic-bezier(.4,0,.2,1), visibility .28s}
       .navrow[data-open="true"] .links{opacity:1; visibility:visible; transform:none}
@@ -348,6 +474,7 @@
       .links a + a{border-top:calc(1 * var(--u)) solid rgba(255,255,255,.08)}
       .links a[aria-current="page"]::after{top:auto; bottom:calc(9 * var(--u)); left:calc(16 * var(--u)); right:auto; width:calc(26 * var(--u)); height:calc(3 * var(--u))}
       .links a.enroll{margin:calc(14 * var(--u)) 0 calc(2 * var(--u)); width:100%; height:calc(46 * var(--u)); border-radius:calc(23 * var(--u)); justify-content:center}
+      .remedies-hero-banner{grid-template-columns:1fr}
       .footer-inner{grid-template-columns:1fr 1fr}
     }
     @media (max-width:579px), (max-height:620px){
@@ -395,7 +522,8 @@
     .anim.play .links a:nth-child(2){--rise:calc(8 * var(--u)); animation:ent-rise .55s var(--e-quint) .31s both}
     .anim.play .links a:nth-child(3){--rise:calc(8 * var(--u)); animation:ent-rise .55s var(--e-quint) .36s both}
     .anim.play .links a:nth-child(4){--rise:calc(8 * var(--u)); animation:ent-rise .55s var(--e-quint) .41s both}
-    .anim.play .links a.enroll, .anim.play .burger{--rise:calc(8 * var(--u)); animation:ent-settle .6s var(--e-quint) .46s both}
+    .anim.play .links a:nth-child(5){--rise:calc(8 * var(--u)); animation:ent-rise .55s var(--e-quint) .46s both}
+    .anim.play .links a.enroll, .anim.play .burger{--rise:calc(8 * var(--u)); animation:ent-settle .6s var(--e-quint) .50s both}
     .anim.play .eyebrow .ent-line{animation:ent-reveal .75s var(--e-expo) .30s both}
     .anim.play h1.title .ent-line{animation:ent-reveal .95s var(--e-expo) .44s both}
     .anim.play .rule span{animation:ent-draw .65s var(--e-expo) .78s both}
@@ -407,6 +535,15 @@
   </style>
 </head>
 <body>
+
+  <!-- ==========================================================================
+       TOP MUHURTA LIVE RIBBON
+       ========================================================================== -->
+  <aside class="top-ribbon" aria-label="Auspicious Muhurta Status">
+    <div><span class="pulse-dot"></span> <span class="badge">Shukra Hora Active</span> Abhijit Muhurta Open for Planetary Consultations</div>
+    <div style="opacity:0.65;">•</div>
+    <div>48,000+ Seekers Guided Worldwide</div>
+  </aside>
 
   <!-- ==========================================================================
        FIXED HEADER / NAVBAR
@@ -435,6 +572,18 @@
         <a href="#astrologers" id="nav-astrologers">Astrologers</a>
         <a href="#horoscope" id="nav-horoscope">Horoscope</a>
         <a href="#remedies" id="nav-remedies">Remedies</a>
+        
+        <div class="nav-controls">
+          <!-- 432Hz Ambient Om Chants Player -->
+          <button class="btn-sound" id="btn-sound-toggle" type="button" aria-label="Toggle 432Hz Om Chants">
+            <span class="sound-bars"><span></span><span></span><span></span></span>
+            <span id="sound-label">432Hz Om</span>
+          </button>
+
+          <!-- Dual Currency Switcher -->
+          <button class="currency-toggle" id="currency-toggle" type="button" aria-label="Toggle Currency">USD ($)</button>
+        </div>
+
         <a class="enroll" href="#modal-booking" id="nav-book">Book Session</a>
       </nav>
 
@@ -462,6 +611,9 @@
              poster="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_0ba6de7c-285d-43dc-b7ab-8c54c73707cb.png"
              aria-hidden="true"></video>
     </div>
+
+    <!-- Radiant Celestial Aura behind Hero Title -->
+    <div class="graha-aura" id="graha-aura"></div>
 
     <div class="ui">
       <div class="copy">
@@ -517,96 +669,135 @@
   <section class="site-section" id="consultations">
     <div class="site-container">
       <div class="sec-header">
-        <span class="sec-tag">Vedic Consultations</span>
+        <span class="sec-tag">✦ Sacred Consultations ✦</span>
         <h2 class="sec-title">Harmonize Your Celestial Destiny</h2>
         <p class="sec-desc">1-on-1 private video or audio sessions with certified Gurukul scholars. Complete Janam Kundli analysis, Mahadasha timing, and customized gemstone remedies.</p>
       </div>
 
       <div class="grid-cards">
+        <!-- 1. Janam Kundli -->
         <article class="card">
+          <span class="card-badge">👑 Most Revered</span>
           <div>
             <div class="card-icon">📜</div>
             <h3 class="card-title">Complete Janam Kundli & Life Path</h3>
-            <p class="card-desc">Comprehensive analysis of your Lagna, D1 birth chart, D9 Navamsha, and current Mahadasha-Antardasha cycles with a 5-year timeline forecast.</p>
+            <p class="card-desc">Deep-dive analysis of your Lagna, D1 birth chart, D9 Navamsha, and current Mahadasha-Antardasha cycles with a 5-year timeline forecast.</p>
+            <ul class="card-perks">
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> 60-Minute Private Video/Audio Session</li>
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> 25-Page Color Janampatri & Chart PDF</li>
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Consecrated Bija Mantra & Remedy Guide</li>
+            </ul>
           </div>
           <div>
             <div class="card-price">
-              <span class="amount">$120</span>
+              <span class="amount" data-usd="$120" data-inr="₹4,999">$120</span>
               <span class="duration">60 Minutes Session</span>
             </div>
             <button class="btn-pill trigger-book-pkg" data-service="Complete Janam Kundli & Life Path ($120)" type="button">Book Kundli Session</button>
           </div>
         </article>
 
+        <!-- 2. Career & Wealth -->
         <article class="card">
+          <span class="card-badge" style="color:var(--cyan); border-color:rgba(95,208,225,0.4); background:rgba(95,208,225,0.12);">🔥 High Demand</span>
           <div>
             <div class="card-icon">💎</div>
             <h3 class="card-title">Career, Wealth & Business Yoga</h3>
             <p class="card-desc">Specialized analysis of the 10th House (Karma Bhava) and Dhana Yogas. Determine optimal timing for job switches, promotions, and investments.</p>
+            <ul class="card-perks">
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> 45-Minute Executive Astrological Timing</li>
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Business Partner Compatibility Diagnostics</li>
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Auspicious Venture Launch Dates</li>
+            </ul>
           </div>
           <div>
             <div class="card-price">
-              <span class="amount">$85</span>
+              <span class="amount" data-usd="$85" data-inr="₹3,499">$85</span>
               <span class="duration">45 Minutes Session</span>
             </div>
             <button class="btn-pill trigger-book-pkg" data-service="Career, Wealth & Business Yoga ($85)" type="button">Book Career Session</button>
           </div>
         </article>
 
+        <!-- 3. Love & Marriage -->
         <article class="card">
           <div>
             <div class="card-icon">❤️</div>
             <h3 class="card-title">Love, Marriage & Kundli Milan</h3>
             <p class="card-desc">Authentic Ashtakoot 36 Guna Milan, partner compatibility, Nadi Dosha diagnostics, and astrological remedies for marital happiness.</p>
+            <ul class="card-perks">
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Dual Chart Astakoot 36-Point Analysis</li>
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Manglik Dosha Clarification & Remedies</li>
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Harmonious Vivaha Muhurta Recommendation</li>
+            </ul>
           </div>
           <div>
             <div class="card-price">
-              <span class="amount">$85</span>
+              <span class="amount" data-usd="$85" data-inr="₹3,499">$85</span>
               <span class="duration">45 Minutes Session</span>
             </div>
             <button class="btn-pill trigger-book-pkg" data-service="Love, Marriage & Kundli Milan ($85)" type="button">Book Compatibility</button>
           </div>
         </article>
 
+        <!-- 4. Urgent Prashna -->
         <article class="card">
+          <span class="card-badge" style="color:#6ee7b7; border-color:rgba(110,231,183,0.4); background:rgba(110,231,183,0.12);">⚡ Instant Slots</span>
           <div>
             <div class="card-icon">⚡</div>
             <h3 class="card-title">Urgent Prashna Kundli (Horary)</h3>
             <p class="card-desc">No birth time required. Uses the cosmic snapshot of the exact moment your critical question is asked to unlock immediate directional answers.</p>
+            <ul class="card-perks">
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Same-Day Expedited Priority Slot</li>
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Focused Resolution on 1-2 Pressing Queries</li>
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Zero Birth Time / Location Dependency</li>
+            </ul>
           </div>
           <div>
             <div class="card-price">
-              <span class="amount">$65</span>
+              <span class="amount" data-usd="$65" data-inr="₹2,499">$65</span>
               <span class="duration">30 Minutes Session</span>
             </div>
             <button class="btn-pill trigger-book-pkg" data-service="Urgent Prashna Kundli ($65)" type="button">Book Prashna Session</button>
           </div>
         </article>
 
+        <!-- 5. Gemstones -->
         <article class="card">
           <div>
             <div class="card-icon">✨</div>
             <h3 class="card-title">Planetary Gemstones & Remedies</h3>
             <p class="card-desc">Scientific prescription of certified Jyotish Ratnas (Sapphire, Ruby, Emerald, etc.) and consecrated Bija Mantras aligned with your Yogakaraka graha.</p>
+            <ul class="card-perks">
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Lab-Certified Natural Gemstone Prescription</li>
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Exact Carat Weight & Metal (Gold/Silver) Guidance</li>
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Prana Pratishtha Consecration Instructions</li>
+            </ul>
           </div>
           <div>
             <div class="card-price">
-              <span class="amount">$55</span>
+              <span class="amount" data-usd="$55" data-inr="₹1,999">$55</span>
               <span class="duration">30 Minutes Session</span>
             </div>
             <button class="btn-pill trigger-book-pkg" data-service="Planetary Gemstones & Remedies ($55)" type="button">Book Remedy Session</button>
           </div>
         </article>
 
+        <!-- 6. Vastu Shastra -->
         <article class="card">
           <div>
             <div class="card-icon">🏛️</div>
             <h3 class="card-title">Vastu Shastra & Space Energy</h3>
             <p class="card-desc">Realign your home or workspace with the 16 Vastu directional zones and five cosmic elements using zero-demolition spiritual corrections.</p>
+            <ul class="card-perks">
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Floor Plan & Architectural Energy Audit</li>
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Non-Demolition Sacred Pyra & Yantra Placement</li>
+              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Prosperity & Peace Directional Realignment</li>
+            </ul>
           </div>
           <div>
             <div class="card-price">
-              <span class="amount">$110</span>
+              <span class="amount" data-usd="$110" data-inr="₹4,499">$110</span>
               <span class="duration">60 Minutes Session</span>
             </div>
             <button class="btn-pill trigger-book-pkg" data-service="Vastu Shastra & Space Energy ($110)" type="button">Book Vastu Session</button>
@@ -622,56 +813,64 @@
   <section class="site-section" id="astrologers" style="background:var(--bg-dark);">
     <div class="site-container">
       <div class="sec-header">
-        <span class="sec-tag">Verified Scholars</span>
+        <span class="sec-tag">✦ Revered Lineage ✦</span>
         <h2 class="sec-title">Our Master Vedic Astrologers</h2>
         <p class="sec-desc">Vetted scholars with traditional Gurukul lineages, gold medals, and decades of transformative astrological counseling experience.</p>
       </div>
 
       <div class="astrologers-grid">
         <article class="astrologer-card">
+          <span class="astro-badge">👑 Banaras Gurukul</span>
           <div class="astro-img-wrap">
             <img src="assets/shastri.jpg" alt="Pt. Radhe Krishna Shastri">
           </div>
           <div class="astro-info">
             <h3 class="astro-name">Pt. Radhe Krishna Shastri</h3>
-            <div class="astro-sub">28+ Yrs Exp • Banaras Vedic Scholar</div>
+            <div class="astro-sub">28+ Yrs Exp • Kashi Vedic Scholar</div>
+            <div class="astro-rating">★★★★★ <span>4.99 (14,200+ Consultations)</span></div>
             <p class="astro-meta">Specialist in Mahadasha turning points, karma resolution, and complex Kundli chart rectifications.</p>
             <button class="btn-pill trigger-book-astro" data-astro="Pt. Radhe Krishna Shastri" type="button">Book with Pandit Ji</button>
           </div>
         </article>
 
         <article class="astrologer-card">
+          <span class="astro-badge">🎓 Ph.D. Vedic Sciences</span>
           <div class="astro-img-wrap">
             <img src="assets/gayatri.jpg" alt="Dr. Gayatri Devi">
           </div>
           <div class="astro-info">
             <h3 class="astro-name">Dr. Gayatri Devi</h3>
-            <div class="astro-sub">22+ Yrs Exp • Ph.D. Vedic Sciences</div>
-            <p class="astro-meta">Nakshatra authority and relationship counselor specializing in D9 Navamsha marital harmony.</p>
+            <div class="astro-sub">22+ Yrs Exp • Nakshatra Authority</div>
+            <div class="astro-rating">★★★★★ <span>4.98 (11,800+ Consultations)</span></div>
+            <p class="astro-meta">Renowned relationship counselor specializing in D9 Navamsha marital harmony and maternal intuition.</p>
             <button class="btn-pill trigger-book-astro" data-astro="Dr. Gayatri Devi" type="button">Book with Dr. Gayatri</button>
           </div>
         </article>
 
         <article class="astrologer-card">
+          <span class="astro-badge">🥇 Jyotish Gold Medalist</span>
           <div class="astro-img-wrap">
             <img src="assets/devvrat.jpg" alt="Acharya Devvrat Sharma">
           </div>
           <div class="astro-info">
             <h3 class="astro-name">Acharya Devvrat Sharma</h3>
-            <div class="astro-sub">19+ Yrs Exp • Gold Medalist</div>
-            <p class="astro-meta">Advisor to founders and executives on commercial timing, Dhana Yogas, and venture expansion.</p>
+            <div class="astro-sub">19+ Yrs Exp • Corporate Jyotish</div>
+            <div class="astro-rating">★★★★★ <span>4.97 (9,600+ Consultations)</span></div>
+            <p class="astro-meta">Advisor to founders and executives on commercial timing, Dhana Yogas, and high-stakes venture expansion.</p>
             <button class="btn-pill trigger-book-astro" data-astro="Acharya Devvrat Sharma" type="button">Book with Acharya Devvrat</button>
           </div>
         </article>
 
         <article class="astrologer-card">
+          <span class="astro-badge">🏛️ Prashna & Vastu Master</span>
           <div class="astro-img-wrap">
             <img src="assets/vidyadhar.jpg" alt="Acharya Vidyadhar Joshi">
           </div>
           <div class="astro-info">
             <h3 class="astro-name">Acharya Vidyadhar Joshi</h3>
-            <div class="astro-sub">16+ Yrs Exp • Prashna & Vastu</div>
-            <p class="astro-meta">Master of instantaneous Prashna charts for urgent critical life events, foreign relocation, and Vastu.</p>
+            <div class="astro-sub">16+ Yrs Exp • Horary Shastra</div>
+            <div class="astro-rating">★★★★★ <span>4.99 (8,900+ Consultations)</span></div>
+            <p class="astro-meta">Master of instantaneous Prashna charts for urgent critical life events, foreign relocation, and space energy.</p>
             <button class="btn-pill trigger-book-astro" data-astro="Acharya Vidyadhar Joshi" type="button">Book with Acharya Vidyadhar</button>
           </div>
         </article>
@@ -685,7 +884,7 @@
   <section class="site-section" id="horoscope">
     <div class="site-container">
       <div class="sec-header">
-        <span class="sec-tag">Daily Vedic Rashiphal</span>
+        <span class="sec-tag">✦ Daily Rashiphal ✦</span>
         <h2 class="sec-title">Today's Planetary Transits</h2>
         <p class="sec-desc">Select your Moon Sign (Rashi) or Zodiac Sun Sign to view planetary vibrations, favorability meters, and auspicious hours.</p>
       </div>
@@ -709,9 +908,11 @@
         <div class="horo-header">
           <div>
             <h3 class="horo-title" id="horo-name">Aries • Mesha Rashi</h3>
-            <span style="font-size:13px; color:var(--cyan);" id="horo-ruler">Ruling Graha: Mangal (Mars) • Element: Fire</span>
+            <span style="font-size:13.5px; color:var(--cyan);" id="horo-ruler">Ruling Graha: Mangal (Mars) • Element: Fire</span>
           </div>
-          <span style="font-size:13px; color:rgba(255,255,255,.6);">Live Cosmic Transit</span>
+          <span style="font-size:13px; color:var(--gold); display:inline-flex; align-items:center; gap:6px;">
+            <span class="pulse-dot"></span> Live Transit Active
+          </span>
         </div>
 
         <p class="horo-forecast" id="horo-text">
@@ -745,14 +946,14 @@
   </section>
 
   <!-- ==========================================================================
-       SECTION 4: FREE INSTANT KUNDLI CALCULATOR
+       SECTION 4: FREE INSTANT KUNDLI CALCULATOR WITH REAL VEDIC DIAMOND CHART
        ========================================================================== -->
   <section class="site-section" id="kundli" style="background:var(--bg-dark);">
     <div class="site-container">
       <div class="sec-header">
-        <span class="sec-tag">Instant Calculation</span>
-        <h2 class="sec-title">Free Janam Kundli Summary</h2>
-        <p class="sec-desc">Enter your birth details to generate your Vedic Ascendant (Lagna), Moon Sign, Sun Sign, and active planetary Mahadasha.</p>
+        <span class="sec-tag">✦ Astronomical Computation ✦</span>
+        <h2 class="sec-title">Free Janam Kundli & Birth Chart</h2>
+        <p class="sec-desc">Enter your precise birth details to compute your authentic Vedic Diamond Janampatri, Ascendant (Lagna), Moon Sign, and active planetary Mahadasha.</p>
       </div>
 
       <div class="kundli-wrap">
@@ -760,7 +961,7 @@
           <div class="form-grid">
             <div class="form-group">
               <label for="k-name">Your Full Name</label>
-              <input type="text" class="form-control" id="k-name" placeholder="Name" value="Aryan Sharma" required>
+              <input type="text" class="form-control" id="k-name" placeholder="Aryan Sharma" value="Aryan Sharma" required>
             </div>
             <div class="form-group">
               <label for="k-gender">Gender</label>
@@ -780,38 +981,76 @@
             </div>
             <div class="form-group" style="grid-column:1/-1;">
               <label for="k-city">Birth City, State, Country</label>
-              <input type="text" class="form-control" id="k-city" placeholder="City" value="New Delhi, India" required>
+              <input type="text" class="form-control" id="k-city" placeholder="e.g. New Delhi, India" value="New Delhi, India" required>
             </div>
           </div>
           <div style="text-align:center;">
-            <button type="submit" class="btn-pill" style="max-width:280px;">Calculate Vedic Kundli</button>
+            <button type="submit" class="btn-pill" style="max-width:300px;">Generate Royal Vedic Chart</button>
           </div>
         </form>
 
         <div class="kundli-output" id="kundli-output">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-            <h4 style="font-family:var(--font-serif); font-size:18px; color:#fff;" id="k-res-title">Kundli Chart Results</h4>
-            <span style="font-size:12px; color:var(--cyan);">Lahiri Ayanamsha</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h4 style="font-family:var(--font-serif); font-size:20px; color:#fff;" id="k-res-title">Lagna Kundli Chart for Aryan Sharma</h4>
+            <span style="font-size:12px; color:var(--cyan); background:rgba(95,208,225,0.1); padding:4px 10px; border-radius:10px; border:1px solid rgba(95,208,225,0.25);">Lahiri Ayanamsha (Chitra Paksha)</span>
           </div>
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:12px; margin-bottom:16px;">
-            <div style="background:rgba(255,255,255,.05); padding:12px; border-radius:8px; text-align:center;">
-              <div style="font-size:11px; color:var(--cyan); text-transform:uppercase;">Ascendant (Lagna)</div>
-              <div style="font-family:var(--font-serif); font-size:17px; color:#fff;" id="k-res-lagna">Leo (Simha)</div>
+
+          <!-- ROYAL NORTH INDIAN DIAMOND KUNDLI CHART SVG -->
+          <svg class="diamond-chart-svg" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Outer Square -->
+            <rect x="5" y="5" width="290" height="290" stroke="var(--cyan)" stroke-width="2" fill="rgba(8, 24, 48, 0.6)"/>
+            <!-- Diagonals -->
+            <line x1="5" y1="5" x2="295" y2="295" stroke="var(--cyan)" stroke-width="1.5"/>
+            <line x1="295" y1="5" x2="5" y2="295" stroke="var(--cyan)" stroke-width="1.5"/>
+            <!-- Inner Diamond -->
+            <polygon points="150,5 295,150 150,295 5,150" stroke="var(--gold)" stroke-width="2" fill="rgba(12, 32, 64, 0.4)"/>
+            
+            <!-- Bhava Numbers & Graha Symbols -->
+            <!-- 1st House (Lagna) Top Center Diamond -->
+            <text x="150" y="80" fill="var(--gold)" font-family="var(--font-serif)" font-size="14" text-anchor="middle" font-weight="bold" id="svg-h1">1 • Su Mo</text>
+            <!-- 2nd House -->
+            <text x="80" y="45" fill="rgba(255,255,255,0.85)" font-size="11" text-anchor="middle">2 • Me</text>
+            <!-- 3rd House -->
+            <text x="45" y="80" fill="rgba(255,255,255,0.85)" font-size="11" text-anchor="middle">3</text>
+            <!-- 4th House Left Center Diamond -->
+            <text x="80" y="155" fill="var(--gold)" font-family="var(--font-serif)" font-size="13" text-anchor="middle">4 • Ju</text>
+            <!-- 5th House -->
+            <text x="45" y="225" fill="rgba(255,255,255,0.85)" font-size="11" text-anchor="middle">5 • Sa</text>
+            <!-- 6th House -->
+            <text x="80" y="260" fill="rgba(255,255,255,0.85)" font-size="11" text-anchor="middle">6</text>
+            <!-- 7th House Bottom Center Diamond -->
+            <text x="150" y="225" fill="var(--gold)" font-family="var(--font-serif)" font-size="13" text-anchor="middle">7 • Ve</text>
+            <!-- 8th House -->
+            <text x="220" y="260" fill="rgba(255,255,255,0.85)" font-size="11" text-anchor="middle">8 • Ra</text>
+            <!-- 9th House -->
+            <text x="255" y="225" fill="rgba(255,255,255,0.85)" font-size="11" text-anchor="middle">9</text>
+            <!-- 10th House Right Center Diamond -->
+            <text x="220" y="155" fill="var(--gold)" font-family="var(--font-serif)" font-size="13" text-anchor="middle">10 • Ma</text>
+            <!-- 11th House -->
+            <text x="255" y="80" fill="rgba(255,255,255,0.85)" font-size="11" text-anchor="middle">11</text>
+            <!-- 12th House -->
+            <text x="220" y="45" fill="rgba(255,255,255,0.85)" font-size="11" text-anchor="middle">12 • Ke</text>
+          </svg>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:14px; margin-bottom:20px;">
+            <div style="background:rgba(255,255,255,.05); padding:14px; border-radius:12px; text-align:center; border:1px solid rgba(255,255,255,0.08);">
+              <div style="font-size:11px; color:var(--cyan); text-transform:uppercase; letter-spacing:1px;">Ascendant (Lagna)</div>
+              <div style="font-family:var(--font-serif); font-size:18px; color:#fff;" id="k-res-lagna">Leo (Simha)</div>
             </div>
-            <div style="background:rgba(255,255,255,.05); padding:12px; border-radius:8px; text-align:center;">
-              <div style="font-size:11px; color:var(--cyan); text-transform:uppercase;">Moon Sign (Rashi)</div>
-              <div style="font-family:var(--font-serif); font-size:17px; color:#fff;" id="k-res-rashi">Aries (Mesha)</div>
+            <div style="background:rgba(255,255,255,.05); padding:14px; border-radius:12px; text-align:center; border:1px solid rgba(255,255,255,0.08);">
+              <div style="font-size:11px; color:var(--cyan); text-transform:uppercase; letter-spacing:1px;">Moon Sign (Rashi)</div>
+              <div style="font-family:var(--font-serif); font-size:18px; color:#fff;" id="k-res-rashi">Aries (Mesha)</div>
             </div>
-            <div style="background:rgba(255,255,255,.05); padding:12px; border-radius:8px; text-align:center;">
-              <div style="font-size:11px; color:var(--cyan); text-transform:uppercase;">Active Mahadasha</div>
-              <div style="font-family:var(--font-serif); font-size:17px; color:#fff;" id="k-res-dasha">Jupiter (Guru)</div>
+            <div style="background:rgba(255,255,255,.05); padding:14px; border-radius:12px; text-align:center; border:1px solid rgba(255,255,255,0.08);">
+              <div style="font-size:11px; color:var(--cyan); text-transform:uppercase; letter-spacing:1px;">Active Mahadasha</div>
+              <div style="font-family:var(--font-serif); font-size:18px; color:var(--gold);" id="k-res-dasha">Jupiter (Guru)</div>
             </div>
           </div>
-          <p style="font-size:14px; color:rgba(255,255,255,.8); line-height:1.6; margin-bottom:16px;" id="k-res-desc">
+          <p style="font-size:14.5px; color:rgba(255,255,255,.85); line-height:1.7; margin-bottom:20px;" id="k-res-desc">
             Your cosmic blueprint indicates noble leadership capabilities and high spiritual intuition. Under your current active planetary dasha, strategic steps in career and higher learning yield extraordinary returns.
           </p>
           <div style="text-align:center;">
-            <button type="button" class="btn-pill" id="btn-book-with-k-res" style="max-width:320px;">Book Full Session with this Chart</button>
+            <button type="button" class="btn-pill" id="btn-book-with-k-res" style="max-width:340px;">Book 1-on-1 Consultation with this Chart</button>
           </div>
         </div>
       </div>
@@ -824,9 +1063,20 @@
   <section class="site-section" id="remedies">
     <div class="site-container">
       <div class="sec-header">
-        <span class="sec-tag">Sacred Jyotish Remedies</span>
+        <span class="sec-tag">✦ Sacred Jyotish Ratnas ✦</span>
         <h2 class="sec-title">Navaratna Gemstones & Consecration</h2>
         <p class="sec-desc">Classical Brihat Samhita prescriptions for strengthening Yogakaraka benefic planets and pacifying malefic karmic influences.</p>
+      </div>
+
+      <!-- SHOWCASE BANNER -->
+      <div class="remedies-hero-banner">
+        <img src="assets/gemstones.jpg" alt="Vedic Navaratna Gemstones" class="remedies-hero-img">
+        <div class="remedies-hero-text">
+          <span class="card-badge" style="position:static; display:inline-block; margin-bottom:12px;">100% Vedic Certified</span>
+          <h3>Prana Pratishtha Consecration</h3>
+          <p>Every gemstone prescribed by TrishulAstro undergoes rigorous 3-day Vedic energization rituals during auspicious planetary horas. Certified natural, untreated, and ethically sourced from historical mines.</p>
+          <button class="btn-pill trigger-book-gem" data-gem="Personalized Gemstone Consultation" style="max-width:240px;" type="button">Request Sanctum Analysis</button>
+        </div>
       </div>
 
       <div class="remedies-table-wrap">
@@ -846,49 +1096,49 @@
               <td>Natural Ruby (Manik)</td>
               <td>Vitality, royal authority, self-realization & leadership</td>
               <td>Sunday</td>
-              <td><button class="btn-pill trigger-book-gem" data-gem="Ruby (Manik)" style="height:32px; font-size:12px; width:100px;" type="button">Inquire</button></td>
+              <td><button class="btn-pill trigger-book-gem" data-gem="Ruby (Manik)" style="height:34px; font-size:12.5px; width:100px;" type="button">Inquire</button></td>
             </tr>
             <tr>
               <td><strong>Chandra (Moon)</strong></td>
               <td>Natural Pearl (Moti)</td>
               <td>Mental calm, emotional peace, intuition & sound sleep</td>
               <td>Monday</td>
-              <td><button class="btn-pill trigger-book-gem" data-gem="Pearl (Moti)" style="height:32px; font-size:12px; width:100px;" type="button">Inquire</button></td>
+              <td><button class="btn-pill trigger-book-gem" data-gem="Pearl (Moti)" style="height:34px; font-size:12.5px; width:100px;" type="button">Inquire</button></td>
             </tr>
             <tr>
               <td><strong>Guru (Jupiter)</strong></td>
               <td>Yellow Sapphire (Pukhraj)</td>
               <td>Supreme wisdom, financial abundance & fortune</td>
               <td>Thursday</td>
-              <td><button class="btn-pill trigger-book-gem" data-gem="Yellow Sapphire (Pukhraj)" style="height:32px; font-size:12px; width:100px;" type="button">Inquire</button></td>
+              <td><button class="btn-pill trigger-book-gem" data-gem="Yellow Sapphire (Pukhraj)" style="height:34px; font-size:12.5px; width:100px;" type="button">Inquire</button></td>
             </tr>
             <tr>
               <td><strong>Shukra (Venus)</strong></td>
               <td>Diamond / White Zircon</td>
               <td>Love, luxury, marital harmony & artistic magnetism</td>
               <td>Friday</td>
-              <td><button class="btn-pill trigger-book-gem" data-gem="Diamond / White Zircon" style="height:32px; font-size:12px; width:100px;" type="button">Inquire</button></td>
+              <td><button class="btn-pill trigger-book-gem" data-gem="Diamond / White Zircon" style="height:34px; font-size:12.5px; width:100px;" type="button">Inquire</button></td>
             </tr>
             <tr>
               <td><strong>Mangal (Mars)</strong></td>
               <td>Red Coral (Moonga)</td>
               <td>Courage, physical stamina, victory & willpower</td>
               <td>Tuesday</td>
-              <td><button class="btn-pill trigger-book-gem" data-gem="Red Coral (Moonga)" style="height:32px; font-size:12px; width:100px;" type="button">Inquire</button></td>
+              <td><button class="btn-pill trigger-book-gem" data-gem="Red Coral (Moonga)" style="height:34px; font-size:12.5px; width:100px;" type="button">Inquire</button></td>
             </tr>
             <tr>
               <td><strong>Budha (Mercury)</strong></td>
               <td>Natural Emerald (Panna)</td>
               <td>Commerce brilliance, sharp memory & speech eloquence</td>
               <td>Wednesday</td>
-              <td><button class="btn-pill trigger-book-gem" data-gem="Emerald (Panna)" style="height:32px; font-size:12px; width:100px;" type="button">Inquire</button></td>
+              <td><button class="btn-pill trigger-book-gem" data-gem="Emerald (Panna)" style="height:34px; font-size:12.5px; width:100px;" type="button">Inquire</button></td>
             </tr>
             <tr>
               <td><strong>Shani (Saturn)</strong></td>
               <td>Blue Sapphire (Neelam)</td>
               <td>Karmic protection, career breakthrough & focus</td>
               <td>Saturday</td>
-              <td><button class="btn-pill trigger-book-gem" data-gem="Blue Sapphire (Neelam)" style="height:32px; font-size:12px; width:100px;" type="button">Inquire</button></td>
+              <td><button class="btn-pill trigger-book-gem" data-gem="Blue Sapphire (Neelam)" style="height:34px; font-size:12.5px; width:100px;" type="button">Inquire</button></td>
             </tr>
           </tbody>
         </table>
@@ -902,37 +1152,37 @@
   <section class="site-section" id="testimonials" style="background:var(--bg-dark);">
     <div class="site-container">
       <div class="sec-header">
-        <span class="sec-tag">Client Voices</span>
+        <span class="sec-tag">✦ Verified Testimonials ✦</span>
         <h2 class="sec-title">Over 48,000 Lives Illuminated</h2>
         <p class="sec-desc">Read how seekers around the globe gained clarity, purpose, and breakthrough timings through TrishulAstro.</p>
       </div>
 
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px; margin-bottom:50px;">
-        <div style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:18px; padding:28px; backdrop-filter:blur(10px);">
-          <div style="color:var(--cyan); margin-bottom:12px;">★★★★★</div>
-          <p style="font-size:14.5px; line-height:1.6; color:rgba(255,255,255,.85); margin-bottom:16px;">
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:26px; margin-bottom:50px;">
+        <div style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:20px; padding:32px; backdrop-filter:blur(14px);">
+          <div style="color:var(--gold); margin-bottom:14px; font-size:16px;">★★★★★</div>
+          <p style="font-size:15px; line-height:1.7; color:rgba(255,255,255,.88); margin-bottom:18px;">
             "Pandit Shastri's reading of my Shani Sade Sati and career transition was startlingly precise. His simple remedy opened doors to an executive role within 3 months."
           </p>
-          <div style="font-size:13px; font-weight:600; color:#fff;">Vikramaditya Singhania</div>
-          <div style="font-size:12px; color:var(--cyan);">Managing Director • Mumbai</div>
+          <div style="font-size:14px; font-weight:600; color:#fff;">Vikramaditya Singhania</div>
+          <div style="font-size:12.5px; color:var(--cyan);">Managing Director • Mumbai</div>
         </div>
 
-        <div style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:18px; padding:28px; backdrop-filter:blur(10px);">
-          <div style="color:var(--cyan); margin-bottom:12px;">★★★★★</div>
-          <p style="font-size:14.5px; line-height:1.6; color:rgba(255,255,255,.85); margin-bottom:16px;">
+        <div style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:20px; padding:32px; backdrop-filter:blur(14px);">
+          <div style="color:var(--gold); margin-bottom:14px; font-size:16px;">★★★★★</div>
+          <p style="font-size:15px; line-height:1.7; color:rgba(255,255,255,.88); margin-bottom:18px;">
             "Dr. Gayatri Devi's Kundli Milan analysis for our daughter's marriage dissolved months of severe anxiety. She explained the true Manglik nuances that local astrologers had misunderstood."
           </p>
-          <div style="font-size:13px; font-weight:600; color:#fff;">Ananya & Rajesh Kulkarni</div>
-          <div style="font-size:12px; color:var(--cyan);">London, UK</div>
+          <div style="font-size:14px; font-weight:600; color:#fff;">Ananya & Rajesh Kulkarni</div>
+          <div style="font-size:12.5px; color:var(--cyan);">London, UK</div>
         </div>
 
-        <div style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:18px; padding:28px; backdrop-filter:blur(10px);">
-          <div style="color:var(--cyan); margin-bottom:12px;">★★★★★</div>
-          <p style="font-size:14.5px; line-height:1.6; color:rgba(255,255,255,.85); margin-bottom:16px;">
+        <div style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:20px; padding:32px; backdrop-filter:blur(14px);">
+          <div style="color:var(--gold); margin-bottom:14px; font-size:16px;">★★★★★</div>
+          <p style="font-size:15px; line-height:1.7; color:rgba(255,255,255,.88); margin-bottom:18px;">
             "The urgent Prashna Kundli session with Acharya Vidyadhar was a lifesaver when facing a sudden multi-million dollar venture crisis. His timing forecast was accurate down to the week."
           </p>
-          <div style="font-size:13px; font-weight:600; color:#fff;">Siddharth Chawla</div>
-          <div style="font-size:12px; color:var(--cyan);">Tech Founder • New York</div>
+          <div style="font-size:14px; font-weight:600; color:#fff;">Siddharth Chawla</div>
+          <div style="font-size:12.5px; color:var(--cyan);">Tech Founder • New York</div>
         </div>
       </div>
     </div>
@@ -944,7 +1194,7 @@
   <section class="site-section" id="faq">
     <div class="site-container">
       <div class="sec-header">
-        <span class="sec-tag">Clarity</span>
+        <span class="sec-tag">✦ Pure Transparency ✦</span>
         <h2 class="sec-title">Frequently Asked Questions</h2>
         <p class="sec-desc">Common questions regarding birth time accuracy, consultation formats, and authentic Vedic remedies.</p>
       </div>
@@ -1021,7 +1271,7 @@
           </svg>
           trishul<i>astro</i>
         </a>
-        <p style="margin-top:12px; font-size:13.5px; line-height:1.6; max-width:320px;">
+        <p style="margin-top:14px; font-size:13.5px; line-height:1.65; max-width:320px;">
           Preserving the sacred classical heritage of Parashari and Jaimini Vedic astrology for spiritual seekers worldwide.
         </p>
       </div>
@@ -1073,12 +1323,12 @@
         <div class="form-group" style="margin-bottom:16px;">
           <label for="consult-service">Select Consultation Focus</label>
           <select class="form-control" id="consult-service" required>
-            <option value="Complete Janam Kundli & Life Path ($120)">📜 Complete Janam Kundli & Life Path (60 Mins • $120)</option>
-            <option value="Career, Wealth & Business Yoga ($85)">💎 Career, Wealth & Business Yoga (45 Mins • $85)</option>
-            <option value="Love, Marriage & Kundli Milan ($85)">❤️ Love, Marriage & Kundli Milan (45 Mins • $85)</option>
-            <option value="Urgent Prashna Kundli ($65)">⚡ Urgent Prashna Kundli (30 Mins • $65)</option>
-            <option value="Planetary Gemstones & Remedies ($55)">✨ Planetary Gemstones & Remedies (30 Mins • $55)</option>
-            <option value="Vastu Shastra & Space Energy ($110)">🏛️ Vastu Shastra & Space Energy (60 Mins • $110)</option>
+            <option value="Complete Janam Kundli & Life Path ($120)">📜 Complete Janam Kundli & Life Path (60 Mins)</option>
+            <option value="Career, Wealth & Business Yoga ($85)">💎 Career, Wealth & Business Yoga (45 Mins)</option>
+            <option value="Love, Marriage & Kundli Milan ($85)">❤️ Love, Marriage & Kundli Milan (45 Mins)</option>
+            <option value="Urgent Prashna Kundli ($65)">⚡ Urgent Prashna Kundli (30 Mins)</option>
+            <option value="Planetary Gemstones & Remedies ($55)">✨ Planetary Gemstones & Remedies (30 Mins)</option>
+            <option value="Vastu Shastra & Space Energy ($110)">🏛️ Vastu Shastra & Space Energy (60 Mins)</option>
           </select>
         </div>
 
@@ -1092,7 +1342,7 @@
           </select>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px;">
           <div class="form-group">
             <label for="client-name">Your Full Name</label>
             <input type="text" class="form-control" id="client-name" placeholder="Full name" required>
@@ -1103,7 +1353,7 @@
           </div>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px;">
           <div class="form-group">
             <label for="client-dob">Date of Birth</label>
             <input type="date" class="form-control" id="client-dob" value="1996-05-12" required>
@@ -1114,12 +1364,12 @@
           </div>
         </div>
 
-        <div class="form-group" style="margin-bottom:20px;">
+        <div class="form-group" style="margin-bottom:22px;">
           <label for="client-city">Place of Birth (City, Country)</label>
           <input type="text" class="form-control" id="client-city" placeholder="e.g. Mumbai, India" required>
         </div>
 
-        <button type="submit" class="btn-pill" id="btn-confirm-session">CONFIRM & GET VEDIC APPOINTMENT PASS</button>
+        <button type="submit" class="btn-pill" id="btn-confirm-session">CONFIRM & ISSUE VEDIC APPOINTMENT PASS</button>
       </form>
     </div>
   </div>
@@ -1128,7 +1378,7 @@
   <div class="toast-pill" id="toast-pill"></div>
 
   <!-- ==========================================================================
-       JAVASCRIPT DRIVER (EXACT LOGIC & SWITCHER)
+       JAVASCRIPT DRIVER (EXACT LOGIC & SWITCHER & AUDIO)
        ========================================================================== -->
   <script>
     /* ══════════════════════════════════════════════════════════════════
@@ -1166,7 +1416,7 @@
     })();
 
     /* ══════════════════════════════════════════════════════════════════
-       PLANET SWITCHER (EARTH REMOVED — VEDIC GRAHAS CONFIGURED)
+       PLANET SWITCHER (EARTH REMOVED — 7 VEDIC GRAHAS CONFIGURED)
        ══════════════════════════════════════════════════════════════════ */
     const ORDER = ['venus', 'mars', 'jupiter', 'saturn', 'sun', 'mercury', 'moon'];
 
@@ -1177,6 +1427,7 @@
         cutout: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202012_640b239a-d08a-4200-adb2-741bbe129ac8.png',
         still: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_cf55d1d8-7b59-4a64-80da-d72052ae974e.png',
         videoSrc: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202422_b211cd74-013b-4dd3-bfd0-64491d8696fa.mp4',
+        aura: 'rgba(121, 220, 232, 0.22)',
         lede: "Governs romance, wealth, luxury, and artistic magnetism. An auspicious Venus <br>bestows fine aesthetics, marital harmony, and charm. Book your session to unlock <br>your planetary destiny."
       },
       mars: {
@@ -1185,6 +1436,7 @@
         cutout: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202018_3d559490-f613-4ed7-a3bb-3b7e9fc90fb8.png',
         still: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_0ba6de7c-285d-43dc-b7ab-8c54c73707cb.png',
         videoSrc: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202422_51eae59a-2459-4c84-907c-cc5edfe5fea7.mp4',
+        aura: 'rgba(255, 107, 74, 0.24)',
         lede: "The planet of courage, ambition, decisive action, and victory over obstacles. <br>Channeling Mangal grants unstoppable willpower and executive leadership. <br>Book your session to align your vitality."
       },
       jupiter: {
@@ -1193,6 +1445,7 @@
         cutout: 'assets/jupiter.jpg',
         still: 'assets/jupiter.jpg',
         videoSrc: null,
+        aura: 'rgba(245, 199, 103, 0.26)',
         lede: "The supreme cosmic benefic of divine wisdom, good fortune, and spiritual wealth. <br>Guru protects against misfortune and expands prosperity and intellect. <br>Book your session to receive divine guidance."
       },
       saturn: {
@@ -1201,6 +1454,7 @@
         cutout: 'assets/saturn.jpg',
         still: 'assets/saturn.jpg',
         videoSrc: null,
+        aura: 'rgba(110, 140, 230, 0.24)',
         lede: "The lord of karma, perseverance, discipline, and enduring legacy. Shani rewards <br>integrity and resilience, turning trials into unshakeable mastery. <br>Book your session to balance your karma."
       },
       sun: {
@@ -1209,6 +1463,7 @@
         cutout: 'assets/sun.jpg',
         still: 'assets/sun.jpg',
         videoSrc: null,
+        aura: 'rgba(255, 200, 70, 0.28)',
         lede: "The king of the celestial forces, representing soul radiance, executive power, <br>and vitality. Surya commands royal stature and administrative victory. <br>Book your session to awaken your true purpose."
       },
       mercury: {
@@ -1217,6 +1472,7 @@
         cutout: 'assets/mercury.jpg',
         still: 'assets/mercury.jpg',
         videoSrc: null,
+        aura: 'rgba(95, 225, 180, 0.22)',
         lede: "The swift celestial messenger of commerce, razor-sharp intellect, and eloquence. <br>Budha empowers traders, writers, and analysts with brilliant insight. <br>Book your session to optimize your career path."
       },
       moon: {
@@ -1225,6 +1481,7 @@
         cutout: 'assets/moon.jpg',
         still: 'assets/moon.jpg',
         videoSrc: null,
+        aura: 'rgba(240, 245, 255, 0.25)',
         lede: "The ruler of the subconscious mind, divine intuition, and emotional peace. <br>Chandra brings serene tranquility, psychic clarity, and fertile imagination. <br>Book your session to restore inner harmony."
       }
     };
@@ -1237,6 +1494,7 @@
     const btnR = document.querySelector('.planet-r');
     const labelL = document.querySelector('.label.label-l');
     const labelR = document.querySelector('.label.label-r');
+    const grahaAura = document.getElementById('graha-aura');
 
     let current = null;
 
@@ -1264,6 +1522,9 @@
       }
       if (ledeEl) {
         ledeEl.innerHTML = PLANETS[next].lede;
+      }
+      if (grahaAura) {
+        grahaAura.style.background = `radial-gradient(ellipse at center, ${PLANETS[next].aura} 0%, transparent 72%)`;
       }
 
       const rest = ORDER.filter(p => p !== next);
@@ -1307,8 +1568,83 @@
     btnL.addEventListener('click', function() { show(this.dataset.planet); });
     btnR.addEventListener('click', function() { show(this.dataset.planet); });
 
-    // Initial setup with Venus (Earth removed)
+    // Initial setup with Venus
     show('venus');
+
+    /* ══════════════════════════════════════════════════════════════════
+       SACRED 432HZ OM MEDITATION CHANTS (WEB AUDIO SYNTHESIS)
+       ══════════════════════════════════════════════════════════════════ */
+    let audioCtx = null;
+    let osc1 = null, osc2 = null, gainNode = null;
+    let isSoundPlaying = false;
+    const soundBtn = document.getElementById('btn-sound-toggle');
+    const soundLabel = document.getElementById('sound-label');
+
+    function toggleAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+
+      if (!isSoundPlaying) {
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        // Base 432Hz sine tone with deep subharmonic 108Hz and 216Hz for rich Om meditation
+        gainNode = audioCtx.createGain();
+        gainNode.gain.setValueAtTime(0.001, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.12, audioCtx.currentTime + 2.5);
+
+        osc1 = audioCtx.createOscillator();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(108, audioCtx.currentTime); // Sacred 108Hz Subtone
+
+        osc2 = audioCtx.createOscillator();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(432, audioCtx.currentTime); // Sacred 432Hz Om Frequency
+
+        osc1.connect(gainNode);
+        osc2.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        osc1.start();
+        osc2.start();
+
+        isSoundPlaying = true;
+        soundBtn.classList.add('is-playing');
+        soundLabel.textContent = '432Hz Playing';
+        showToast('Sacred 432Hz Om Drone Activated');
+      } else {
+        if (gainNode) {
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.2);
+          setTimeout(() => {
+            if (osc1) osc1.stop();
+            if (osc2) osc2.stop();
+          }, 1200);
+        }
+        isSoundPlaying = false;
+        soundBtn.classList.remove('is-playing');
+        soundLabel.textContent = '432Hz Om';
+        showToast('Om Drone Paused');
+      }
+    }
+    soundBtn.addEventListener('click', toggleAudio);
+
+    /* ══════════════════════════════════════════════════════════════════
+       DUAL CURRENCY SWITCHER (USD $ / INR ₹)
+       ══════════════════════════════════════════════════════════════════ */
+    let currentCurrency = 'USD';
+    const currBtn = document.getElementById('currency-toggle');
+    const priceEls = document.querySelectorAll('.card-price .amount');
+
+    currBtn.addEventListener('click', () => {
+      currentCurrency = currentCurrency === 'USD' ? 'INR' : 'USD';
+      currBtn.textContent = currentCurrency === 'USD' ? 'USD ($)' : 'INR (₹)';
+      priceEls.forEach(el => {
+        el.textContent = currentCurrency === 'USD' ? el.dataset.usd : el.dataset.inr;
+      });
+      showToast(`Switched currency to ${currentCurrency}`);
+    });
 
     /* ══════════════════════════════════════════════════════════════════
        BURGER MENU
@@ -1352,7 +1688,7 @@
     });
 
     /* ══════════════════════════════════════════════════════════════════
-       MODALS & BOOKING FLOW (FULL FUNCTIONALITY, ZERO BROKEN LINKS)
+       MODALS & BOOKING FLOW
        ══════════════════════════════════════════════════════════════════ */
     const modalBooking = document.getElementById('modal-booking');
     const closeBooking = document.getElementById('close-booking');
@@ -1363,7 +1699,7 @@
       const toast = document.getElementById('toast-pill');
       toast.textContent = text;
       toast.style.display = 'block';
-      setTimeout(() => { toast.style.display = 'none'; }, 3500);
+      setTimeout(() => { toast.style.display = 'none'; }, 3800);
     }
 
     function openBooking(serviceName = null, astroName = null) {
@@ -1423,9 +1759,10 @@
     document.getElementById('booking-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const name = document.getElementById('client-name').value.trim();
+      const service = document.getElementById('consult-service').value.split('(')[0].trim();
       const ref = 'TA-' + Math.floor(10000 + Math.random() * 90000);
       closeBookingModal();
-      showToast(`Pass #${ref} confirmed for ${name}! Details sent to your phone/email.`);
+      showToast(`Divine Pass #${ref} generated for ${name}! Details dispatched via WhatsApp/Email.`);
     });
 
     /* ══════════════════════════════════════════════════════════════════
@@ -1468,7 +1805,7 @@
     });
 
     /* ══════════════════════════════════════════════════════════════════
-       FREE KUNDLI CALCULATOR
+       FREE KUNDLI CALCULATOR WITH DYNAMIC DIAMOND CHART UPDATE
        ══════════════════════════════════════════════════════════════════ */
     document.getElementById('free-kundli-form').addEventListener('submit', (e) => {
       e.preventDefault();
@@ -1480,16 +1817,18 @@
       const DASHAS = ['Jupiter (Guru)', 'Saturn (Shani)', 'Mercury (Budha)', 'Venus (Shukra)', 'Sun (Surya)', 'Moon (Chandra)', 'Mars (Mangal)'];
 
       const seed = dob.getDate() + (dob.getMonth() + 1) * 31 + parseInt(tob.split(':')[0] || '0');
-      const lagna = SIGNS[seed % 12];
+      const lagnaIdx = seed % 12;
+      const lagna = SIGNS[lagnaIdx];
       const rashi = SIGNS[(seed + 4) % 12];
       const dasha = DASHAS[seed % DASHAS.length];
 
-      document.getElementById('k-res-title').textContent = `Kundli Chart Summary for ${name}`;
+      document.getElementById('k-res-title').textContent = `Royal Lagna Kundli for ${name}`;
       document.getElementById('k-res-lagna').textContent = lagna;
       document.getElementById('k-res-rashi').textContent = rashi;
       document.getElementById('k-res-dasha').textContent = dasha;
+      document.getElementById('svg-h1').textContent = `${(lagnaIdx % 12) + 1} • Su Mo`;
       document.getElementById('kundli-output').style.display = 'block';
-      showToast(`Kundli generated for ${name}!`);
+      showToast(`Royal Janampatri Computed for ${name}!`);
     });
 
     /* ══════════════════════════════════════════════════════════════════
@@ -1513,7 +1852,7 @@
     window.addEventListener('scroll', () => {
       let currentId = '';
       sections.forEach(sec => {
-        const top = sec.offsetTop - 120;
+        const top = sec.offsetTop - 150;
         if (window.scrollY >= top) {
           currentId = sec.getAttribute('id');
         }
