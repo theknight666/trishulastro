@@ -178,6 +178,10 @@
     .starry-canvas{position:absolute; inset:0; width:100%; height:100%; display:block; z-index:0}
 
     /* SEPARATE PLANET HORIZON STAGE (FOREGROUND PLANET LAYER) */
+    :root {
+      --horizon-d: max(130vw, calc(100vh * 1.35));
+    }
+
     .planet-stage{position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden;
       display:flex; justify-content:center; align-items:flex-end}
 
@@ -193,15 +197,38 @@
       opacity:1; transform:translateY(0) scale(1);
     }
 
-    /* For spherical images (Saturn, Sun, Mercury, Moon), position as majestic curved horizon */
+    /* Spherical planets: calibrated so apex lands right below BOOK SESSION button (38vh from bottom) */
     .planet-horizon-img.is-spherical{
-      width:110vw; height:110vw; max-width:1650px; max-height:1650px;
-      bottom:-36vw; left:50%;
-      transform:translateX(-50%) translateY(16px) scale(0.985);
+      width:var(--horizon-d); height:var(--horizon-d);
+      left:50%;
       object-fit:contain;
     }
     .planet-horizon-img.is-spherical.is-active{
       opacity:1; transform:translateX(-50%) translateY(0) scale(1);
+    }
+
+    /* Saturn: Globe apex aligned at 38vh, majestic rings arching around the sides */
+    .planet-horizon-img.planet-saturn{
+      bottom:calc(38vh - (var(--horizon-d) * 0.78));
+      transform:translateX(-50%) translateY(16px) scale(0.985);
+    }
+
+    /* The Sun: Solar limb apex aligned at 38vh */
+    .planet-horizon-img.planet-sun{
+      bottom:calc(38vh - (var(--horizon-d) * 0.955));
+      transform:translateX(-50%) translateY(16px) scale(0.985);
+    }
+
+    /* The Moon: Lunar limb apex aligned at 38vh */
+    .planet-horizon-img.planet-moon{
+      bottom:calc(38vh - (var(--horizon-d) * 0.99));
+      transform:translateX(-50%) translateY(16px) scale(0.985);
+    }
+
+    /* Mercury: Terrestrial limb apex aligned at 38vh */
+    .planet-horizon-img.planet-mercury{
+      bottom:calc(38vh - (var(--horizon-d) * 0.94));
+      transform:translateX(-50%) translateY(16px) scale(0.985);
     }
 
     /* CELESTIAL GRAHA AURA LIGHTING */
@@ -653,13 +680,13 @@
       <!-- 3. JUPITER (Pristine High-Res Curved Horizon) -->
       <img class="planet-horizon-img" data-planet="jupiter" src="assets/jupiter_horizon.jpg" alt="Jupiter Horizon">
       <!-- 4. SATURN (Pristine Curved Celestial Horizon) -->
-      <img class="planet-horizon-img is-spherical" data-planet="saturn" src="assets/saturn.jpg" alt="Saturn Horizon">
+      <img class="planet-horizon-img is-spherical planet-saturn" data-planet="saturn" src="assets/saturn.jpg" alt="Saturn Horizon">
       <!-- 5. THE SUN (Pristine Curved Solar Horizon) -->
-      <img class="planet-horizon-img is-spherical" data-planet="sun" src="assets/sun.jpg" alt="The Sun Horizon">
+      <img class="planet-horizon-img is-spherical planet-sun" data-planet="sun" src="assets/sun.jpg" alt="The Sun Horizon">
       <!-- 6. MERCURY (Pristine Curved Terrestrial Horizon) -->
-      <img class="planet-horizon-img is-spherical" data-planet="mercury" src="assets/mercury.jpg" alt="Mercury Horizon">
+      <img class="planet-horizon-img is-spherical planet-mercury" data-planet="mercury" src="assets/mercury.jpg" alt="Mercury Horizon">
       <!-- 7. THE MOON (Pristine Curved Lunar Horizon) -->
-      <img class="planet-horizon-img is-spherical" data-planet="moon" src="assets/moon.jpg" alt="The Moon Horizon">
+      <img class="planet-horizon-img is-spherical planet-moon" data-planet="moon" src="assets/moon.jpg" alt="The Moon Horizon">
     </div>
 
     <!-- Radiant Atmospheric Corona behind Hero Title -->
