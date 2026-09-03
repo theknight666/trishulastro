@@ -4,7 +4,7 @@ const path = require('path');
 const htmlPath = path.join(__dirname, 'index.html');
 const html = fs.readFileSync(htmlPath, 'utf8');
 
-console.log('--- AUDITING TRISHULASTRO MINIMAL HERO BUILD ---');
+console.log('--- AUDITING TRISHULASTRO FULL SITE WITH MINIMAL HERO ---');
 let errors = [];
 
 // 1. Check title and branding
@@ -39,7 +39,24 @@ foundAssets.forEach(asset => {
   }
 });
 
-// 4. Check all buttons have non-empty content
+// 4. Check all anchor targets exist
+const hrefRegex = /href=["']#([^"']+)["']/g;
+const foundHrefs = new Set();
+while ((match = hrefRegex.exec(html)) !== null) {
+  foundHrefs.add(match[1]);
+}
+console.log(`\nFound ${foundHrefs.size} anchor targets:`);
+foundHrefs.forEach(target => {
+  if (target === '' || target === '#') return;
+  const idRegex = new RegExp(`id=["']${target}["']`);
+  if (!idRegex.test(html)) {
+    errors.push(`Broken anchor link: #${target} (no element with id="${target}")`);
+  } else {
+    console.log(`  ✓ Valid anchor target: #${target}`);
+  }
+});
+
+// 5. Check all buttons have non-empty content
 const btnRegex = /<button[^>]*>([\s\S]*?)<\/button>/g;
 let btnCount = 0;
 while ((match = btnRegex.exec(html)) !== null) {
@@ -49,9 +66,9 @@ while ((match = btnRegex.exec(html)) !== null) {
     errors.push(`Found empty button: ${match[0]}`);
   }
 }
-console.log(`Audited ${btnCount} buttons.`);
+console.log(`\nAudited ${btnCount} buttons.`);
 
-// 5. Check all planets
+// 6. Check all planets
 const requiredGrahas = ['venus', 'mars', 'jupiter', 'saturn', 'sun', 'mercury', 'moon'];
 requiredGrahas.forEach(graha => {
   if (!html.includes(`${graha}: {`)) {
@@ -62,7 +79,7 @@ requiredGrahas.forEach(graha => {
 });
 
 if (errors.length === 0) {
-  console.log('\n🎉 MINIMAL BUILD AUDIT PASSED 100%!');
+  console.log('\n🎉 FULL SITE WITH MINIMAL HERO AUDIT PASSED 100%!');
   process.exit(0);
 } else {
   console.error('\n❌ AUDIT FAILURES:');
