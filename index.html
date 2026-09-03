@@ -62,103 +62,311 @@
        TOP MUHURTA LIVE RIBBON
        ========================================================================== */
     .top-ribbon{position:fixed; top:0; left:0; right:0; z-index:110; height:calc(26 * var(--u));
-      background:rgba(0, 0, 0, 0.96);
-      border-bottom:1px solid rgba(255,255,255,0.08); font-size:calc(11.5 * var(--u));
-      letter-spacing:calc(1.5 * var(--u)); color:rgba(255,255,255,0.85); display:flex;
+      background:rgba(0, 0, 0, 0.97);
+      border-bottom:1px solid rgba(255,255,255,0.06); font-size:calc(11 * var(--u));
+      letter-spacing:calc(1.8 * var(--u)); color:rgba(255,255,255,0.72); display:flex;
       align-items:center; justify-content:center; gap:calc(16 * var(--u)); text-transform:uppercase;
-      backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px)}
-    .top-ribbon span.badge{background:rgba(245,199,103,0.18); color:var(--gold);
-      padding:calc(2 * var(--u)) calc(8 * var(--u)); border-radius:calc(10 * var(--u));
-      border:1px solid rgba(245,199,103,0.35); font-weight:600}
-    .top-ribbon .pulse-dot{width:calc(6 * var(--u)); height:calc(6 * var(--u)); border-radius:50%;
-      background:#4ade80; box-shadow:0 0 calc(8 * var(--u)) #4ade80; display:inline-block}
+      backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px)}
+    .top-ribbon span.badge{background:rgba(245,199,103,0.15); color:var(--gold);
+      padding:calc(2 * var(--u)) calc(9 * var(--u)); border-radius:calc(10 * var(--u));
+      border:1px solid rgba(245,199,103,0.3); font-weight:600; letter-spacing:calc(1 * var(--u))}
+    .top-ribbon .pulse-dot{width:calc(5.5 * var(--u)); height:calc(5.5 * var(--u)); border-radius:50%;
+      background:#4ade80; box-shadow:0 0 calc(8 * var(--u)) #4ade80; display:inline-block;
+      animation:dot-pulse 2s ease-in-out infinite}
+    @keyframes dot-pulse{
+      0%,100%{box-shadow:0 0 calc(4 * var(--u)) #4ade80}
+      50%{box-shadow:0 0 calc(14 * var(--u)) #4ade80, 0 0 calc(24 * var(--u)) rgba(74,222,128,0.4)}
+    }
 
     /* ==========================================================================
-       2. FIXED NAVBAR (FROSTED GLASS ON SCROLL)
+       2. FLOATING PILL NAVBAR
        ========================================================================== */
-    .navbar{position:fixed; top:calc(26 * var(--u)); left:0; right:0; z-index:100; height:calc(88 * var(--u));
-      background:rgba(0, 0, 0, 0.88); backdrop-filter:blur(calc(18 * var(--u)));
-      -webkit-backdrop-filter:blur(calc(18 * var(--u))); border-bottom:calc(1 * var(--u)) solid rgba(255,255,255,.09);
-      transition:all .3s ease}
-    .navrow{position:absolute; left:calc(25 * var(--u)); right:calc(49 * var(--u)); top:0;
-      height:calc(86 * var(--u)); display:flex; align-items:center; justify-content:space-between}
+    .navbar{
+      position:fixed;
+      top:calc((26 + 14) * var(--u));
+      left:50%;
+      transform:translateX(-50%);
+      z-index:100;
+      width:min(calc(1100 * var(--u)), 96vw);
+      height:calc(58 * var(--u));
+      background:rgba(8, 8, 12, 0.82);
+      backdrop-filter:blur(28px) saturate(180%);
+      -webkit-backdrop-filter:blur(28px) saturate(180%);
+      border-radius:calc(36 * var(--u));
+      border:1px solid rgba(255,255,255,0.10);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04) inset,
+        0 calc(4 * var(--u)) calc(32 * var(--u)) rgba(0,0,0,0.55),
+        0 calc(1 * var(--u)) calc(2 * var(--u)) rgba(0,0,0,0.6);
+      transition:box-shadow .4s ease, border-color .4s ease, background .3s ease;
+    }
+    /* Animated glowing border ring on hover */
+    @keyframes navbar-glow-spin{
+      0%  { background-position: 0% 50%; }
+      100%{ background-position: 200% 50%; }
+    }
+    .navbar::before{
+      content:'';
+      position:absolute;
+      inset:-1px;
+      border-radius:inherit;
+      padding:1px;
+      background:linear-gradient(90deg,
+        transparent 0%,
+        rgba(121,220,232,0.0) 20%,
+        rgba(121,220,232,0.45) 50%,
+        rgba(245,199,103,0.35) 65%,
+        rgba(121,220,232,0.0) 80%,
+        transparent 100%);
+      background-size:200% 100%;
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      opacity:0;
+      transition:opacity .5s ease;
+      animation:navbar-glow-spin 4s linear infinite;
+      pointer-events:none;
+    }
+    .navbar:hover::before{ opacity:1; }
 
-    /* LOGO WITH SACRED TRISHUL EMBLEM */
-    .logo{font-family:var(--font-logo); font-weight:600; font-size:calc(19 * var(--u));
-      letter-spacing:calc(-0.15 * var(--u)); line-height:1; color:#fff; text-decoration:none;
-      white-space:nowrap; display:inline-flex; align-items:center; gap:calc(8 * var(--u));
-      transition:opacity .2s}
-    .logo:hover{opacity:.92}
-    .logo i{font-style:normal; color:var(--cyan-logo)}
-    .logo-icon{width:calc(24 * var(--u)); height:calc(24 * var(--u)); flex:none;
-      filter:drop-shadow(0 0 calc(8 * var(--u)) rgba(95,208,225,0.75))}
+    .navrow{
+      position:absolute; inset:0;
+      display:flex; align-items:center;
+      padding:0 calc(20 * var(--u));
+      justify-content:space-between;
+    }
 
-    .burger{display:none; position:relative; width:calc(46 * var(--u)); height:calc(46 * var(--u));
+    /* ==========================================================================
+       ULTRA-PREMIUM LOGO
+       ========================================================================== */
+    .logo{
+      display:inline-flex; align-items:center;
+      gap:calc(10 * var(--u));
+      text-decoration:none;
+      color:#fff;
+      flex:none;
+      position:relative;
+      transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+    }
+    .logo:hover{ transform:scale(1.03); }
+
+    /* Sacred Trishul emblem container with glow */
+    .logo-emblem{
+      position:relative;
+      width:calc(38 * var(--u));
+      height:calc(38 * var(--u));
+      flex:none;
+      display:flex; align-items:center; justify-content:center;
+    }
+    /* Outer rotating halo ring */
+    .logo-emblem::before{
+      content:'';
+      position:absolute;
+      inset:calc(-5 * var(--u));
+      border-radius:50%;
+      border:calc(1 * var(--u)) solid transparent;
+      background:
+        linear-gradient(135deg, rgba(95,208,225,0.55), rgba(245,199,103,0.45), rgba(95,208,225,0.0)) border-box;
+      -webkit-mask:
+        linear-gradient(#fff 0 0) padding-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite:destination-out;
+      mask-composite:exclude;
+      animation:emblem-halo 8s linear infinite;
+    }
+    @keyframes emblem-halo{
+      from{ transform:rotate(0deg); }
+      to  { transform:rotate(360deg); }
+    }
+    /* Inner glow pulse */
+    .logo-emblem::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(95,208,225,0.18) 0%, transparent 70%);
+      animation:emblem-pulse 3s ease-in-out infinite;
+    }
+    @keyframes emblem-pulse{
+      0%,100%{ opacity:0.6; transform:scale(0.95); }
+      50%{ opacity:1; transform:scale(1.05); }
+    }
+    .logo-icon{
+      width:calc(30 * var(--u));
+      height:calc(30 * var(--u));
+      position:relative;
+      z-index:1;
+      filter:
+        drop-shadow(0 0 calc(6 * var(--u)) rgba(95,208,225,0.9))
+        drop-shadow(0 0 calc(14 * var(--u)) rgba(95,208,225,0.4));
+    }
+
+    /* Wordmark */
+    .logo-wordmark{
+      display:flex;
+      flex-direction:column;
+      line-height:1;
+      gap:calc(1.5 * var(--u));
+    }
+    .logo-name{
+      font-family:var(--font-logo);
+      font-weight:700;
+      font-size:calc(17.5 * var(--u));
+      letter-spacing:calc(0.5 * var(--u));
+      line-height:1;
+      background:linear-gradient(135deg, #ffffff 0%, #e8f8fc 50%, #ffffff 100%);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .logo-name span{
+      background:linear-gradient(135deg, var(--cyan-logo) 0%, #a8edff 40%, var(--gold) 100%);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .logo-tagline{
+      font-family:var(--font-body);
+      font-size:calc(7.5 * var(--u));
+      letter-spacing:calc(2.8 * var(--u));
+      color:rgba(121,220,232,0.65);
+      text-transform:uppercase;
+      font-weight:500;
+    }
+
+    .burger{display:none; position:relative; width:calc(42 * var(--u)); height:calc(42 * var(--u));
       padding:0; border:0; background:none; cursor:pointer; flex-direction:column;
       align-items:center; justify-content:center; gap:calc(6 * var(--u)); flex:none}
-    .burger span{display:block; width:calc(24 * var(--u)); height:calc(2 * var(--u));
+    .burger span{display:block; width:calc(22 * var(--u)); height:calc(1.5 * var(--u));
       border-radius:calc(2 * var(--u)); background:#fff;
       transition:transform .28s cubic-bezier(.4,0,.2,1), opacity .18s linear}
-    .navrow[data-open="true"] .burger span:nth-child(1){transform:translateY(calc(8 * var(--u))) rotate(45deg)}
+    .navrow[data-open="true"] .burger span:nth-child(1){transform:translateY(calc(7.5 * var(--u))) rotate(45deg)}
     .navrow[data-open="true"] .burger span:nth-child(2){opacity:0}
-    .navrow[data-open="true"] .burger span:nth-child(3){transform:translateY(calc(-8 * var(--u))) rotate(-45deg)}
+    .navrow[data-open="true"] .burger span:nth-child(3){transform:translateY(calc(-7.5 * var(--u))) rotate(-45deg)}
 
-    .links{display:flex; align-items:center}
-    .links a{position:relative; display:flex; align-items:center; height:calc(86 * var(--u));
-      font-size:calc(18.4 * var(--u)); font-weight:400; line-height:1; color:#fff;
-      text-decoration:none; padding:0 calc(17.5 * var(--u));
-      letter-spacing:calc(-1 * var(--u)); white-space:nowrap; cursor:pointer;
-      transition:color .2s}
-    .links a:hover{color:var(--cyan)}
-    .links a[aria-current="page"]::after{content:""; position:absolute; left:0; right:0;
-      top:calc(83.5 * var(--u)); height:calc(4 * var(--u)); background:var(--cyan);
-      border-radius:calc(1 * var(--u)); transform-origin:center;
-      box-shadow:0 0 calc(10 * var(--u)) var(--cyan)}
-    .links a:nth-child(3){letter-spacing:calc(-1.75 * var(--u))}
-    .links a:nth-child(2){margin-left:calc(24 * var(--u))}
-    .links a:nth-child(3){margin-left:calc(26 * var(--u))}
-    .links a:nth-child(4){margin-left:calc(27 * var(--u))}
-    .links a:nth-child(5){margin-left:calc(26 * var(--u))}
+    /* PILL NAV LINKS */
+    .links{display:flex; align-items:center; gap:calc(2 * var(--u))}
+    .links a{
+      position:relative;
+      display:flex; align-items:center;
+      height:calc(36 * var(--u));
+      font-size:calc(13.5 * var(--u));
+      font-weight:500;
+      line-height:1;
+      color:rgba(255,255,255,0.75);
+      text-decoration:none;
+      padding:0 calc(14 * var(--u));
+      border-radius:calc(20 * var(--u));
+      letter-spacing:calc(0.1 * var(--u));
+      white-space:nowrap;
+      cursor:pointer;
+      transition:color .2s ease, background .2s ease;
+      overflow:hidden;
+    }
+    .links a::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      border-radius:inherit;
+      background:rgba(255,255,255,0.0);
+      transition:background .2s ease;
+    }
+    .links a:hover{
+      color:#fff;
+    }
+    .links a:hover::before{
+      background:rgba(255,255,255,0.07);
+    }
+    /* Active indicator: glowing dot beneath */
+    .links a[aria-current="page"]{
+      color:#fff;
+      background:rgba(121,220,232,0.10);
+      border:1px solid rgba(121,220,232,0.22);
+    }
+    /* Animated underline slide on hover */
+    .links a::after{
+      content:'';
+      position:absolute;
+      bottom:calc(5 * var(--u));
+      left:50%;
+      width:0;
+      height:calc(1.5 * var(--u));
+      background:linear-gradient(90deg, var(--cyan), var(--gold));
+      border-radius:calc(1 * var(--u));
+      transition:width .25s ease, left .25s ease;
+      box-shadow:0 0 calc(8 * var(--u)) var(--cyan);
+    }
+    .links a:hover::after, .links a[aria-current="page"]::after{
+      width:calc(100% - calc(28 * var(--u)));
+      left:calc(14 * var(--u));
+    }
 
     /* SOUND & CURRENCY CONTROLS */
-    .nav-controls{display:flex; align-items:center; gap:calc(10 * var(--u)); margin-left:calc(24 * var(--u))}
-    .btn-sound{display:inline-flex; align-items:center; gap:calc(6 * var(--u)); height:calc(34 * var(--u));
-      padding:0 calc(12 * var(--u)); border-radius:calc(17 * var(--u));
-      border:1px solid rgba(255,255,255,0.18); background:rgba(255,255,255,0.06);
-      color:#fff; font-size:calc(12.5 * var(--u)); cursor:pointer; transition:all .25s;
+    .nav-controls{display:flex; align-items:center; gap:calc(6 * var(--u)); margin-left:calc(6 * var(--u))}
+    .btn-sound{display:inline-flex; align-items:center; gap:calc(5 * var(--u)); height:calc(30 * var(--u));
+      padding:0 calc(10 * var(--u)); border-radius:calc(15 * var(--u));
+      border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.05);
+      color:rgba(255,255,255,0.75); font-size:calc(11 * var(--u)); cursor:pointer; transition:all .25s;
       font-family:var(--font-body); white-space:nowrap}
-    .btn-sound:hover{border-color:var(--cyan); background:rgba(95,208,225,0.12)}
-    .btn-sound.is-playing{border-color:var(--gold); color:var(--gold); background:rgba(245,199,103,0.15)}
-    .sound-bars{display:flex; align-items:center; gap:calc(2 * var(--u)); height:calc(12 * var(--u))}
+    .btn-sound:hover{border-color:var(--cyan); background:rgba(95,208,225,0.10); color:#fff}
+    .btn-sound.is-playing{border-color:var(--gold); color:var(--gold); background:rgba(245,199,103,0.12)}
+    .sound-bars{display:flex; align-items:center; gap:calc(2 * var(--u)); height:calc(10 * var(--u))}
     .sound-bars span{width:calc(2 * var(--u)); height:calc(4 * var(--u)); background:currentColor;
       border-radius:calc(1 * var(--u)); transition:height .15s ease}
     .btn-sound.is-playing .sound-bars span:nth-child(1){animation:sound-wave .6s infinite alternate}
     .btn-sound.is-playing .sound-bars span:nth-child(2){animation:sound-wave .8s infinite alternate .2s}
     .btn-sound.is-playing .sound-bars span:nth-child(3){animation:sound-wave .5s infinite alternate .4s}
-    @keyframes sound-wave{0%{height:calc(3 * var(--u))} 100%{height:calc(13 * var(--u))}}
+    @keyframes sound-wave{0%{height:calc(3 * var(--u))} 100%{height:calc(11 * var(--u))}}
 
-    .currency-toggle{display:inline-flex; align-items:center; height:calc(34 * var(--u));
-      padding:0 calc(8 * var(--u)); border-radius:calc(17 * var(--u));
-      border:1px solid rgba(255,255,255,0.18); background:rgba(255,255,255,0.06);
-      color:rgba(255,255,255,0.85); font-size:calc(12 * var(--u)); cursor:pointer;
+    .currency-toggle{display:inline-flex; align-items:center; height:calc(30 * var(--u));
+      padding:0 calc(9 * var(--u)); border-radius:calc(15 * var(--u));
+      border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.05);
+      color:rgba(255,255,255,0.75); font-size:calc(11 * var(--u)); cursor:pointer;
       font-weight:600; font-family:var(--font-body); transition:all .2s}
     .currency-toggle:hover{border-color:var(--cyan); color:#fff}
 
-    .links a.enroll{margin-left:calc(16 * var(--u)); width:calc(134 * var(--u));
-      height:calc(38 * var(--u)); border-radius:calc(19 * var(--u)); display:flex;
-      align-items:center; justify-content:center; font-size:calc(16 * var(--u));
-      font-weight:600; letter-spacing:calc(-0.5 * var(--u)); line-height:1;
-      color:var(--btn-ink); text-decoration:none; padding-top:calc(2 * var(--u));
-      background:linear-gradient(180deg,#ffffff 0%,#d8ecfe 9%,#dceefe 72%,#f4f9ff 100%);
-      box-shadow:0 calc(3 * var(--u)) calc(14 * var(--u)) rgba(255,255,255,.22),
-                 inset 0 0 0 calc(1.5 * var(--u)) rgba(255,255,255,.92);
-      flex:none; cursor:pointer; transition:transform .2s ease, box-shadow .2s ease;
-      position:relative; overflow:hidden}
-    .links a.enroll:hover{transform:scale(1.03); box-shadow:0 calc(5 * var(--u)) calc(20 * var(--u)) rgba(255,255,255,.4)}
+    /* BOOK SESSION PILL BUTTON in nav */
+    .links a.enroll{
+      margin-left:calc(8 * var(--u));
+      height:calc(36 * var(--u));
+      padding:0 calc(18 * var(--u));
+      border-radius:calc(20 * var(--u));
+      font-size:calc(13 * var(--u));
+      font-weight:700;
+      letter-spacing:calc(0.3 * var(--u));
+      line-height:1;
+      color:var(--btn-ink);
+      text-decoration:none;
+      background:linear-gradient(135deg, #ffffff 0%, #e2f6ff 40%, #f8fdff 100%);
+      box-shadow:
+        0 0 calc(18 * var(--u)) rgba(255,255,255,0.18),
+        inset 0 0 0 calc(1.5 * var(--u)) rgba(255,255,255,0.88);
+      flex:none; cursor:pointer;
+      transition:transform .2s ease, box-shadow .2s ease;
+      position:relative; overflow:hidden;
+      /* reset the generic underline animation */
+      border:none;
+    }
+    .links a.enroll::after{
+      content:'';
+      position:absolute;
+      top:-50%; left:-70%;
+      width:50%; height:200%;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+      transform:rotate(25deg); pointer-events:none;
+      animation:shimmer-glint 4s cubic-bezier(.4,0,.2,1) infinite;
+    }
+    .links a.enroll::before{ display:none; }
+    .links a.enroll:hover{
+      transform:scale(1.04);
+      box-shadow:0 0 calc(28 * var(--u)) rgba(255,255,255,0.38);
+    }
 
-    /* SPECULAR SHIMMER GLINT ON BUTTONS */
-    .cta a, .links a.enroll, .btn-pill{position:relative; overflow:hidden}
-    .cta a::after, .links a.enroll::after, .btn-pill::after{
+    /* SPECULAR SHIMMER GLINT ON CTA */
+    .cta a, .btn-pill{position:relative; overflow:hidden}
+    .cta a::after, .btn-pill::after{
       content:''; position:absolute; top:-50%; left:-70%; width:50%; height:200%;
       background:linear-gradient(90deg, transparent, rgba(255,255,255,0.42), transparent);
       transform:rotate(25deg); pointer-events:none;
@@ -643,19 +851,57 @@
        ========================================================================== -->
   <header class="navbar">
     <div class="navrow">
-      <!-- TrishulAstro Logo with custom Trishul Emblem -->
+      <!-- TrishulAstro Premium Logo -->
       <a class="logo" href="#hero" id="site-logo">
-        <svg class="logo-icon" viewBox="0 0 100 100" fill="none" aria-hidden="true">
-          <ellipse cx="50" cy="50" rx="44" ry="17" stroke="var(--cyan-logo)" stroke-width="2.2" stroke-dasharray="3 3" transform="rotate(-26 50 50)"/>
-          <path d="M50 14 L53 34 L52 74 L48 74 L47 34 Z" fill="#fff"/>
-          <polygon points="50,10 54,23 50,20 46,23" fill="var(--cyan-logo)"/>
-          <path d="M48 44 C40 43 31 37 32 25 C34 25 38 29 42 35 C45 39 48 42 49 45 Z" fill="#fff"/>
-          <path d="M52 44 C60 43 69 37 68 25 C66 25 62 29 58 35 C55 39 52 42 51 45 Z" fill="#fff"/>
-          <path d="M38 46 C41 55 59 55 62 46 C57 51 43 51 38 46 Z" fill="var(--cyan-logo)"/>
-          <circle cx="50" cy="38" r="3.2" fill="#fff"/>
-          <rect x="48.5" y="72" width="3" height="15" rx="1.5" fill="#fff"/>
-        </svg>
-        trishul<i>astro</i>
+        <span class="logo-emblem">
+          <svg class="logo-icon" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+            <!-- Outer sacred ring -->
+            <circle cx="50" cy="50" r="42" stroke="url(#logoRingGrad)" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.6"/>
+            <!-- Trishul shaft -->
+            <path d="M50 16 L53 36 L52 76 L48 76 L47 36 Z" fill="url(#logoShaftGrad)"/>
+            <!-- Trishul prongs -->
+            <path d="M47 38 C38 37 28 29 30 16 C33 16 37 22 41 29 C44 34 47 38 48 40 Z" fill="url(#logoProng)"/>
+            <path d="M53 38 C62 37 72 29 70 16 C67 16 63 22 59 29 C56 34 53 38 52 40 Z" fill="url(#logoProng)"/>
+            <!-- Center jewel -->
+            <circle cx="50" cy="36" r="4" fill="url(#logoJewel)"/>
+            <circle cx="50" cy="36" r="2" fill="#fff" opacity="0.9"/>
+            <!-- Crossbar -->
+            <path d="M37 48 C41 56 59 56 63 48 C57 53 43 53 37 48 Z" fill="url(#logoCrossGrad)"/>
+            <!-- Base ornament -->
+            <rect x="48.5" y="74" width="3" height="12" rx="1.5" fill="url(#logoShaftGrad)"/>
+            <ellipse cx="50" cy="88" rx="6" ry="2.5" fill="url(#logoCrossGrad)" opacity="0.8"/>
+            <defs>
+              <linearGradient id="logoRingGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#5fd0e1"/>
+                <stop offset="50%" stop-color="#f5c767"/>
+                <stop offset="100%" stop-color="#5fd0e1"/>
+              </linearGradient>
+              <linearGradient id="logoShaftGrad" x1="50" y1="16" x2="50" y2="90" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="60%" stop-color="#c8ecf5"/>
+                <stop offset="100%" stop-color="#5fd0e1"/>
+              </linearGradient>
+              <linearGradient id="logoProng" x1="30" y1="16" x2="70" y2="42" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#a8edff"/>
+              </linearGradient>
+              <radialGradient id="logoJewel" cx="40%" cy="35%" r="60%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="45%" stop-color="#f5c767"/>
+                <stop offset="100%" stop-color="#e8a020"/>
+              </radialGradient>
+              <linearGradient id="logoCrossGrad" x1="37" y1="48" x2="63" y2="56" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#5fd0e1"/>
+                <stop offset="50%" stop-color="#f5c767"/>
+                <stop offset="100%" stop-color="#5fd0e1"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </span>
+        <span class="logo-wordmark">
+          <span class="logo-name">trishul<span>astro</span></span>
+          <span class="logo-tagline">Vedic Planetary Guidance</span>
+        </span>
       </a>
 
       <!-- Navigation Links -->
