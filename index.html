@@ -755,50 +755,168 @@
     /* ==========================================================================
        6. RESPONSIVE BREAKPOINTS
        ========================================================================== */
-    @media (max-width:1030px), (max-height:620px){
+    /* ==========================================================================
+       6. RESPONSIVE BREAKPOINTS (FULL SITE MOBILE OPTIMIZATION)
+       ========================================================================== */
+    @media (max-width: 1024px) {
       .top-ribbon{display:none}
-      .navbar{top:0}
-      .graha-bar{top:calc(100 * var(--u)); max-width:92vw; overflow-x:auto}
-      .navrow{left:calc(25 * var(--u)); right:calc(25 * var(--u))}
-      .burger{display:flex}
-      .links{position:absolute; top:calc(96 * var(--u)); right:0; z-index:5;
-        width:min(calc(324 * var(--u)), calc(100vw - 50 * var(--u)));
-        flex-direction:column; align-items:stretch; padding:calc(14 * var(--u));
-        border-radius:calc(20 * var(--u)); background:rgba(8,19,38,.96);
-        -webkit-backdrop-filter:blur(calc(18 * var(--u))); backdrop-filter:blur(calc(18 * var(--u)));
-        border:calc(1 * var(--u)) solid rgba(255,255,255,.14); box-shadow:0 calc(18 * var(--u)) calc(44 * var(--u)) rgba(2,8,20,.65);
-        opacity:0; visibility:hidden; transform:translateY(calc(-10 * var(--u)));
-        transition:opacity .24s ease, transform .28s cubic-bezier(.4,0,.2,1), visibility .28s}
-      .navrow[data-open="true"] .links{opacity:1; visibility:visible; transform:none}
-      .links a:nth-child(n){margin-left:0; height:auto; justify-content:flex-start;
-        padding:calc(14 * var(--u)) calc(16 * var(--u)); font-size:calc(19 * var(--u)); letter-spacing:calc(-.6 * var(--u))}
-      .links a + a{border-top:calc(1 * var(--u)) solid rgba(255,255,255,.08)}
-      .links a[aria-current="page"]::after{top:auto; bottom:calc(9 * var(--u)); left:calc(16 * var(--u)); right:auto; width:calc(26 * var(--u)); height:calc(3 * var(--u))}
-      .links a.enroll{margin:calc(14 * var(--u)) 0 calc(2 * var(--u)); width:100%; height:calc(46 * var(--u)); border-radius:calc(23 * var(--u)); justify-content:center}
+      .navbar{
+        top:10px; left:12px; right:12px; height:56px;
+        border-radius:28px; padding:0 16px; width:auto;
+      }
+      .navrow{
+        position:static; width:100%; height:100%; padding:0;
+        display:flex; align-items:center; justify-content:space-between;
+      }
+      .burger{
+        display:flex; width:40px; height:40px; padding:8px;
+        background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15);
+        border-radius:50%; cursor:pointer; flex-direction:column;
+        align-items:center; justify-content:center; gap:5px;
+      }
+      .burger span{
+        width:18px; height:2px; background:#fff; border-radius:1px;
+      }
+      .links{
+        position:fixed; top:72px; left:12px; right:12px; z-index:105;
+        width:auto; max-width:none; flex-direction:column; align-items:stretch;
+        padding:18px; border-radius:24px; background:rgba(8, 8, 12, 0.97);
+        -webkit-backdrop-filter:blur(28px) saturate(180%);
+        backdrop-filter:blur(28px) saturate(180%);
+        border:1px solid rgba(255,255,255,0.12);
+        box-shadow:0 24px 70px rgba(0,0,0,0.85);
+        opacity:0; visibility:hidden; transform:translateY(-12px);
+        transition:opacity .28s ease, transform .28s cubic-bezier(.4,0,.2,1), visibility .28s;
+        gap:4px;
+      }
+      .navrow[data-open="true"] .links{
+        opacity:1; visibility:visible; transform:translateY(0);
+      }
+      .links a{
+        height:44px; font-size:16px; padding:0 16px; justify-content:flex-start;
+        border-radius:12px; color:rgba(255,255,255,0.85); border:none;
+      }
+      .links a:hover, .links a:active{
+        background:rgba(255,255,255,0.08); color:#fff;
+      }
+      .links a[aria-current="page"]{
+        background:rgba(121, 220, 232, 0.12);
+        border:1px solid rgba(121, 220, 232, 0.3);
+        color:var(--cyan);
+      }
+      .links a::after{display:none}
+      .nav-controls{
+        margin:12px 0 6px; width:100%; display:flex; gap:10px;
+      }
+      .btn-sound, .currency-toggle{
+        flex:1; height:40px; justify-content:center; font-size:13px;
+      }
+      .links a.enroll{
+        margin:8px 0 0; width:100%; height:48px; border-radius:24px;
+        font-size:15px; justify-content:center;
+      }
+      .graha-bar{
+        top:74px; width:calc(100% - 24px); max-width:540px;
+        overflow-x:auto; -webkit-overflow-scrolling:touch;
+        scrollbar-width:none; padding:5px 8px; gap:6px;
+      }
+      .graha-bar::-webkit-scrollbar{display:none}
+      .graha-pill{
+        padding:6px 12px; font-size:12px; flex-shrink:0;
+      }
       .remedies-hero-banner{grid-template-columns:1fr}
       .footer-inner{grid-template-columns:1fr 1fr}
     }
-    @media (max-width:579px), (max-height:620px){
-      .navbar{height:calc(76 * var(--u))}
-      .navrow{left:calc(24 * var(--u)); right:calc(24 * var(--u)); height:calc(74 * var(--u))}
-      .copy{top:calc(76 * var(--u)); display:flex; flex-direction:column; align-items:center; padding:calc(56 * var(--u)) calc(26 * var(--u)) 0}
-      .col{position:static; width:100%; right:auto}
-      .eyebrow{font-size:calc(20 * var(--u)); letter-spacing:calc(5 * var(--u)); text-indent:calc(5 * var(--u))}
-      h1.title{font-size:calc(86 * var(--u)); margin-top:calc(15 * var(--u))}
-      .rule{margin-top:calc(20 * var(--u)); height:calc(5 * var(--u)); padding-right:0}
-      .rule span{width:calc(84 * var(--u))}
-      p.lede{margin-top:calc(19 * var(--u)); font-size:calc(15.5 * var(--u)); line-height:calc(26 * var(--u)); max-width:calc(400 * var(--u))}
+
+    @media (max-width: 768px) {
+      :root{
+        --planet-size: max(160vw, 720px);
+      }
+      .planet-horizon-img{
+        bottom: calc(24vh - (var(--planet-size) * 0.95));
+      }
+      .planet-horizon-img.planet-saturn{
+        bottom: calc(24vh - (var(--saturn-size) * 0.60));
+      }
+      .copy{
+        top:126px; display:flex; flex-direction:column; align-items:center;
+        padding:0 20px; transform:none;
+      }
+      .col{position:static; width:100%; right:auto; text-align:center}
+      .eyebrow{font-size:12px; letter-spacing:3.5px; text-indent:3.5px}
+      h1.title{font-size:clamp(38px, 10.5vw, 54px); margin-top:6px; letter-spacing:1px}
+      .rule{margin:12px auto; height:3px; padding-right:0}
+      .rule span{width:64px; height:100%}
+      p.lede{margin:8px auto 0; font-size:14px; line-height:1.55; max-width:360px; padding:0 6px}
       p.lede br{display:none}
-      .cta{top:auto; margin-top:calc(32 * var(--u)); height:calc(60 * var(--u)); position:relative}
-      .cta a{width:calc(190 * var(--u)); height:calc(60 * var(--u)); border-radius:calc(30 * var(--u))}
-      .label{top:50%; transform:translateY(-50%); font-size:calc(16 * var(--u)); letter-spacing:calc(4 * var(--u))}
-      .label.label-l{left:calc(56 * var(--u))}
-      .label.label-r{right:calc(60 * var(--u))}
-      .planet-l{width:calc(89 * var(--u)); left:calc(-44.5 * var(--u)); top:calc(-17 * var(--u))}
-      .planet-r{width:calc(89 * var(--u)); right:calc(-44.5 * var(--u)); top:calc(-18.3 * var(--u))}
-      .scroll{width:calc(74 * var(--u)); height:calc(74 * var(--u)); margin-left:calc(-37 * var(--u)); bottom:calc(49 * var(--u))}
-      .footer-inner{grid-template-columns:1fr}
+      .cta{top:auto; margin-top:18px; height:auto; position:static; display:flex; justify-content:center}
+      .cta a{width:190px; height:48px; font-size:14.5px; border-radius:24px}
+      .planet-l{
+        width:80px; height:80px; left:-36px; top:50%; transform:translateY(-50%);
+      }
+      .planet-r{
+        width:80px; height:80px; right:-36px; top:50%; transform:translateY(-50%);
+      }
+      .planet-l:hover{transform:translateY(-50%) translateX(3px)}
+      .planet-r:hover{transform:translateY(-50%) translateX(-3px)}
+      .label{font-size:10px; letter-spacing:1.5px}
+      .label.label-l{left:48px}
+      .label.label-r{right:48px}
+      .scroll{width:50px; height:50px; margin-left:-25px; bottom:18px}
+      .scroll svg{width:15px; height:19px}
+
+      /* Sections on mobile */
+      .site-section{padding:65px 16px}
+      .sec-header{margin-bottom:34px}
+      .sec-title{font-size:clamp(25px, 7vw, 34px); line-height:1.25}
+      .sec-desc{font-size:14px; line-height:1.6}
+      .grid-cards{grid-template-columns:1fr; gap:18px}
+      .card{padding:24px 18px; border-radius:20px}
+      .card-title{font-size:20px}
+      .card-desc{font-size:13.5px}
+      .card-price .amount{font-size:24px}
+
+      /* Horoscope on mobile */
+      .rashi-grid{gap:6px; margin-bottom:22px}
+      .rashi-pill{padding:6px 13px; font-size:12.5px}
+      .horo-card{padding:22px 16px; border-radius:20px}
+      .horo-header{flex-direction:column; align-items:flex-start; gap:8px}
+      .horo-title{font-size:21px}
+      .horo-forecast{font-size:14px; line-height:1.65; margin-bottom:22px}
+      .horo-metrics{grid-template-columns:1fr 1fr; gap:10px; margin-bottom:22px}
+      .horo-metric-box{padding:12px}
+
+      /* Kundli on mobile */
+      .kundli-wrap{padding:22px 16px; border-radius:20px}
+      .form-grid{grid-template-columns:1fr; gap:14px}
+      .diamond-chart-svg{max-width:280px}
+
+      /* Remedies on mobile */
+      .remedies-hero-banner{grid-template-columns:1fr; border-radius:20px}
+      .remedies-hero-img{min-height:180px; max-height:220px}
+      .remedies-hero-text{padding:22px 18px}
+      .remedies-hero-text h3{font-size:22px}
+      .remedies-table-wrap{padding:8px; border-radius:16px}
+      .remedies-table th, .remedies-table td{padding:12px 10px; font-size:13px}
+
+      /* FAQ & Footer on mobile */
+      .faq-btn{padding:16px; font-size:15.5px}
+      .faq-body{padding:0 16px 16px; font-size:13.5px}
+      .site-footer{padding:50px 16px 24px}
+      .footer-inner{grid-template-columns:1fr; gap:32px}
+      .footer-bottom{flex-direction:column; gap:12px; text-align:center}
+      .modal-card{width:95vw; max-height:90vh; padding:24px 18px; border-radius:20px}
     }
+
+    @media (max-width: 480px) {
+      .logo-tagline{display:none}
+      .logo-name{font-size:16px}
+      .logo-emblem{width:32px; height:32px}
+      .logo-icon{width:24px; height:24px}
+      .horo-metrics{grid-template-columns:1fr}
+      .toast-pill{width:calc(100% - 32px); text-align:center; font-size:13px; padding:10px 16px}
+    }
+
     @media (max-height:660px){.scroll{display:none}}
 
     /* ENTRANCE ANIMATION */
