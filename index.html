@@ -40,9 +40,9 @@
       --rule:rgba(255,255,255,.23); --btn-ink:#071227;
       --gold:#f5c767;
       --gold-light:#ffdf9e;
-      --bg-dark:#030c18;
-      --card-bg:rgba(7, 18, 38, 0.76);
-      --card-border:rgba(255, 255, 255, 0.12);
+      --bg-dark:#000000;
+      --card-bg:rgba(12, 12, 16, 0.85);
+      --card-border:rgba(255, 255, 255, 0.1);
       --card-border-hover:rgba(121, 220, 232, 0.45);
       --graha-aura: rgba(121, 220, 232, 0.22);
     }
@@ -54,7 +54,7 @@
     }
 
     html{scroll-behavior:smooth}
-    body{background:var(--bg-dark); color:var(--ink); font-family:var(--font-body);
+    body{background:#000000; color:var(--ink); font-family:var(--font-body);
       -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
       text-rendering:geometricPrecision; overflow-x:hidden; min-height:100%}
 
@@ -62,7 +62,7 @@
        TOP MUHURTA LIVE RIBBON
        ========================================================================== */
     .top-ribbon{position:fixed; top:0; left:0; right:0; z-index:110; height:calc(26 * var(--u));
-      background:linear-gradient(90deg, rgba(3,12,24,0.96), rgba(12,28,56,0.96), rgba(3,12,24,0.96));
+      background:rgba(0, 0, 0, 0.96);
       border-bottom:1px solid rgba(255,255,255,0.08); font-size:calc(11.5 * var(--u));
       letter-spacing:calc(1.5 * var(--u)); color:rgba(255,255,255,0.85); display:flex;
       align-items:center; justify-content:center; gap:calc(16 * var(--u)); text-transform:uppercase;
@@ -77,7 +77,7 @@
        2. FIXED NAVBAR (FROSTED GLASS ON SCROLL)
        ========================================================================== */
     .navbar{position:fixed; top:calc(26 * var(--u)); left:0; right:0; z-index:100; height:calc(88 * var(--u));
-      background:rgba(4, 16, 31, 0.78); backdrop-filter:blur(calc(18 * var(--u)));
+      background:rgba(0, 0, 0, 0.88); backdrop-filter:blur(calc(18 * var(--u)));
       -webkit-backdrop-filter:blur(calc(18 * var(--u))); border-bottom:calc(1 * var(--u)) solid rgba(255,255,255,.09);
       transition:all .3s ease}
     .navrow{position:absolute; left:calc(25 * var(--u)); right:calc(49 * var(--u)); top:0;
@@ -174,7 +174,7 @@
     .hero-stage{position:relative; width:100%; height:100vh; min-height:100vh; overflow:hidden; isolation:isolate}
 
     /* STARRY NIGHT ANIMATED CANVAS (BACKGROUND LAYER) */
-    .sky{position:absolute; inset:0; z-index:0; background:#030a16}
+    .sky{position:absolute; inset:0; z-index:0; background:#000000}
     .starry-canvas{position:absolute; inset:0; width:100%; height:100%; display:block; z-index:0}
 
     /* SEPARATE PLANET HORIZON STAGE (TRUE TRANSPARENT PNG PLANETS) */
@@ -190,7 +190,7 @@
       width:var(--planet-size);
       height:var(--planet-size);
       left:50%;
-      bottom:calc(38vh - var(--planet-size));
+      bottom:calc(38vh - (var(--planet-size) * 0.96));
       transform:translateX(-50%) translateY(16px) scale(0.985);
       object-fit:contain;
       opacity:0;
@@ -204,12 +204,12 @@
 
     /* Saturn: rings arch around the sides, globe apex calibrated at 38vh */
     .planet-horizon-img.planet-saturn{
-      bottom:calc(38vh - (var(--planet-size) * 0.78));
+      bottom:calc(38vh - (var(--planet-size) * 0.74));
     }
 
     /* The Sun: solar corona apex calibrated at 38vh */
     .planet-horizon-img.planet-sun{
-      bottom:calc(38vh - (var(--planet-size) * 0.96));
+      bottom:calc(38vh - (var(--planet-size) * 0.95));
       filter:drop-shadow(0 -15px 50px rgba(255, 150, 45, 0.4));
     }
 
@@ -220,7 +220,7 @@
 
     /* The Moon: lunar limb calibrated at 38vh */
     .planet-horizon-img.planet-moon{
-      bottom:calc(38vh - (var(--planet-size) * 0.98));
+      bottom:calc(38vh - (var(--planet-size) * 0.96));
     }
 
     /* CELESTIAL GRAHA AURA LIGHTING */
@@ -346,7 +346,7 @@
        4. SECTIONS BELOW HERO (LUXURY VEDIC COSMIC LANGUAGE)
        ========================================================================== */
     .site-section{position:relative; width:100%; padding:120px 24px; z-index:5;
-      background:radial-gradient(circle at 50% 10%, rgba(14, 34, 68, 0.45) 0%, var(--bg-dark) 85%)}
+      background:#000000}
     .site-container{max-width:1220px; margin:0 auto; position:relative}
 
     .sec-header{text-align:center; max-width:800px; margin:0 auto 58px}
@@ -1536,12 +1536,12 @@
       const w = starCanvas.width;
       const h = starCanvas.height;
 
-      // Deep celestial galaxy gradient
+      // Deep celestial pure black space
       const bgGrad = sCtx.createRadialGradient(w / 2, h * 0.25, 60, w / 2, h * 0.35, Math.max(w, h) * 0.9);
-      bgGrad.addColorStop(0, '#0e2a52');
-      bgGrad.addColorStop(0.35, '#071630');
-      bgGrad.addColorStop(0.75, '#030c18');
-      bgGrad.addColorStop(1, '#01050d');
+      bgGrad.addColorStop(0, '#060810');
+      bgGrad.addColorStop(0.35, '#020306');
+      bgGrad.addColorStop(0.75, '#000000');
+      bgGrad.addColorStop(1, '#000000');
       sCtx.fillStyle = bgGrad;
       sCtx.fillRect(0, 0, w, h);
 
