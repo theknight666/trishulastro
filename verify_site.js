@@ -4,7 +4,7 @@ const path = require('path');
 const htmlPath = path.join(__dirname, 'index.html');
 const html = fs.readFileSync(htmlPath, 'utf8');
 
-console.log('--- AUDITING TRISHULASTRO FULL SITE WITH MINIMAL HERO ---');
+console.log('--- AUDITING TRISHULASTRO 3D WEBGL PLANETARY BUILD ---');
 let errors = [];
 
 // 1. Check title and branding
@@ -21,15 +21,15 @@ if (html.includes("data-planet=\"earth\"") || html.includes("'earth'")) {
 }
 
 // 3. Check all local assets referenced in HTML exist
-const assetRegex = /src=["'](assets\/[^"']+)["']|href=["'](assets\/[^"']+)["']|url\(["']?(assets\/[^"')]+)["']?\)/g;
+const assetRegex = /src=["'](assets\/[^"']+)["']|href=["'](assets\/[^"']+)["']|url\(["']?(assets\/[^"')]+)["']?\)|['"](assets\/textures\/[^'"]+)['"]/g;
 let match;
 const foundAssets = new Set();
 while ((match = assetRegex.exec(html)) !== null) {
-  const asset = match[1] || match[2] || match[3];
-  foundAssets.add(asset);
+  const asset = match[1] || match[2] || match[3] || match[4];
+  if (asset) foundAssets.add(asset);
 }
 
-console.log(`Found ${foundAssets.size} local assets referenced in index.html:`);
+console.log(`\nFound ${foundAssets.size} local assets referenced in index.html:`);
 foundAssets.forEach(asset => {
   const fullPath = path.join(__dirname, asset);
   if (!fs.existsSync(fullPath)) {
@@ -78,8 +78,16 @@ requiredGrahas.forEach(graha => {
   }
 });
 
+// 7. Check 3D Canvas
+if (!html.includes('id="planet-canvas"')) {
+  errors.push('Missing planet-canvas element');
+}
+if (!html.includes('init3DPlanet')) {
+  errors.push('Missing init3DPlanet engine');
+}
+
 if (errors.length === 0) {
-  console.log('\n🎉 FULL SITE WITH MINIMAL HERO AUDIT PASSED 100%!');
+  console.log('\n🎉 3D ROTATING PLANETARY ENGINE & SITE AUDIT PASSED 100%!');
   process.exit(0);
 } else {
   console.error('\n❌ AUDIT FAILURES:');
