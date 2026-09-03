@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 70" fill="none">
+  <defs>
+    <radialGradient id="logoBgGlow" cx="35" cy="35" r="35" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#5fd0e1" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#5fd0e1" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="logoGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff6d6"/>
+      <stop offset="35%" stop-color="#f5c767"/>
+      <stop offset="70%" stop-color="#e09d2d"/>
+      <stop offset="100%" stop-color="#a86812"/>
+    </linearGradient>
+    <linearGradient id="logoCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9bf2fb"/>
+      <stop offset="100%" stop-color="#3eb8ca"/>
+    </linearGradient>
+    <filter id="logoGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Ambient Glow behind Icon -->
+  <circle cx="35" cy="35" r="34" fill="url(#logoBgGlow)"/>
+
+  <!-- Cosmic Orbits -->
+  <ellipse cx="35" cy="35" rx="30" ry="12" stroke="url(#logoCyan)" stroke-width="1" stroke-dasharray="2 2" transform="rotate(-24 35 35)" opacity="0.85"/>
+  <ellipse cx="35" cy="35" rx="30" ry="12" stroke="url(#logoGold)" stroke-width="0.75" transform="rotate(40 35 35)" opacity="0.6"/>
+
+  <!-- Trishul Icon -->
+  <g filter="url(#logoGlow)">
+    <!-- Prongs -->
+    <path d="M35 8 L38 24 L36.5 54 L33.5 54 L32 24 Z" fill="url(#logoGold)"/>
+    <polygon points="35,6 38.5,18 35,16 31.5,18" fill="#ffffff"/>
+    <path d="M34 32 C28 31 22 26 23 16 C25 16 27 19 30 24 C32 27 34 29 35 32 Z" fill="url(#logoGold)"/>
+    <path d="M36 32 C42 31 48 26 47 16 C45 16 43 19 40 24 C38 27 36 29 35 32 Z" fill="url(#logoGold)"/>
+    <!-- Crescent Moon -->
+    <path d="M26 34 C29 41 41 41 44 34 C40 38 30 38 26 34 Z" fill="#ffffff"/>
+    <polygon points="35,23 36.5,26.5 40,27.5 37,29.5 35.5,33 34,29.5 31,27.5 34,26.5" fill="#ffffff"/>
+    <!-- Base Staff -->
+    <rect x="33.7" y="53" width="2.6" height="11" rx="1.3" fill="url(#logoGold)"/>
+    <circle cx="35" cy="54" r="2.5" fill="url(#logoGold)"/>
+    <circle cx="35" cy="65" r="1.6" fill="url(#logoGold)"/>
+  </g>
+
+  <!-- Typography -->
+  <!-- Main Title -->
+  <text x="76" y="38" font-family="'Prata', 'Cinzel', serif" font-size="25" font-weight="600" letter-spacing="1.5" fill="url(#logoGold)">TRISHUL<tspan fill="#ffffff">ASTRO</tspan></text>
+  <!-- Subtitle -->
+  <text x="77" y="52" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="8" font-weight="600" letter-spacing="3.2" fill="#79dce8" opacity="0.9">VEDIC CELESTIAL GUIDANCE</text>
+  <!-- Tiny Auspicious Accent -->
+  <polygon points="325,32 327,35 330,36 327,37 325,40 323,37 320,36 323,35" fill="#f5c767" opacity="0.8"/>
+</svg>

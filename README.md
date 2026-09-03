@@ -1,42 +1,44 @@
-# SpaceEdu — Cinematic Planetary Hero Section
+# TrishulAstro — Sacred Vedic Astrology & Cosmic Booking Platform
 
-A full-viewport, cinematic, interactive space-themed hero section built as a self-contained HTML file without any external frameworks, dependencies, or build tools.
+A luxury, full-featured Vedic astrology consultation website featuring an interactive celestial planetary hero, certified master astrologers directory, daily horoscope forecasts, free Janam Kundli calculator, and an end-to-end booking pass generator.
 
-![SpaceEdu Hero](https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_508c64b8-a31e-4290-bdfc-1187df70e0a6.png)
+![TrishulAstro Logo](assets/trishulastro_logo.jpg)
 
-## Overview
+## Features
 
-- **Single Self-Contained File**: Everything is contained in [index.html](index.html) — all CSS in a single `<style>` tag, all JavaScript in a single `<script>` block.
-- **Dynamic Planet Switching**: Cycle between **EARTH**, **VENUS**, and **MARS**. The featured planet displays as an auto-looping background video with corresponding typography, lede copy, and poster fallback.
-- **Pre-rendered Cutout Slots**: Sibling PNG cutouts preloaded in both left and right buttons enable instant, sub-2ms visual planet swaps without network reload flashes.
-- **Strict Mathematical Design System**: Viewport geometry is computed with custom property `--u` derived from a reference resolution of `1353 x 1163`, incorporating `--vshift`, `--gutter`, and `100dvh` support.
-- **6-Tier Responsive Cascade**:
-  - **Tier A**: Nav collapse to slide-out frosted glass menu (`<=1030px` or `<=620px`).
-  - **Tier B**: Balanced tablet composition (`580px–1030px`).
-  - **Tier C**: Mobile flex flow column layout (`<=579px` or `<=620px`).
-  - **Tier D**: Automatic scroll indicator hiding on low-height screens (`<=660px`).
-  - **Tier E**: Compact vertical spacing on short viewports (`<=620px`).
-  - **Tier F**: Dropdown label alignment beneath button on narrow viewports (`<=500px`).
-- **Choreographed Entrance Animations**: Hardware-accelerated CSS keyframe choreography (`ent-reveal`, `ent-rise`, `ent-settle`, `ent-draw`, `ent-fade`) that runs once and cleanly unregisters all animation classes after completion.
-- **Full Accessibility**: Focus rings in `--cyan`, ARIA expanded / control states, semantic markup, and comprehensive `prefers-reduced-motion` fallbacks.
+- **Celestial Planetary Showcase (Vedic Grahas)**:
+  - Explores the sacred celestial forces: **Venus (Shukra)**, **Jupiter (Guru)**, **Mars (Mangal)**, **Saturn (Shani)**, **The Sun (Surya)**, **Mercury (Budha)**, and **The Moon (Chandra)**.
+  - Earth removed and replaced with rich Vedic astrological significance, ruling deities, gemstones, auspicious days, and sacred Bija Mantras.
+  - Interactive dual orbital switchers plus a 1-click Graha quick-dock.
+- **Brand Identity**:
+  - Custom vector TrishulAstro logo and favicon featuring Lord Shiva's Trishul, luminous crescent moon, and golden celestial orbits.
+- **Vedic Consultation Packages**:
+  - Complete Janam Kundli & Life Path (D1, D9 Navamsha, Mahadasha)
+  - Career, Business & Wealth Yoga
+  - Love, Marriage Compatibility & Kundli Milan
+  - Urgent Prashna Kundli (Horary)
+  - Gemstones & Karma Remedies
+  - Vastu Shastra & Space Energy
+- **Master Astrologers Directory**:
+  - Verified profiles of Banaras and Vedic scholars (Pt. Radhe Krishna Shastri, Dr. Gayatri Devi, Acharya Devvrat Sharma, Acharya Vidyadhar Joshi).
+- **Interactive Daily Horoscope & Rashiphal**:
+  - Dynamic 12-sign zodiac picker (Aries through Pisces) with career, love, wealth, and health rating meters.
+- **Free Instant Kundli & Transit Calculator**:
+  - Computes Ascendant (Lagna), Moon Sign (Rashi), Sun Sign, and active Mahadasha with customized astrological synthesis.
+- **Sacred Navaratna Remedies & Gemstone Sanctum**:
+  - Detailed gemstone guide with authentic Prana Pratishtha energization advice.
+- **Interactive Multi-Step Booking Wizard**:
+  - 5-step seamless flow: Service selection, Astrologer selection, Muhurta/Slot picking, Birth data inputs, and Instant Vedic Booking Pass generation with Google Calendar sync.
+- **Sacred 432Hz Om Chants Audio**:
+  - Real-time synthesized harmonic drone with zero external dependencies.
+- **Zero Broken Links & Zero Empty Buttons**:
+  - Every button and link triggers responsive actions, modals, or smooth section navigation.
 
 ## Quick Start
 
-### 1. Direct File Access
-Simply open [index.html](index.html) in any modern web browser.
+Simply open `index.html` in any modern web browser or serve it locally via PowerShell / Python / Node:
 
-### 2. Local Development Server
-Run the included 0-dependency Node server:
-```bash
-node server.js
+```powershell
+python -m http.server 8080
 ```
-Then open `http://localhost:8080/` in your browser.
-
-## Project Structure
-
-```
-├── index.html       # The single self-contained application file
-├── server.js        # Minimal 0-dependency local static HTTP server
-├── validate.js      # Automated specification & regex verification tests
-└── README.md        # Documentation
-```
+Then visit `http://localhost:8080/`.
