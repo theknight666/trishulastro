@@ -202,9 +202,15 @@
       opacity:1; transform:translateX(-50%) translateY(0) scale(1);
     }
 
-    /* Saturn: rings arch around the sides, globe apex calibrated at 38vh */
+    /* Saturn: the master image is 2076x1484 (wide landscape due to rings).
+       The globe sits in the center ~56% of image height, rings extend sideways.
+       We upscale Saturn 1.55x so the globe appears as large as other planets,
+       and shift bottom so the globe apex aligns at 38vh. */
     .planet-horizon-img.planet-saturn{
-      bottom:calc(38vh - (var(--planet-size) * 0.74));
+      --saturn-size: calc(var(--planet-size) * 1.55);
+      width: var(--saturn-size);
+      height: var(--saturn-size);
+      bottom: calc(38vh - (var(--saturn-size) * 0.62));
     }
 
     /* The Sun: solar corona apex calibrated at 38vh */
@@ -259,19 +265,19 @@
       overflow:hidden;
       transition:opacity .35s ease, transform .45s cubic-bezier(.22,1,.36,1);
     }
-    /* Each side planet is a large circle, partially hidden off-screen edge, centered vertically */
+    /* Each side nav planet is a small circle, ~40% hidden off the screen edge */
     .planet-l{
-      width: clamp(200px, 30vw, 440px);
-      height: clamp(200px, 30vw, 440px);
-      left: calc(-1 * clamp(200px, 30vw, 440px) * 0.58);
+      width: clamp(110px, 14vw, 180px);
+      height: clamp(110px, 14vw, 180px);
+      left: calc(-1 * clamp(110px, 14vw, 180px) * 0.40);
       top: 50%;
       transform: translateY(-50%);
       border-radius: 50%;
     }
     .planet-r{
-      width: clamp(200px, 30vw, 440px);
-      height: clamp(200px, 30vw, 440px);
-      right: calc(-1 * clamp(200px, 30vw, 440px) * 0.58);
+      width: clamp(110px, 14vw, 180px);
+      height: clamp(110px, 14vw, 180px);
+      right: calc(-1 * clamp(110px, 14vw, 180px) * 0.40);
       top: 50%;
       transform: translateY(-50%);
       border-radius: 50%;
@@ -279,12 +285,12 @@
     .planet img{
       display:none; width:100%; height:100%;
       border-radius:50%; object-fit:cover;
-      filter: brightness(0.7) saturate(1.1);
+      filter: brightness(0.72) saturate(1.05);
     }
     .planet img.is-shown{display:block}
     .planet:hover { opacity: 1; }
-    .planet-l:hover { transform: translateY(-50%) translateX(6px); }
-    .planet-r:hover { transform: translateY(-50%) translateX(-6px); }
+    .planet-l:hover { transform: translateY(-50%) translateX(5px); }
+    .planet-r:hover { transform: translateY(-50%) translateX(-5px); }
     .planet:active { opacity: 0.9; }
     @media (prefers-reduced-motion:reduce){
       .planet{transition:none} .planet:hover,.planet:active{transform:translateY(-50%)} }
@@ -337,12 +343,12 @@
       top: 50%;
       transform: translateY(-50%);
     }
-    /* Label sits just inside the visible edge of each side planet */
+    /* Label sits just inside the visible edge of each small side nav planet */
     .label.label-l{
-      left: calc(clamp(200px, 30vw, 440px) * 0.44);
+      left: calc(clamp(110px, 14vw, 180px) * 0.62);
     }
     .label.label-r{
-      right: calc(clamp(200px, 30vw, 440px) * 0.44);
+      right: calc(clamp(110px, 14vw, 180px) * 0.62);
       text-align: right;
     }
 
