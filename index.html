@@ -249,34 +249,45 @@
       border:1px solid rgba(121, 220, 232, 0.45); box-shadow:0 0 calc(12 * var(--u)) rgba(121, 220, 232, 0.3)}
     .graha-pill span{font-size:calc(14 * var(--u)); line-height:1}
 
-    /* SIDE PLANET BUTTONS WITH 3D SPHERICAL SHADING */
-    .planet{position:absolute; z-index:-1; padding:0; border:0; background:none;
-      -webkit-appearance:none; appearance:none; line-height:0; cursor:pointer;
-      pointer-events:auto; border-radius:50%; overflow:hidden;
-      box-shadow:0 0 calc(22 * var(--u)) rgba(0,0,0,0.7);
-      transition:transform .45s cubic-bezier(.22,1,.36,1)}
-    .planet img{display:none; width:100%; height:100%; border-radius:50%; object-fit:cover}
+    /* SIDE EDGE-PEEKING PLANET BUTTONS (Large horizon planets on left/right) */
+    .planet{
+      position:absolute;
+      z-index:3;
+      padding:0; border:0; background:none;
+      -webkit-appearance:none; appearance:none;
+      cursor:pointer; pointer-events:auto;
+      overflow:hidden;
+      transition:opacity .35s ease, transform .45s cubic-bezier(.22,1,.36,1);
+    }
+    /* Each side planet is a large circle, partially hidden off-screen edge, centered vertically */
+    .planet-l{
+      width: clamp(200px, 30vw, 440px);
+      height: clamp(200px, 30vw, 440px);
+      left: calc(-1 * clamp(200px, 30vw, 440px) * 0.58);
+      top: 50%;
+      transform: translateY(-50%);
+      border-radius: 50%;
+    }
+    .planet-r{
+      width: clamp(200px, 30vw, 440px);
+      height: clamp(200px, 30vw, 440px);
+      right: calc(-1 * clamp(200px, 30vw, 440px) * 0.58);
+      top: 50%;
+      transform: translateY(-50%);
+      border-radius: 50%;
+    }
+    .planet img{
+      display:none; width:100%; height:100%;
+      border-radius:50%; object-fit:cover;
+      filter: brightness(0.7) saturate(1.1);
+    }
     .planet img.is-shown{display:block}
-
-    /* TACTILE 3D SPHERICAL GLASS OVERLAY FOR BUTTON ORBS */
-    .planet::after{content:''; position:absolute; inset:0; border-radius:50%;
-      background:radial-gradient(circle at 35% 35%, rgba(255,255,255,0.38) 0%, rgba(255,255,255,0.05) 35%, rgba(0,0,0,0.65) 75%, rgba(0,0,0,0.92) 100%);
-      pointer-events:none; box-shadow:inset 0 0 calc(8 * var(--u)) rgba(0,0,0,0.85)}
-
-    /* ORBITAL RING HALO */
-    .planet::before{content:""; position:absolute; inset:calc(-7 * var(--u)); border-radius:50%;
-      border:calc(1.5 * var(--u)) dashed rgba(121, 220, 232, 0.42); pointer-events:none;
-      animation:orbit-spin 26s linear infinite; transition:all .3s ease; opacity:0.75}
-    .planet:hover::before{opacity:1; border-color:var(--cyan); border-style:solid;
-      box-shadow:0 0 calc(18 * var(--u)) rgba(95,208,225,0.45)}
-    @keyframes orbit-spin{from{transform:rotate(0deg)} to{transform:rotate(360deg)}}
-
-    .planet:hover{transform:scale(1.06)}
-    .planet:active{transform:scale(.98)}
-    .planet-l{width:calc(143 * var(--u)); left:calc(-69.5 * var(--u)); top:calc(-38.3 * var(--u))}
-    .planet-r{width:calc(143 * var(--u)); right:calc(-64.7 * var(--u)); top:calc(-40.6 * var(--u))}
+    .planet:hover { opacity: 1; }
+    .planet-l:hover { transform: translateY(-50%) translateX(6px); }
+    .planet-r:hover { transform: translateY(-50%) translateX(-6px); }
+    .planet:active { opacity: 0.9; }
     @media (prefers-reduced-motion:reduce){
-      .planet{transition:none} .planet:hover,.planet:active{transform:none} }
+      .planet{transition:none} .planet:hover,.planet:active{transform:translateY(-50%)} }
 
     /* LAYOUT */
     .copy{position:absolute; inset:0; transform:translateY(var(--vshift)); pointer-events:none}
@@ -312,12 +323,28 @@
                  inset 0 0 0 calc(2 * var(--u)) rgba(255,255,255,.95);
       cursor:pointer; transition:transform 0.25s ease, box-shadow 0.25s ease}
     .cta a:hover{transform:scale(1.035); box-shadow:0 calc(14 * var(--u)) calc(28 * var(--u)) rgba(255,255,255,.75)}
-    .label{position:absolute; top:calc(33 * var(--u)); font-family:var(--font-serif);
-      font-weight:400; font-size:calc(17.8 * var(--u)); letter-spacing:calc(4.6 * var(--u));
-      line-height:1; color:#fff; white-space:nowrap;
-      text-shadow:0 calc(2 * var(--u)) calc(8 * var(--u)) rgba(0,0,0,0.8)}
-    .label.label-l{left:calc(111 * var(--u))}
-    .label.label-r{right:calc(104 * var(--u))}
+
+    /* Planet name labels beside the edge-peeking planets */
+    .label{
+      position:absolute;
+      font-family:var(--font-serif);
+      font-weight:400; font-size:clamp(11px, calc(13 * var(--u)), 16px);
+      letter-spacing:3px;
+      line-height:1; color:rgba(255,255,255,0.65); white-space:nowrap;
+      text-shadow:0 2px 10px rgba(0,0,0,0.95);
+      text-transform:uppercase;
+      pointer-events:none;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    /* Label sits just inside the visible edge of each side planet */
+    .label.label-l{
+      left: calc(clamp(200px, 30vw, 440px) * 0.44);
+    }
+    .label.label-r{
+      right: calc(clamp(200px, 30vw, 440px) * 0.44);
+      text-align: right;
+    }
 
     /* SCROLL CONTROL WITH PULSING HALO */
     @keyframes pulse-ring{
@@ -696,6 +723,29 @@
     </nav>
 
     <div class="ui">
+      <!-- SIDE EDGE-PEEKING PLANET BUTTONS (on full hero stage, not CTA row) -->
+      <button class="planet planet-l" type="button" data-slot="l" aria-label="Show Planet">
+        <img data-planet="venus" alt="Venus" src="assets/venus_trans.png">
+        <img data-planet="mars" alt="Mars" src="assets/mars_trans.png">
+        <img data-planet="jupiter" alt="Jupiter" src="assets/jupiter_trans.png">
+        <img data-planet="saturn" alt="Saturn" src="assets/saturn_trans.png">
+        <img data-planet="sun" alt="Sun" src="assets/sun_trans.png">
+        <img data-planet="mercury" alt="Mercury" src="assets/mercury_trans.png">
+        <img data-planet="moon" alt="Moon" src="assets/moon_trans.png">
+      </button>
+      <span class="label label-l"></span>
+
+      <button class="planet planet-r" type="button" data-slot="r" aria-label="Show Planet">
+        <img data-planet="venus" alt="Venus" src="assets/venus_trans.png">
+        <img data-planet="mars" alt="Mars" src="assets/mars_trans.png">
+        <img data-planet="jupiter" alt="Jupiter" src="assets/jupiter_trans.png">
+        <img data-planet="saturn" alt="Saturn" src="assets/saturn_trans.png">
+        <img data-planet="sun" alt="Sun" src="assets/sun_trans.png">
+        <img data-planet="mercury" alt="Mercury" src="assets/mercury_trans.png">
+        <img data-planet="moon" alt="Moon" src="assets/moon_trans.png">
+      </button>
+      <span class="label label-r"></span>
+
       <div class="copy">
         <div class="col eyebrow"><span class="ent-mask"><span class="ent-line">VEDIC GRAHA</span></span></div>
         <h1 class="col title"><span class="ent-mask"><span class="ent-line">VENUS</span></span></h1>
@@ -704,32 +754,8 @@
         <p class="col lede">Governs romance, wealth, luxury, and artistic magnetism. An auspicious Venus <br>bestows fine aesthetics, marital harmony, and charm. Book your session to unlock <br>your planetary destiny.</p>
         
         <div class="col cta">
-          <!-- Left Planet Button Slot (Circular Glass Orbs) -->
-          <button class="planet planet-l" type="button" data-slot="l" aria-label="Show Planet">
-            <img data-planet="venus" alt="Venus" src="assets/venus_orb.png">
-            <img data-planet="mars" alt="Mars" src="assets/mars_orb.png">
-            <img data-planet="jupiter" alt="Jupiter" src="assets/jupiter.jpg">
-            <img data-planet="saturn" alt="Saturn" src="assets/saturn.jpg">
-            <img data-planet="sun" alt="Sun" src="assets/sun.jpg">
-            <img data-planet="mercury" alt="Mercury" src="assets/mercury.jpg">
-            <img data-planet="moon" alt="Moon" src="assets/moon.jpg">
-          </button>
-
-          <!-- Right Planet Button Slot (Circular Glass Orbs) -->
-          <button class="planet planet-r" type="button" data-slot="r" aria-label="Show Planet">
-            <img data-planet="venus" alt="Venus" src="assets/venus_orb.png">
-            <img data-planet="mars" alt="Mars" src="assets/mars_orb.png">
-            <img data-planet="jupiter" alt="Jupiter" src="assets/jupiter.jpg">
-            <img data-planet="saturn" alt="Saturn" src="assets/saturn.jpg">
-            <img data-planet="sun" alt="Sun" src="assets/sun.jpg">
-            <img data-planet="mercury" alt="Mercury" src="assets/mercury.jpg">
-            <img data-planet="moon" alt="Moon" src="assets/moon.jpg">
-          </button>
-
           <!-- Primary Action Button -->
           <a href="#modal-booking" id="cta-book">BOOK SESSION</a>
-          <span class="label label-l"></span>
-          <span class="label label-r"></span>
         </div>
       </div>
     </div>
