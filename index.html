@@ -169,35 +169,52 @@
     }
 
     /* ==========================================================================
-       3. HERO STAGE (CINEMATIC VIDEOS & REAL-TIME ROTATING HORIZON)
+       3. HERO STAGE (ANIMATED STARRY NIGHT & SEPARATE STATIC PLANET IMAGES)
        ========================================================================== */
     .hero-stage{position:relative; width:100%; height:100vh; min-height:100vh; overflow:hidden; isolation:isolate}
 
-    .sky{position:absolute; inset:0; z-index:0; background:#030a16;
-      background-image:radial-gradient(circle at 50% 20%, rgba(14,34,68,0.7) 0%, #030c18 80%), url('assets/deep_space_bg.jpg');
-      background-size:cover; background-position:center; background-repeat:no-repeat}
+    /* STARRY NIGHT ANIMATED CANVAS (BACKGROUND LAYER) */
+    .sky{position:absolute; inset:0; z-index:0; background:#030a16}
+    .starry-canvas{position:absolute; inset:0; width:100%; height:100%; display:block; z-index:0}
 
-    /* PHOTOREALISTIC VIDEO LAYERS (Venus & Mars) */
-    .sky video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
-      opacity:0; transition:opacity 1.1s cubic-bezier(.4,0,.2,1); pointer-events:none; z-index:1}
-    .sky video.is-active{opacity:1; z-index:2}
+    /* SEPARATE PLANET HORIZON STAGE (FOREGROUND PLANET LAYER) */
+    .planet-stage{position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden;
+      display:flex; justify-content:center; align-items:flex-end}
 
-    /* SMOOTH ROTATING PLANETARY HORIZON CANVAS (For Jupiter, Saturn, Sun, Mercury, Moon) */
-    .horizon-canvas{position:absolute; inset:0; width:100%; height:100%; display:block;
-      opacity:0; transition:opacity 1.1s cubic-bezier(.4,0,.2,1); pointer-events:none; z-index:1}
-    .horizon-canvas.is-active{opacity:1; z-index:2}
+    .planet-horizon-img{
+      position:absolute; bottom:0; left:0; width:100%; height:100%;
+      object-fit:cover; object-position:center bottom;
+      mix-blend-mode:screen;
+      opacity:0; transition:opacity .85s cubic-bezier(.4,0,.2,1), transform .85s cubic-bezier(.4,0,.2,1);
+      transform:translateY(16px) scale(0.985);
+      will-change:opacity, transform;
+    }
+    .planet-horizon-img.is-active{
+      opacity:1; transform:translateY(0) scale(1);
+    }
+
+    /* For spherical images (Saturn, Sun, Mercury, Moon), position as majestic curved horizon */
+    .planet-horizon-img.is-spherical{
+      width:110vw; height:110vw; max-width:1650px; max-height:1650px;
+      bottom:-36vw; left:50%;
+      transform:translateX(-50%) translateY(16px) scale(0.985);
+      object-fit:contain;
+    }
+    .planet-horizon-img.is-spherical.is-active{
+      opacity:1; transform:translateX(-50%) translateY(0) scale(1);
+    }
 
     /* CELESTIAL GRAHA AURA LIGHTING */
     .graha-aura{position:absolute; top:calc(280 * var(--u)); left:50%;
       transform:translate(-50%, -50%); width:min(calc(800 * var(--u)), 90vw);
       height:min(calc(420 * var(--u)), 50vh);
       background:radial-gradient(ellipse at center, var(--graha-aura) 0%, transparent 72%);
-      filter:blur(calc(45 * var(--u))); pointer-events:none; z-index:3;
+      filter:blur(calc(45 * var(--u))); pointer-events:none; z-index:2;
       transition:background 0.8s ease}
 
     .ui{position:absolute; inset:0; z-index:4; pointer-events:none}
 
-    /* ALL 7 GRAHAS QUICK-SELECTOR PILL BAR (Ensures all planets are immediately accessible) */
+    /* ALL 7 GRAHAS QUICK-SELECTOR PILL BAR (Directly Accessible) */
     .graha-bar{position:absolute; top:calc(122 * var(--u)); left:50%; transform:translateX(-50%);
       display:flex; align-items:center; gap:calc(8 * var(--u)); padding:calc(4 * var(--u)) calc(8 * var(--u));
       background:rgba(4, 16, 31, 0.72); border:1px solid rgba(255,255,255,0.12);
@@ -619,24 +636,30 @@
   </header>
 
   <!-- ==========================================================================
-       HERO SECTION (ORIGINAL CINEMATIC VIDEOS & REAL ROTATING HORIZON)
+       HERO SECTION (DYNAMIC STARRY NIGHT & SEPARATE STATIC PLANET IMAGES)
        ========================================================================== -->
   <section class="hero-stage" id="hero">
+    <!-- DYNAMIC ANIMATED STARRY NIGHT BACKGROUND -->
     <div class="sky">
-      <!-- VENUS (Original 4K Photorealistic Video Loop) -->
-      <video data-planet="venus" class="is-active" autoplay muted loop playsinline preload="auto"
-             src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202422_b211cd74-013b-4dd3-bfd0-64491d8696fa.mp4"
-             poster="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_cf55d1d8-7b59-4a64-80da-d72052ae974e.png"
-             aria-hidden="true"></video>
+      <canvas id="starry-canvas" class="starry-canvas"></canvas>
+    </div>
 
-      <!-- MARS (Original 4K Photorealistic Video Loop) -->
-      <video data-planet="mars" muted loop playsinline preload="none"
-             data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202422_51eae59a-2459-4c84-907c-cc5edfe5fea7.mp4"
-             poster="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202133_0ba6de7c-285d-43dc-b7ab-8c54c73707cb.png"
-             aria-hidden="true"></video>
-
-      <!-- ROTATING 3D HORIZON CANVAS (For Jupiter, Saturn, Sun, Mercury, Moon) -->
-      <canvas id="horizon-canvas" class="horizon-canvas"></canvas>
+    <!-- SEPARATE HIGH QUALITY STATIC PLANET IMAGES (Layered on top of starry sky) -->
+    <div class="planet-stage" id="planet-stage">
+      <!-- 1. VENUS (Pristine High-Res Curved Horizon) -->
+      <img class="planet-horizon-img is-active" data-planet="venus" src="assets/venus_horizon.png" alt="Venus Horizon">
+      <!-- 2. MARS (Pristine High-Res Curved Horizon) -->
+      <img class="planet-horizon-img" data-planet="mars" src="assets/mars_horizon.png" alt="Mars Horizon">
+      <!-- 3. JUPITER (Pristine High-Res Curved Horizon) -->
+      <img class="planet-horizon-img" data-planet="jupiter" src="assets/jupiter_horizon.jpg" alt="Jupiter Horizon">
+      <!-- 4. SATURN (Pristine Curved Celestial Horizon) -->
+      <img class="planet-horizon-img is-spherical" data-planet="saturn" src="assets/saturn.jpg" alt="Saturn Horizon">
+      <!-- 5. THE SUN (Pristine Curved Solar Horizon) -->
+      <img class="planet-horizon-img is-spherical" data-planet="sun" src="assets/sun.jpg" alt="The Sun Horizon">
+      <!-- 6. MERCURY (Pristine Curved Terrestrial Horizon) -->
+      <img class="planet-horizon-img is-spherical" data-planet="mercury" src="assets/mercury.jpg" alt="Mercury Horizon">
+      <!-- 7. THE MOON (Pristine Curved Lunar Horizon) -->
+      <img class="planet-horizon-img is-spherical" data-planet="moon" src="assets/moon.jpg" alt="The Moon Horizon">
     </div>
 
     <!-- Radiant Atmospheric Corona behind Hero Title -->
@@ -664,8 +687,8 @@
         <div class="col cta">
           <!-- Left Planet Button Slot (Circular Glass Orbs) -->
           <button class="planet planet-l" type="button" data-slot="l" aria-label="Show Planet">
-            <img data-planet="venus" alt="Venus" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202012_640b239a-d08a-4200-adb2-741bbe129ac8.png">
-            <img data-planet="mars" alt="Mars" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202018_3d559490-f613-4ed7-a3bb-3b7e9fc90fb8.png">
+            <img data-planet="venus" alt="Venus" src="assets/venus_orb.png">
+            <img data-planet="mars" alt="Mars" src="assets/mars_orb.png">
             <img data-planet="jupiter" alt="Jupiter" src="assets/jupiter.jpg">
             <img data-planet="saturn" alt="Saturn" src="assets/saturn.jpg">
             <img data-planet="sun" alt="Sun" src="assets/sun.jpg">
@@ -675,8 +698,8 @@
 
           <!-- Right Planet Button Slot (Circular Glass Orbs) -->
           <button class="planet planet-r" type="button" data-slot="r" aria-label="Show Planet">
-            <img data-planet="venus" alt="Venus" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202012_640b239a-d08a-4200-adb2-741bbe129ac8.png">
-            <img data-planet="mars" alt="Mars" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260827_202018_3d559490-f613-4ed7-a3bb-3b7e9fc90fb8.png">
+            <img data-planet="venus" alt="Venus" src="assets/venus_orb.png">
+            <img data-planet="mars" alt="Mars" src="assets/mars_orb.png">
             <img data-planet="jupiter" alt="Jupiter" src="assets/jupiter.jpg">
             <img data-planet="saturn" alt="Saturn" src="assets/saturn.jpg">
             <img data-planet="sun" alt="Sun" src="assets/sun.jpg">
@@ -918,7 +941,7 @@
 
   <!-- ==========================================================================
        SECTION 3: DAILY VEDIC HOROSCOPE & RASHIPHAL
-       ========================================================================== -->
+       ========================================================================= -->
   <section class="site-section" id="horoscope">
     <div class="site-container">
       <div class="sec-header">
@@ -1404,7 +1427,7 @@
   <div class="toast-pill" id="toast-pill"></div>
 
   <!-- ==========================================================================
-       JAVASCRIPT DRIVER: CINEMATIC VIDEOS, ROTATING HORIZON & SITE LOGIC
+       JAVASCRIPT DRIVER: STARRY NIGHT ANIMATION & PLANET SWITCHER
        ========================================================================== -->
   <script>
     /* ══════════════════════════════════════════════════════════════════
@@ -1442,6 +1465,117 @@
     })();
 
     /* ══════════════════════════════════════════════════════════════════
+       DYNAMIC STARRY NIGHT ANIMATION ENGINE (BACKGROUND LAYER)
+       ══════════════════════════════════════════════════════════════════ */
+    const starCanvas = document.getElementById('starry-canvas');
+    const sCtx = starCanvas.getContext('2d');
+
+    function resizeStarryCanvas() {
+      starCanvas.width = window.innerWidth;
+      starCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeStarryCanvas);
+    resizeStarryCanvas();
+
+    // 260 Multi-depth celestial stars
+    const starCount = 260;
+    const stars = [];
+    for (let i = 0; i < starCount; i++) {
+      stars.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight * 0.85,
+        r: Math.random() < 0.8 ? (Math.random() * 1.1 + 0.4) : (Math.random() * 1.8 + 1.2),
+        alpha: Math.random() * 0.75 + 0.25,
+        speed: Math.random() * 0.022 + 0.006,
+        phase: Math.random() * Math.PI * 2,
+        color: Math.random() < 0.2 ? '#9feaff' : (Math.random() < 0.15 ? '#ffd89e' : '#ffffff')
+      });
+    }
+
+    // Occasional shooting meteor streak
+    let meteor = null;
+    function spawnMeteor() {
+      meteor = {
+        x: Math.random() * (starCanvas.width * 0.6) + (starCanvas.width * 0.1),
+        y: Math.random() * (starCanvas.height * 0.28),
+        len: Math.random() * 120 + 80,
+        speed: Math.random() * 14 + 10,
+        angle: Math.PI / 4 + (Math.random() * 0.2 - 0.1),
+        alpha: 1,
+        life: 0,
+        maxLife: Math.random() * 25 + 20
+      };
+    }
+    setInterval(() => {
+      if (!meteor && Math.random() < 0.75) spawnMeteor();
+    }, 5500);
+
+    function renderStarryNight() {
+      requestAnimationFrame(renderStarryNight);
+      sCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+
+      const w = starCanvas.width;
+      const h = starCanvas.height;
+
+      // Deep celestial radial background
+      const bgGrad = sCtx.createRadialGradient(w / 2, h * 0.22, 60, w / 2, h * 0.3, Math.max(w, h) * 0.85);
+      bgGrad.addColorStop(0, '#0c2344');
+      bgGrad.addColorStop(0.35, '#061328');
+      bgGrad.addColorStop(0.75, '#030a16');
+      bgGrad.addColorStop(1, '#01040a');
+      sCtx.fillStyle = bgGrad;
+      sCtx.fillRect(0, 0, w, h);
+
+      // Render twinkling stars
+      stars.forEach(s => {
+        s.phase += s.speed;
+        const twinkle = s.alpha * (0.65 + 0.35 * Math.sin(s.phase));
+        sCtx.save();
+        sCtx.beginPath();
+        sCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        sCtx.fillStyle = s.color;
+        sCtx.globalAlpha = twinkle;
+        if (s.r > 1.3) {
+          sCtx.shadowColor = s.color;
+          sCtx.shadowBlur = 8;
+        }
+        sCtx.fill();
+        sCtx.restore();
+      });
+
+      // Render meteor if active
+      if (meteor) {
+        meteor.x += Math.cos(meteor.angle) * meteor.speed;
+        meteor.y += Math.sin(meteor.angle) * meteor.speed;
+        meteor.life++;
+
+        const tailX = meteor.x - Math.cos(meteor.angle) * meteor.len;
+        const tailY = meteor.y - Math.sin(meteor.angle) * meteor.len;
+
+        const mGrad = sCtx.createLinearGradient(tailX, tailY, meteor.x, meteor.y);
+        mGrad.addColorStop(0, 'rgba(255, 255, 255, 0)');
+        mGrad.addColorStop(1, `rgba(165, 235, 255, ${meteor.alpha})`);
+
+        sCtx.save();
+        sCtx.beginPath();
+        sCtx.moveTo(tailX, tailY);
+        sCtx.lineTo(meteor.x, meteor.y);
+        sCtx.strokeStyle = mGrad;
+        sCtx.lineWidth = 1.8;
+        sCtx.shadowColor = '#79dce8';
+        sCtx.shadowBlur = 12;
+        sCtx.stroke();
+        sCtx.restore();
+
+        if (meteor.life >= meteor.maxLife) {
+          meteor.alpha -= 0.12;
+          if (meteor.alpha <= 0) meteor = null;
+        }
+      }
+    }
+    renderStarryNight();
+
+    /* ══════════════════════════════════════════════════════════════════
        PLANET DEFINITIONS (ALL 7 VEDIC GRAHAS CONFIGURED)
        ══════════════════════════════════════════════════════════════════ */
     const ORDER = ['venus', 'mars', 'jupiter', 'saturn', 'sun', 'mercury', 'moon'];
@@ -1450,158 +1584,46 @@
       venus: {
         name: 'VENUS',
         sanskrit: 'शुक्र ग्रह (SHUKRA)',
-        isVideo: true,
-        texture: 'assets/textures/venus.jpg',
         aura: 'rgba(121, 220, 232, 0.22)',
-        rimColor: 'rgba(121, 220, 232, 0.85)',
         lede: "Governs romance, wealth, luxury, and artistic magnetism. An auspicious Venus <br>bestows fine aesthetics, marital harmony, and charm. Book your session to unlock <br>your planetary destiny."
       },
       mars: {
         name: 'MARS',
         sanskrit: 'मंगल ग्रह (MANGAL)',
-        isVideo: true,
-        texture: 'assets/textures/mars.jpg',
         aura: 'rgba(255, 107, 74, 0.24)',
-        rimColor: 'rgba(255, 107, 74, 0.85)',
         lede: "The planet of courage, ambition, decisive action, and victory over obstacles. <br>Channeling Mangal grants unstoppable willpower and executive leadership. <br>Book your session to align your vitality."
       },
       jupiter: {
         name: 'JUPITER',
         sanskrit: 'बृहस्पति ग्रह (GURU)',
-        isVideo: false,
-        texture: 'assets/textures/jupiter.jpg',
-        horizonBg: 'assets/jupiter_horizon.jpg',
         aura: 'rgba(245, 199, 103, 0.26)',
-        rimColor: 'rgba(245, 199, 103, 0.85)',
         lede: "The supreme cosmic benefic of divine wisdom, good fortune, and spiritual wealth. <br>Guru protects against misfortune and expands prosperity and intellect. <br>Book your session to receive divine guidance."
       },
       saturn: {
         name: 'SATURN',
         sanskrit: 'शनि ग्रह (SHANI)',
-        isVideo: false,
-        texture: 'assets/textures/saturn.jpg',
         aura: 'rgba(110, 140, 230, 0.24)',
-        rimColor: 'rgba(110, 140, 230, 0.85)',
-        hasRings: true,
         lede: "The lord of karma, perseverance, discipline, and enduring legacy. Shani rewards <br>integrity and resilience, turning trials into unshakeable mastery. <br>Book your session to balance your karma."
       },
       sun: {
         name: 'THE SUN',
         sanskrit: 'सूर्य ग्रह (SURYA)',
-        isVideo: false,
-        texture: 'assets/textures/sun.jpg',
         aura: 'rgba(255, 200, 70, 0.28)',
-        rimColor: 'rgba(255, 190, 60, 0.95)',
         lede: "The king of the celestial forces, representing soul radiance, executive power, <br>and vitality. Surya commands royal stature and administrative victory. <br>Book your session to awaken your true purpose."
       },
       mercury: {
         name: 'MERCURY',
         sanskrit: 'बुध ग्रह (BUDHA)',
-        isVideo: false,
-        texture: 'assets/textures/mercury.jpg',
         aura: 'rgba(95, 225, 180, 0.22)',
-        rimColor: 'rgba(95, 225, 180, 0.85)',
         lede: "The swift celestial messenger of commerce, razor-sharp intellect, and eloquence. <br>Budha empowers traders, writers, and analysts with brilliant insight. <br>Book your session to optimize your career path."
       },
       moon: {
         name: 'THE MOON',
         sanskrit: 'चन्द्र ग्रह (CHANDRA)',
-        isVideo: false,
-        texture: 'assets/textures/moon.jpg',
         aura: 'rgba(240, 245, 255, 0.25)',
-        rimColor: 'rgba(220, 235, 255, 0.88)',
         lede: "The ruler of the subconscious mind, divine intuition, and emotional peace. <br>Chandra brings serene tranquility, psychic clarity, and fertile imagination. <br>Book your session to restore inner harmony."
       }
     };
-
-    /* ══════════════════════════════════════════════════════════════════
-       ROTATING HORIZON ENGINE (HTML5 CANVAS FOR JUPITER, SATURN, ETC.)
-       ══════════════════════════════════════════════════════════════════ */
-    const sky = document.querySelector('.sky');
-    const clips = sky.querySelectorAll('video[data-planet]');
-    const horizonCanvas = document.getElementById('horizon-canvas');
-    const hCtx = horizonCanvas.getContext('2d');
-
-    const loadedTextures = {};
-    Object.keys(PLANETS).forEach(k => {
-      if (PLANETS[k].texture) {
-        const img = new Image();
-        img.src = PLANETS[k].texture;
-        loadedTextures[k] = img;
-      }
-    });
-
-    let current = null;
-    let canvasOffset = 0;
-    let animId = null;
-
-    function resizeCanvas() {
-      horizonCanvas.width = window.innerWidth;
-      horizonCanvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    function renderHorizonFrame() {
-      if (!current || PLANETS[current].isVideo) return;
-
-      const w = horizonCanvas.width;
-      const h = horizonCanvas.height;
-      hCtx.clearRect(0, 0, w, h);
-
-      const pData = PLANETS[current];
-      const tex = loadedTextures[current];
-
-      // Apex curves up to ~62% from top (38% from bottom), identical to Venus
-      const apexY = h * 0.62;
-      const r = Math.max(w * 0.85, h * 1.35);
-      const cx = w / 2;
-      const cy = apexY + r;
-
-      // Draw planet surface inside the curved horizon arc
-      hCtx.save();
-      hCtx.beginPath();
-      hCtx.arc(cx, cy, r, 0, Math.PI * 2);
-      hCtx.clip();
-
-      if (tex && tex.complete && tex.naturalWidth > 0) {
-        canvasOffset += 0.35; // Smooth continuous 3D rotation across the horizon
-        const tw = r * 2.8;
-        const th = r * 1.4;
-        const wrapX = canvasOffset % tw;
-        const drawY = cy - r;
-
-        // Seamless tile wrap for continuous planetary surface rotation
-        hCtx.drawImage(tex, cx - tw/2 - wrapX, drawY, tw, th);
-        hCtx.drawImage(tex, cx + tw/2 - wrapX, drawY, tw, th);
-        if (wrapX > 0) {
-          hCtx.drawImage(tex, cx - tw*1.5 - wrapX, drawY, tw, th);
-        }
-
-        // Spherical sunlight gradient (realistic space illumination)
-        const shadeGrad = hCtx.createRadialGradient(cx, cy - r * 0.96, r * 0.04, cx, cy, r);
-        shadeGrad.addColorStop(0, 'rgba(255, 255, 255, 0.16)');
-        shadeGrad.addColorStop(0.35, 'rgba(0, 0, 0, 0)');
-        shadeGrad.addColorStop(0.72, 'rgba(3, 12, 24, 0.58)');
-        shadeGrad.addColorStop(1, 'rgba(1, 5, 12, 0.96)');
-        hCtx.fillStyle = shadeGrad;
-        hCtx.fillRect(cx - r, cy - r, r * 2, r * 2);
-      }
-      hCtx.restore();
-
-      // Atmospheric Rim Glow along the top curve
-      hCtx.save();
-      hCtx.beginPath();
-      hCtx.arc(cx, cy, r, Math.PI * 1.15, Math.PI * 1.85);
-      hCtx.strokeStyle = pData.rimColor || 'rgba(121, 220, 232, 0.85)';
-      hCtx.lineWidth = 4.5;
-      hCtx.shadowColor = pData.rimColor || 'rgba(121, 220, 232, 0.85)';
-      hCtx.shadowBlur = 26;
-      hCtx.stroke();
-      hCtx.restore();
-
-      animId = requestAnimationFrame(renderHorizonFrame);
-    }
 
     /* ══════════════════════════════════════════════════════════════════
        PLANET SWITCHER LOGIC (FULL 7-PLANET CYCLE & INSTANT SELECTOR)
@@ -1614,54 +1636,23 @@
     const labelR = document.querySelector('.label.label-r');
     const grahaAura = document.getElementById('graha-aura');
     const grahaPills = document.querySelectorAll('.graha-pill');
+    const planetImages = document.querySelectorAll('.planet-horizon-img');
 
-    function warm(planet) {
-      if (!planet) return;
-      const clip = sky.querySelector(`video[data-planet="${planet}"]`);
-      if (clip && !clip.getAttribute('src') && clip.dataset.src) {
-        clip.preload = 'auto';
-        clip.src = clip.dataset.src;
-        clip.load();
-      }
-    }
+    let current = null;
 
     function show(next) {
       if (!PLANETS[next] || current === next) return;
 
       const pData = PLANETS[next];
 
-      // Handle video vs canvas playback
-      if (pData.isVideo) {
-        // Stop canvas animation loop
-        if (animId) cancelAnimationFrame(animId);
-        horizonCanvas.classList.remove('is-active');
-
-        // Activate corresponding video
-        clips.forEach(clip => {
-          if (clip.dataset.planet === next) {
-            if (!clip.getAttribute('src') && clip.dataset.src) {
-              clip.src = clip.dataset.src;
-              clip.load();
-            }
-            clip.play().catch(() => {});
-            clip.classList.add('is-active');
-          } else {
-            clip.classList.remove('is-active');
-            clip.pause();
-          }
-        });
-      } else {
-        // Deactivate all videos
-        clips.forEach(clip => {
-          clip.classList.remove('is-active');
-          clip.pause();
-        });
-
-        // Activate and run smooth rotating canvas horizon
-        horizonCanvas.classList.add('is-active');
-        if (animId) cancelAnimationFrame(animId);
-        animId = requestAnimationFrame(renderHorizonFrame);
-      }
+      // Switch static planet horizon image with smooth crossfade
+      planetImages.forEach(img => {
+        if (img.dataset.planet === next) {
+          img.classList.add('is-active');
+        } else {
+          img.classList.remove('is-active');
+        }
+      });
 
       // Update Typography & Texts
       if (titleLine) {
@@ -1687,7 +1678,7 @@
       const prevPlanet = ORDER[prevIdx];
       const nextPlanet = ORDER[nextIdx];
 
-      // Left Button: Previous Planet in order
+      // Left Button: Points to Previous Planet in order
       btnL.dataset.planet = prevPlanet;
       btnL.setAttribute('aria-label', `Show ${PLANETS[prevPlanet].name}`);
       labelL.textContent = PLANETS[prevPlanet].name;
@@ -1695,17 +1686,13 @@
         img.classList.toggle('is-shown', img.dataset.planet === prevPlanet);
       });
 
-      // Right Button: Next Planet in order
+      // Right Button: Points to Next Planet in order
       btnR.dataset.planet = nextPlanet;
       btnR.setAttribute('aria-label', `Show ${PLANETS[nextPlanet].name}`);
       labelR.textContent = PLANETS[nextPlanet].name;
       btnR.querySelectorAll('img[data-planet]').forEach(img => {
         img.classList.toggle('is-shown', img.dataset.planet === nextPlanet);
       });
-
-      // Preload next planets
-      warm(prevPlanet);
-      warm(nextPlanet);
 
       current = next;
     }
@@ -1719,7 +1706,7 @@
       });
     });
 
-    // Initial Planet: Venus (Original Cinematic Video)
+    // Initial Planet: Venus
     show('venus');
 
     /* ══════════════════════════════════════════════════════════════════
@@ -1909,6 +1896,7 @@
     document.getElementById('booking-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const name = document.getElementById('client-name').value.trim();
+      const service = document.getElementById('consult-service').value.split('(')[0].trim();
       const ref = 'TA-' + Math.floor(10000 + Math.random() * 90000);
       closeBookingModal();
       showToast(`Divine Pass #${ref} generated for ${name}! Details dispatched via WhatsApp/Email.`);

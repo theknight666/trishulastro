@@ -4,7 +4,7 @@ const path = require('path');
 const htmlPath = path.join(__dirname, 'index.html');
 const html = fs.readFileSync(htmlPath, 'utf8');
 
-console.log('--- AUDITING TRISHULASTRO BUILD ---');
+console.log('--- AUDITING TRISHULASTRO STARRY NIGHT & SEPARATE PLANETS BUILD ---');
 let errors = [];
 
 // 1. Check title and branding
@@ -21,11 +21,11 @@ if (html.includes("data-planet=\"earth\"") || html.includes("'earth'")) {
 }
 
 // 3. Check all local assets referenced in HTML exist
-const assetRegex = /src=["'](assets\/[^"']+)["']|href=["'](assets\/[^"']+)["']|url\(["']?(assets\/[^"')]+)["']?\)|['"](assets\/textures\/[^'"]+)['"]/g;
+const assetRegex = /src=["'](assets\/[^"']+)["']|href=["'](assets\/[^"']+)["']|url\(["']?(assets\/[^"')]+)["']?\)/g;
 let match;
 const foundAssets = new Set();
 while ((match = assetRegex.exec(html)) !== null) {
-  const asset = match[1] || match[2] || match[3] || match[4];
+  const asset = match[1] || match[2] || match[3];
   if (asset) foundAssets.add(asset);
 }
 
@@ -78,8 +78,16 @@ requiredGrahas.forEach(graha => {
   }
 });
 
+// 7. Check Starry night animation canvas & separate planet stage
+if (!html.includes('id="starry-canvas"')) {
+  errors.push('Missing starry-canvas element');
+}
+if (!html.includes('id="planet-stage"')) {
+  errors.push('Missing planet-stage element');
+}
+
 if (errors.length === 0) {
-  console.log('\n🎉 ALL PLANETS & SITE AUDIT PASSED 100%!');
+  console.log('\n🎉 STARRY NIGHT ANIMATION & SEPARATE PLANETS AUDIT PASSED 100%!');
   process.exit(0);
 } else {
   console.error('\n❌ AUDIT FAILURES:');
