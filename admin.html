@@ -376,6 +376,50 @@
     }
     .empty-icon { font-size: 40px; margin-bottom: 12px; color: var(--gold); opacity: 0.7; }
 
+    /* Fullscreen Login Gate */
+    .login-gate-overlay {
+      position: fixed; inset: 0; z-index: 1000;
+      background: radial-gradient(circle at 50% 30%, rgba(20, 24, 38, 0.98), #06070a 90%);
+      backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+    .login-gate-overlay.hidden {
+      opacity: 0; visibility: hidden; pointer-events: none;
+    }
+    .login-card {
+      width: 100%; max-width: 440px;
+      background: #0e1019; border: 1px solid var(--border-gold);
+      border-radius: 24px; padding: 40px 32px;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.95), 0 0 40px rgba(245, 199, 103, 0.15);
+      text-align: center; position: relative;
+      animation: gate-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes gate-enter {
+      0% { transform: scale(0.92) translateY(24px); opacity: 0; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+    .login-logo {
+      width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 16px;
+      background: linear-gradient(135deg, rgba(245, 199, 103, 0.25), rgba(121, 220, 232, 0.1));
+      border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center;
+      font-size: 30px; color: var(--gold); box-shadow: 0 0 26px rgba(245, 199, 103, 0.35);
+    }
+    .login-title { font-family: var(--font-serif); font-size: 22px; color: #fff; margin-bottom: 4px; letter-spacing: 1px; }
+    .login-sub { font-size: 11px; color: var(--cyan); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px; }
+    .login-error {
+      background: rgba(248, 113, 113, 0.12); border: 1px solid var(--red); color: var(--red);
+      font-size: 12.5px; padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; display: none;
+    }
+    .login-error.shake {
+      animation: shake 0.4s ease;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .top-nav { padding: 12px 16px; }
@@ -387,7 +431,40 @@
 </head>
 <body>
 
-<div class="sanctum-app">
+<!-- Fullscreen Admin Authentication Gate -->
+<div class="login-gate-overlay" id="login-gate">
+  <div class="login-card">
+    <div class="login-logo">ॐ</div>
+    <h2 class="login-title">TRISHULASTRO SANCTUM</h2>
+    <div class="login-sub">Sacred Astrologer Authentication</div>
+
+    <div class="login-error" id="login-error-msg"></div>
+
+    <form id="login-form" style="display:flex; flex-direction:column; gap:16px; text-align:left;">
+      <div class="form-group">
+        <label class="form-label" for="login-password">Master Password or PIN</label>
+        <div style="position:relative;">
+          <input type="password" class="form-control" id="login-password" placeholder="Enter password (default: trishul1088)" required style="width:100%; padding-right:42px;">
+          <button type="button" id="btn-toggle-pwd" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:16px;" title="Show/Hide Password">👁️</button>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--text-muted);">
+        <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+          <input type="checkbox" id="login-remember" checked>
+          <span>Remember on this device</span>
+        </label>
+        <span style="color:var(--gold); font-size:11px;">Default: trishul1088</span>
+      </div>
+
+      <button type="submit" class="btn-gold" id="btn-submit-login" style="width:100%; justify-content:center; padding:12px; margin-top:8px; font-size:14px;">
+        <span>✦ Unlock Sanctum Console</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="sanctum-app" id="sanctum-app-root">
   <!-- Top Navigation Header -->
   <header class="top-nav">
     <a href="/admin" class="brand-wrap">
@@ -432,6 +509,12 @@
       <!-- Quick Manual Booking -->
       <button class="btn-gold" id="btn-new-booking">
         <span>+ New Booking</span>
+      </button>
+
+      <!-- Logout / Lock -->
+      <button class="btn-action" id="btn-logout" title="Lock & Logout Sanctum Console">
+        <span>🔒</span>
+        <span>Lock</span>
       </button>
     </div>
   </header>
@@ -652,6 +735,32 @@
             </button>
           </div>
         </form>
+
+        <!-- Password & Security Management -->
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-gold); border-radius: 12px; padding: 22px;">
+          <h3 style="font-family: var(--font-serif); font-size: 17px; color: var(--gold); margin-bottom: 4px;">
+            🔒 Sanctum Master Password & Security
+          </h3>
+          <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 16px;">
+            Change the sacred password used to unlock this Astrologer Sanctum console.
+          </p>
+
+          <form id="change-password-form" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; align-items: end;">
+            <div class="form-group">
+              <label class="form-label" for="cp-current">Current Password</label>
+              <input type="password" class="form-control" id="cp-current" required placeholder="Current password">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cp-new">New Password</label>
+              <input type="password" class="form-control" id="cp-new" required placeholder="Min 4 characters">
+            </div>
+            <div>
+              <button type="submit" class="btn-gold" id="btn-update-pwd" style="width: 100%; justify-content: center;">
+                <span>Update Password</span>
+              </button>
+            </div>
+          </form>
+        </div>
 
         <!-- Notification History Log Table -->
         <div style="margin-top: 16px;">
@@ -1598,8 +1707,142 @@
     document.getElementById('toast-popup').classList.remove('visible');
   });
 
-  // Initial load
-  loadData();
+  /* ══════════════════════════════════════════════════════════════════
+     AUTHENTICATION & PASSWORD CONTROLLER
+     ══════════════════════════════════════════════════════════════════ */
+  const loginGate = document.getElementById('login-gate');
+  const loginForm = document.getElementById('login-form');
+  const loginPasswordInput = document.getElementById('login-password');
+  const loginErrorMsg = document.getElementById('login-error-msg');
+  const btnTogglePwd = document.getElementById('btn-toggle-pwd');
+  const btnLogout = document.getElementById('btn-logout');
+  const changePwdForm = document.getElementById('change-password-form');
+  let isSanctumInitialized = false;
+
+  // Toggle password visibility
+  btnTogglePwd.addEventListener('click', () => {
+    if (loginPasswordInput.type === 'password') {
+      loginPasswordInput.type = 'text';
+      btnTogglePwd.textContent = '🙈';
+    } else {
+      loginPasswordInput.type = 'password';
+      btnTogglePwd.textContent = '👁️';
+    }
+  });
+
+  // Check login state on load
+  function checkAuth() {
+    const token = sessionStorage.getItem('sanctum_token') || localStorage.getItem('sanctum_token');
+    if (token) {
+      loginGate.classList.add('hidden');
+      initSanctum();
+    } else {
+      loginGate.classList.remove('hidden');
+      setTimeout(() => loginPasswordInput.focus(), 150);
+    }
+  }
+
+  // Handle Login submission
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pwd = loginPasswordInput.value.trim();
+    const remember = document.getElementById('login-remember').checked;
+    const submitBtn = document.getElementById('btn-submit-login');
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span>✦ Verifying Sanctum Key...</span>';
+    loginErrorMsg.style.display = 'none';
+    loginErrorMsg.classList.remove('shake');
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pwd, pin: pwd })
+      });
+
+      const data = await res.json();
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<span>✦ Unlock Sanctum Console</span>';
+
+      if (data.success && data.token) {
+        if (remember) {
+          localStorage.setItem('sanctum_token', data.token);
+        } else {
+          sessionStorage.setItem('sanctum_token', data.token);
+        }
+
+        loginGate.classList.add('hidden');
+        playTempleChime();
+        showToast('✦ Sanctum Unlocked', `Welcome, ${data.adminName || 'Master Astrologer'}.`);
+        initSanctum();
+      } else {
+        loginErrorMsg.textContent = data.error || 'Incorrect Sanctum Password. Please re-enter.';
+        loginErrorMsg.style.display = 'block';
+        loginErrorMsg.classList.add('shake');
+        loginPasswordInput.select();
+      }
+    } catch (err) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<span>✦ Unlock Sanctum Console</span>';
+      loginErrorMsg.textContent = 'Connection error: ' + err.message;
+      loginErrorMsg.style.display = 'block';
+    }
+  });
+
+  // Logout Handler
+  btnLogout.addEventListener('click', () => {
+    sessionStorage.removeItem('sanctum_token');
+    localStorage.removeItem('sanctum_token');
+    loginGate.classList.remove('hidden');
+    loginPasswordInput.value = '';
+    loginErrorMsg.style.display = 'none';
+    showToast('🔒 Sanctum Locked', 'You have been logged out.');
+  });
+
+  // Change Password Handler in Settings tab
+  if (changePwdForm) {
+    changePwdForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const currentPassword = document.getElementById('cp-current').value;
+      const newPassword = document.getElementById('cp-new').value;
+
+      try {
+        const res = await fetch('/api/auth/change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ currentPassword, newPassword })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showToast('✓ Password Updated', 'Your new Sanctum password is now active.');
+          changePwdForm.reset();
+        } else {
+          alert(data.error || 'Could not update password.');
+        }
+      } catch (err) {
+        alert('Error updating password: ' + err.message);
+      }
+    });
+  }
+
+  // Initialize Sanctum dashboard once authenticated
+  function initSanctum() {
+    if (isSanctumInitialized) return;
+    isSanctumInitialized = true;
+
+    loadData();
+
+    // Vercel Serverless Reliability: Auto-poll every 15s in background
+    // Guarantees live updates even if serverless terminates SSE connection
+    setInterval(() => {
+      loadData();
+    }, 15000);
+  }
+
+  // Start authentication check
+  checkAuth();
 </script>
 
 </body>

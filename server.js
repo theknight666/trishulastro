@@ -259,14 +259,17 @@ app.post('/api/notifications/test', async (req, res) => {
 app.get('/api/settings', (req, res) => {
   try {
     const settings = db.getAllSettings();
-    // Mask sensitive password before returning to frontend
+    // Mask sensitive passwords before returning to frontend
     if (settings.smtp_pass) {
       settings.smtp_pass_set = true;
       settings.smtp_pass = '••••••••';
     } else {
       settings.smtp_pass_set = false;
     }
-    // Mask PIN partially
+    if (settings.admin_password) {
+      settings.admin_password_set = true;
+      settings.admin_password = '••••••••';
+    }
     if (settings.admin_pin) {
       settings.admin_pin_set = true;
     }
@@ -279,10 +282,10 @@ app.get('/api/settings', (req, res) => {
 app.post('/api/settings', (req, res) => {
   try {
     const incoming = req.body;
-    // Don't overwrite password with masked value
-    if (incoming.smtp_pass === '••••••••') {
-      delete incoming.smtp_pass;
-    }
+    // Don't overwrite masked values
+    if (incoming.smtp_pass === '••••••••') delete incoming.smtp_pass;
+    if (incoming.admin_password === '••••••••') delete incoming.admin_password;
+
     db.setManySettings(incoming);
     res.json({ success: true, message: 'Settings saved successfully!' });
   } catch (error) {
@@ -290,16 +293,47 @@ app.post('/api/settings', (req, res) => {
   }
 });
 
-// 11. Admin Authentication
+// 11. Admin Authentication (Password & PIN)
 app.post('/api/auth/login', (req, res) => {
   try {
-    const { pin } = req.body;
+    const { password, pin } = req.body;
+    const correctPassword = db.getSetting('admin_password', 'trishul1088');
     const correctPin = db.getSetting('admin_pin', '1088');
-    if (String(pin) === String(correctPin)) {
-      res.json({ success: true, token: 'vedic-admin-' + Date.now() });
+
+    const isPassValid = password && String(password).trim() === String(correctPassword).trim();
+    const isPinValid = pin && String(pin).trim() === String(correctPin).trim();
+
+    if (isPassValid || isPinValid) {
+      res.json({
+        success: true,
+        token: 'sanctum-auth-' + Date.now(),
+        adminName: db.getSetting('admin_name', 'Pt. Radhe Krishna Shastri'),
+        message: 'Auspicious entry granted to the Sanctum.'
+      });
     } else {
-      res.status(401).json({ error: 'Incorrect Sacred Security PIN. Please re-enter.' });
+      res.status(401).json({ error: 'Incorrect Sanctum Password. Access denied.' });
     }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Change Password Endpoint
+app.post('/api/auth/change-password', (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const actualPassword = db.getSetting('admin_password', 'trishul1088');
+
+    if (String(currentPassword).trim() !== String(actualPassword).trim()) {
+      return res.status(400).json({ error: 'Current password does not match.' });
+    }
+
+    if (!newPassword || newPassword.trim().length < 4) {
+      return res.status(400).json({ error: 'New password must be at least 4 characters.' });
+    }
+
+    db.setSetting('admin_password', newPassword.trim());
+    res.json({ success: true, message: 'Sanctum password updated successfully!' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -325,12 +359,16 @@ app.use((req, res) => {
   }
 });
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`\n========================================================`);
-  console.log(`⚜ TRISHULASTRO VEDIC PLATFORM & BACKEND RUNNING`);
-  console.log(`   Client Sanctum:   http://localhost:${PORT}/`);
-  console.log(`   Astrologer Admin: http://localhost:${PORT}/admin`);
-  console.log(`   Real-Time SSE:    http://localhost:${PORT}/api/events`);
-  console.log(`========================================================\n`);
-});
+// Start Server locally if run directly
+if (require.main === module || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`\n========================================================`);
+    console.log(`⚜ TRISHULASTRO VEDIC PLATFORM & BACKEND RUNNING`);
+    console.log(`   Client Sanctum:   http://localhost:${PORT}/`);
+    console.log(`   Astrologer Admin: http://localhost:${PORT}/admin`);
+    console.log(`   Real-Time SSE:    http://localhost:${PORT}/api/events`);
+    console.log(`========================================================\n`);
+  });
+}
+
+module.exports = app;

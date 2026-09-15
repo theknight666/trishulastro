@@ -2,7 +2,22 @@ const { DatabaseSync } = require('node:sqlite');
 const path = require('path');
 const fs = require('fs');
 
-const DB_PATH = path.join(__dirname, 'trishulastro.db');
+// Vercel serverless has a read-only root filesystem; /tmp is the only writable directory
+const isVercel = Boolean(process.env.VERCEL || process.env.NOW_REGION || process.env.AWS_REGION);
+let DB_PATH = path.join(__dirname, 'trishulastro.db');
+
+if (isVercel) {
+  DB_PATH = path.join('/tmp', 'trishulastro.db');
+  const seedPath = path.join(__dirname, 'trishulastro.db');
+  if (!fs.existsSync(DB_PATH) && fs.existsSync(seedPath)) {
+    try {
+      fs.copyFileSync(seedPath, DB_PATH);
+    } catch (e) {
+      console.warn('Could not copy seed DB to /tmp:', e);
+    }
+  }
+}
+
 const db = new DatabaseSync(DB_PATH);
 
 // Initialize schema
@@ -61,6 +76,7 @@ function initDB() {
     { key: 'admin_email', value: 'astrologer@trishulastro.com' },
     { key: 'admin_name', value: 'Pt. Radhe Krishna Shastri' },
     { key: 'admin_pin', value: '1088' },
+    { key: 'admin_password', value: 'trishul1088' },
     { key: 'webhook_url', value: '' },
     { key: 'smtp_host', value: '' },
     { key: 'smtp_port', value: '587' },
