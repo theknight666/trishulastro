@@ -411,15 +411,9 @@
       opacity:1; transform:translateX(-50%) translateY(0) scale(1);
     }
 
-    /* Saturn: the master image is 2076x1484 (wide landscape due to rings).
-       The globe sits in the center ~56% of image height, rings extend sideways.
-       We upscale Saturn 1.55x so the globe appears as large as other planets,
-       and shift bottom so the globe apex aligns at 38vh. */
+    /* Saturn: apex aligned at 38vh with rings spanning the cosmic horizon */
     .planet-horizon-img.planet-saturn{
-      --saturn-size: calc(var(--planet-size) * 1.55);
-      width: var(--saturn-size);
-      height: var(--saturn-size);
-      bottom: calc(38vh - (var(--saturn-size) * 0.62));
+      bottom: calc(38vh - (var(--planet-size) * 0.96));
     }
 
     /* The Sun: solar corona apex calibrated at 38vh */
@@ -430,7 +424,7 @@
 
     /* Mercury: terrestrial limb calibrated at 38vh */
     .planet-horizon-img.planet-mercury{
-      bottom:calc(38vh - (var(--planet-size) * 0.94));
+      bottom:calc(38vh - (var(--planet-size) * 0.96));
     }
 
     /* The Moon: lunar limb calibrated at 38vh */
@@ -834,9 +828,6 @@
       }
       .planet-horizon-img{
         bottom: calc(24vh - (var(--planet-size) * 0.95));
-      }
-      .planet-horizon-img.planet-saturn{
-        bottom: calc(24vh - (var(--saturn-size) * 0.60));
       }
       .copy{
         top:126px; display:flex; flex-direction:column; align-items:center;
