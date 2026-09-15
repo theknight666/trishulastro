@@ -400,15 +400,18 @@
       height:var(--planet-size);
       left:50%;
       bottom:calc(38vh - (var(--planet-size) * 0.96));
-      transform:translateX(-50%) translateY(16px) scale(0.985);
+      transform:translateX(-50%) translateY(16px) scale(0.985) translateZ(0);
       object-fit:contain;
       opacity:0;
       transition:opacity .75s cubic-bezier(.4,0,.2,1), transform .75s cubic-bezier(.4,0,.2,1);
       will-change:opacity, transform;
       filter:drop-shadow(0 -10px 35px var(--graha-aura));
+      image-rendering:-webkit-optimize-contrast;
+      image-rendering:high-quality;
+      backface-visibility:hidden;
     }
     .planet-horizon-img.is-active{
-      opacity:1; transform:translateX(-50%) translateY(0) scale(1);
+      opacity:1; transform:translateX(-50%) translateY(0) scale(1) translateZ(0);
     }
 
     /* Saturn: apex aligned at 38vh with rings spanning the cosmic horizon */
