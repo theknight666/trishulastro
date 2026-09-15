@@ -18,7 +18,7 @@ function calculateVedicSigns(dobStr) {
     const m = dob.getMonth() + 1; // 1-12
     const d = dob.getDate();
 
-    // Tropical/Sidereal Sun approximation (Lahiri Ayanamsha offset ~23-24 deg)
+    // Tropical/Sidereal Sun approximation
     const signs = [
       { name: 'Mesha (Aries)', ruler: 'Mangal (Mars)', element: 'Fire', from: [3, 21], to: [4, 19] },
       { name: 'Vrishabha (Taurus)', ruler: 'Shukra (Venus)', element: 'Earth', from: [4, 20], to: [5, 20] },
@@ -63,11 +63,12 @@ function calculateVedicSigns(dobStr) {
 }
 
 // -------------------------------------------------------------
-// REST API ROUTES
+// REST API ROUTER (Mounts on both /api and / for Vercel + Local)
 // -------------------------------------------------------------
+const apiRouter = express.Router();
 
 // 1. Real-Time SSE Stream for Admin Console
-app.get('/api/events', (req, res) => {
+apiRouter.get('/events', (req, res) => {
   res.writeHead(200, {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
@@ -83,8 +84,8 @@ app.get('/api/events', (req, res) => {
   });
 });
 
-// 2. Create Booking (Submitted from client website)
-app.post('/api/bookings', async (req, res) => {
+// 2. Create Booking
+apiRouter.post('/bookings', async (req, res) => {
   try {
     const {
       client_name,
@@ -101,19 +102,16 @@ app.post('/api/bookings', async (req, res) => {
       query_topic
     } = req.body;
 
-    // Validation
     if (!client_name || !client_email || !client_phone || !client_dob) {
       return res.status(400).json({ error: 'Client name, email, phone, and date of birth are required.' });
     }
 
-    // Extract price from service string if applicable (e.g. "Complete Janam Kundli & Life Path ($120)")
     let servicePrice = 85;
     if (service_name) {
       const match = service_name.match(/\$(\d+)/);
       if (match) servicePrice = parseFloat(match[1]);
     }
 
-    // Generate distinctive Vedic Booking Reference Code
     const refCode = 'TA-' + Math.floor(10000 + Math.random() * 90000);
     const nowIso = new Date().toISOString();
 
@@ -141,8 +139,6 @@ app.post('/api/bookings', async (req, res) => {
 
     const newBooking = db.createBooking(bookingPayload);
 
-    // Trigger instant notifications across all active channels (SSE, Email, Webhook)
-    // Non-blocking so response is swift
     notifications.notifyNewBooking(newBooking).catch(err => {
       console.error('Notification dispatch failure:', err);
     });
@@ -158,27 +154,25 @@ app.post('/api/bookings', async (req, res) => {
   }
 });
 
-// 3. Get All Bookings (with filtering & search)
-app.get('/api/bookings', (req, res) => {
+// 3. Get All Bookings
+apiRouter.get('/bookings', (req, res) => {
   try {
     const { status, search, date, limit, offset } = req.query;
     const bookings = db.getAllBookings({ status, search, date, limit, offset });
     res.json({ success: true, count: bookings.length, bookings });
   } catch (error) {
-    console.error('Error querying bookings:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
 // 4. Get Single Booking with calculated Vedic astro parameters
-app.get('/api/bookings/:id', (req, res) => {
+apiRouter.get('/bookings/:id', (req, res) => {
   try {
     const booking = db.getBookingById(req.params.id);
     if (!booking) {
       return res.status(404).json({ error: 'Booking not found' });
     }
 
-    // Add astrological calculation preview
     const astroMeta = calculateVedicSigns(booking.client_dob);
 
     res.json({
@@ -192,7 +186,7 @@ app.get('/api/bookings/:id', (req, res) => {
 });
 
 // 5. Update Booking Status / Meeting Link / Notes
-app.patch('/api/bookings/:id', (req, res) => {
+apiRouter.patch('/bookings/:id', (req, res) => {
   try {
     const existing = db.getBookingById(req.params.id);
     if (!existing) {
@@ -201,7 +195,6 @@ app.patch('/api/bookings/:id', (req, res) => {
 
     const updated = db.updateBooking(req.params.id, req.body);
 
-    // Broadcast update via SSE
     notifications.broadcastSSE('booking_updated', {
       booking: updated,
       message: `Booking #${updated.reference_code} updated (${updated.status})`
@@ -209,13 +202,12 @@ app.patch('/api/bookings/:id', (req, res) => {
 
     res.json({ success: true, booking: updated });
   } catch (error) {
-    console.error('Error updating booking:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
 // 6. Delete Booking
-app.delete('/api/bookings/:id', (req, res) => {
+apiRouter.delete('/bookings/:id', (req, res) => {
   try {
     db.deleteBooking(req.params.id);
     notifications.broadcastSSE('booking_deleted', { id: req.params.id });
@@ -226,7 +218,7 @@ app.delete('/api/bookings/:id', (req, res) => {
 });
 
 // 7. Executive Stats & Analytics
-app.get('/api/stats', (req, res) => {
+apiRouter.get('/stats', (req, res) => {
   try {
     const stats = db.getStats();
     res.json({ success: true, stats });
@@ -236,7 +228,7 @@ app.get('/api/stats', (req, res) => {
 });
 
 // 8. Notification Logs
-app.get('/api/notifications', (req, res) => {
+apiRouter.get('/notifications', (req, res) => {
   try {
     const notifs = db.getRecentNotifications(50);
     res.json({ success: true, notifications: notifs });
@@ -246,7 +238,7 @@ app.get('/api/notifications', (req, res) => {
 });
 
 // 9. Send Test Notification
-app.post('/api/notifications/test', async (req, res) => {
+apiRouter.post('/notifications/test', async (req, res) => {
   try {
     const result = await notifications.dispatchTestNotification();
     res.json({ success: true, result, message: 'Test notification triggered successfully!' });
@@ -256,10 +248,9 @@ app.post('/api/notifications/test', async (req, res) => {
 });
 
 // 10. Admin Settings Management
-app.get('/api/settings', (req, res) => {
+apiRouter.get('/settings', (req, res) => {
   try {
     const settings = db.getAllSettings();
-    // Mask sensitive passwords before returning to frontend
     if (settings.smtp_pass) {
       settings.smtp_pass_set = true;
       settings.smtp_pass = '••••••••';
@@ -279,10 +270,9 @@ app.get('/api/settings', (req, res) => {
   }
 });
 
-app.post('/api/settings', (req, res) => {
+apiRouter.post('/settings', (req, res) => {
   try {
     const incoming = req.body;
-    // Don't overwrite masked values
     if (incoming.smtp_pass === '••••••••') delete incoming.smtp_pass;
     if (incoming.admin_password === '••••••••') delete incoming.admin_password;
 
@@ -294,7 +284,7 @@ app.post('/api/settings', (req, res) => {
 });
 
 // 11. Admin Authentication (Password & PIN)
-app.post('/api/auth/login', (req, res) => {
+apiRouter.post('/auth/login', (req, res) => {
   try {
     const { password, pin } = req.body;
     const correctPassword = db.getSetting('admin_password', 'trishul1088');
@@ -319,7 +309,7 @@ app.post('/api/auth/login', (req, res) => {
 });
 
 // Change Password Endpoint
-app.post('/api/auth/change-password', (req, res) => {
+apiRouter.post('/auth/change-password', (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
     const actualPassword = db.getSetting('admin_password', 'trishul1088');
@@ -338,6 +328,10 @@ app.post('/api/auth/change-password', (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// Mount router on both /api (standard) and / (Vercel serverless prefix-strip fallback)
+app.use('/api', apiRouter);
+app.use('/', apiRouter);
 
 // -------------------------------------------------------------
 // STATIC FILES & SPA FALLBACK
