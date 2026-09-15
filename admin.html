@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrishulAstro Sanctum — Astrologer Management Console</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&family=Prata&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-base: #06070a;
+      --bg-surface: #0e0f17;
+      --bg-surface-elevated: #151722;
+      --bg-card: rgba(18, 20, 30, 0.75);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-gold: rgba(245, 199, 103, 0.35);
+      --gold: #f5c767;
+      --gold-light: #ffdf9e;
+      --cyan: #79dce8;
+      --green: #4ade80;
+      --red: #f87171;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-serif: 'Prata', Georgia, serif;
+      --font-body: 'Hanken Grotesk', system-ui, sans-serif;
+      --font-logo: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      background-image: 
+        radial-gradient(circle at 15% 10%, rgba(121, 220, 232, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 85% 20%, rgba(245, 199, 103, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 50% 80%, rgba(14, 165, 233, 0.03) 0%, transparent 60%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-base); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+    /* Layout Containers */
+    .sanctum-app { display: flex; flex-direction: column; min-height: 100vh; }
+
+    /* Top Navigation Bar */
+    .top-nav {
+      position: sticky; top: 0; z-index: 90;
+      background: rgba(8, 9, 14, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 12px 28px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .brand-wrap { display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; }
+    .brand-icon {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, rgba(245, 199, 103, 0.2), rgba(121, 220, 232, 0.1));
+      border: 1px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; color: var(--gold);
+      box-shadow: 0 0 16px rgba(245, 199, 103, 0.25);
+    }
+    .brand-title { font-family: var(--font-serif); font-size: 20px; font-weight: 600; letter-spacing: 1.5px; color: #fff; }
+    .brand-sub { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--cyan); }
+
+    .nav-actions { display: flex; align-items: center; gap: 14px; }
+
+    /* Live SSE Pill */
+    .live-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3);
+      padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+      color: var(--green); letter-spacing: 0.5px;
+    }
+    .live-pulse {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--green);
+      box-shadow: 0 0 8px var(--green); animation: pulse-anim 2s infinite;
+    }
+    @keyframes pulse-anim {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+    }
+
+    /* Buttons & Toggles */
+    .btn-action {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 8px 16px; border-radius: 8px;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.2s ease; text-decoration: none;
+    }
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .btn-action.active {
+      background: rgba(245, 199, 103, 0.15);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold) 0%, #d4a339 100%);
+      color: #071227; font-weight: 600; border: none;
+      padding: 9px 20px; border-radius: 8px; cursor: pointer;
+      font-size: 13px; letter-spacing: 0.5px; transition: all 0.2s ease;
+      display: inline-flex; align-items: center; gap: 8px;
+      box-shadow: 0 4px 14px rgba(245, 199, 103, 0.25);
+    }
+    .btn-gold:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(245, 199, 103, 0.4);
+    }
+
+    /* Main Container */
+    .sanctum-body {
+      max-width: 1440px; margin: 0 auto; width: 100%;
+      padding: 24px 28px; flex: 1; display: flex; flex-direction: column; gap: 24px;
+    }
+
+    /* KPI Cards Grid */
+    .kpi-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+    }
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px; padding: 18px 20px;
+      backdrop-filter: blur(12px);
+      transition: all 0.25s ease;
+      position: relative; overflow: hidden;
+    }
+    .kpi-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
+    }
+    .kpi-card:hover {
+      border-color: var(--border-gold);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+    .kpi-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .kpi-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+    .kpi-icon { font-size: 18px; color: var(--gold); }
+    .kpi-value { font-family: var(--font-serif); font-size: 30px; font-weight: 600; color: #fff; line-height: 1; }
+    .kpi-sub { font-size: 11px; color: var(--cyan); margin-top: 6px; }
+
+    /* Navigation Tabs Bar */
+    .tabs-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      gap: 12px; flex-wrap: wrap; padding-bottom: 4px;
+    }
+    .tabs-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .tab-btn {
+      background: transparent; border: none; color: var(--text-muted);
+      padding: 10px 18px; font-size: 14px; font-weight: 500; cursor: pointer;
+      border-radius: 8px; transition: all 0.2s; position: relative;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .tab-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.04); }
+    .tab-btn.active {
+      color: var(--gold); background: rgba(245, 199, 103, 0.08); font-weight: 600;
+    }
+    .tab-btn.active::after {
+      content: ''; position: absolute; bottom: -5px; left: 16px; right: 16px;
+      height: 2px; background: var(--gold); border-radius: 2px;
+    }
+    .tab-badge {
+      background: rgba(255, 255, 255, 0.1); color: #fff;
+      font-size: 11px; padding: 2px 7px; border-radius: 12px; font-weight: 600;
+    }
+    .tab-btn.active .tab-badge {
+      background: var(--gold); color: #071227;
+    }
+
+    /* Controls & Filter Bar */
+    .filter-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      padding: 14px 18px; border-radius: 12px;
+    }
+    .search-box {
+      flex: 1; min-width: 260px; position: relative;
+    }
+    .search-input {
+      width: 100%; background: var(--bg-base);
+      border: 1px solid var(--border-subtle); border-radius: 8px;
+      padding: 10px 14px 10px 38px; color: #fff; font-size: 13px;
+      outline: none; transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--cyan); }
+    .search-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--text-muted); font-size: 14px;
+    }
+    .filter-select {
+      background: var(--bg-base); border: 1px solid var(--border-subtle);
+      color: #fff; border-radius: 8px; padding: 10px 14px; font-size: 13px;
+      outline: none; cursor: pointer;
+    }
+
+    /* Bookings Table */
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px; overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+    .table-responsive { width: 100%; overflow-x: auto; }
+    .sanctum-table {
+      width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;
+    }
+    .sanctum-table th {
+      background: rgba(255, 255, 255, 0.02);
+      padding: 14px 18px; color: var(--text-muted);
+      font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 1px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .sanctum-table td {
+      padding: 16px 18px; border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      vertical-align: middle;
+    }
+    .sanctum-table tr:hover td { background: rgba(255, 255, 255, 0.02); }
+    .sanctum-table tr.row-new td {
+      background: rgba(245, 199, 103, 0.05);
+      animation: highlight-row 3s ease-out;
+    }
+    @keyframes highlight-row {
+      0% { background: rgba(245, 199, 103, 0.25); }
+      100% { background: rgba(245, 199, 103, 0.05); }
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 14px; font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .badge-pending {
+      background: rgba(245, 199, 103, 0.15); border: 1px solid rgba(245, 199, 103, 0.35);
+      color: var(--gold);
+    }
+    .badge-confirmed {
+      background: rgba(74, 222, 128, 0.15); border: 1px solid rgba(74, 222, 128, 0.35);
+      color: var(--green);
+    }
+    .badge-completed {
+      background: rgba(121, 220, 232, 0.15); border: 1px solid rgba(121, 220, 232, 0.35);
+      color: var(--cyan);
+    }
+    .badge-cancelled {
+      background: rgba(248, 113, 113, 0.15); border: 1px solid rgba(248, 113, 113, 0.35);
+      color: var(--red);
+    }
+
+    .client-title { font-weight: 600; color: #fff; font-size: 14px; margin-bottom: 2px; }
+    .client-sub { font-size: 12px; color: var(--text-muted); display: flex; gap: 8px; align-items: center; }
+
+    /* Quick action buttons in table */
+    .row-actions { display: flex; align-items: center; gap: 6px; }
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-subtle);
+      color: var(--text-muted); width: 32px; height: 32px; border-radius: 6px;
+      display: inline-flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s; font-size: 13px; text-decoration: none;
+    }
+    .btn-icon:hover { color: #fff; background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.3); }
+    .btn-icon.wa:hover { color: #25d366; border-color: #25d366; background: rgba(37, 211, 102, 0.1); }
+    .btn-icon.confirm:hover { color: var(--green); border-color: var(--green); background: rgba(74, 222, 128, 0.1); }
+
+    /* Drawer / Side Modal for Kundli Details */
+    .drawer-overlay {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px); z-index: 100;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+    .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+    .drawer {
+      position: fixed; top: 0; right: -580px; width: 100%; max-width: 580px; height: 100vh;
+      background: #0d0f17; border-left: 1px solid var(--border-gold);
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8); z-index: 101;
+      display: flex; flex-direction: column;
+      transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .drawer.open { right: 0; }
+    .drawer-header {
+      padding: 20px 24px; border-bottom: 1px solid var(--border-subtle);
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .drawer-title { font-family: var(--font-serif); font-size: 18px; color: var(--gold); }
+    .drawer-close {
+      background: none; border: none; color: var(--text-muted); font-size: 22px;
+      cursor: pointer; padding: 4px 8px; border-radius: 4px;
+    }
+    .drawer-close:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+    .drawer-content { padding: 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 20px; }
+
+    .box-kundli {
+      background: rgba(245, 199, 103, 0.04);
+      border: 1px solid var(--border-gold);
+      border-radius: 10px; padding: 18px;
+    }
+    .box-kundli-title {
+      font-size: 12px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--cyan); margin-bottom: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .grid-kundli {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;
+    }
+    .kundli-item-label { color: var(--text-muted); font-size: 11px; margin-bottom: 2px; }
+    .kundli-item-val { color: #fff; font-weight: 500; }
+
+    /* Form controls in drawer & modals */
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-control {
+      background: var(--bg-base); border: 1px solid var(--border-subtle);
+      border-radius: 8px; padding: 10px 14px; color: #fff; font-size: 13px;
+      outline: none; transition: border-color 0.2s; font-family: inherit;
+    }
+    .form-control:focus { border-color: var(--gold); }
+    textarea.form-control { min-height: 80px; resize: vertical; }
+
+    /* Notification Drawer */
+    .notif-item {
+      padding: 14px; border-radius: 8px; background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 4px;
+      font-size: 13px;
+    }
+    .notif-item-header { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
+    .notif-channel-badge { font-weight: 600; text-transform: uppercase; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
+    .chan-sse { background: rgba(121, 220, 232, 0.15); color: var(--cyan); }
+    .chan-email { background: rgba(245, 199, 103, 0.15); color: var(--gold); }
+    .chan-webhook { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+
+    /* Toast alert banner */
+    .toast-popup {
+      position: fixed; bottom: 28px; right: 28px; z-index: 200;
+      background: #11131c; border: 1px solid var(--gold);
+      border-radius: 12px; padding: 16px 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(245, 199, 103, 0.2);
+      display: flex; align-items: center; gap: 14px;
+      transform: translateY(100px); opacity: 0; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 440px;
+    }
+    .toast-popup.visible { transform: translateY(0); opacity: 1; }
+    .toast-icon { font-size: 24px; color: var(--gold); }
+    .toast-text { font-size: 13px; color: #fff; line-height: 1.4; }
+    .toast-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; margin-left: 8px; }
+
+    /* Empty state */
+    .empty-state {
+      padding: 60px 20px; text-align: center; color: var(--text-muted);
+    }
+    .empty-icon { font-size: 40px; margin-bottom: 12px; color: var(--gold); opacity: 0.7; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .top-nav { padding: 12px 16px; }
+      .sanctum-body { padding: 16px; }
+      .drawer { max-width: 100%; }
+      .brand-title { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="sanctum-app">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a href="/admin" class="brand-wrap">
+      <div class="brand-icon">ॐ</div>
+      <div>
+        <div class="brand-title">TRISHULASTRO SANCTUM</div>
+        <div class="brand-sub">Master Astrologer Command Console</div>
+      </div>
+    </a>
+
+    <div class="nav-actions">
+      <!-- Live SSE Connection Pill -->
+      <div class="live-pill" id="live-indicator">
+        <span class="live-pulse" id="live-pulse"></span>
+        <span id="live-status-text">LIVE SSE SYNCED</span>
+      </div>
+
+      <!-- Web Audio Chime Toggle -->
+      <button class="btn-action active" id="btn-audio-toggle" title="Toggle auspicious temple chime on new booking">
+        <span id="sound-icon">🔔</span>
+        <span id="sound-text">Chime: ON</span>
+      </button>
+
+      <!-- Desktop Notifications -->
+      <button class="btn-action" id="btn-desktop-notif" title="Enable OS desktop notifications">
+        <span>📣</span>
+        <span>Desktop Push</span>
+      </button>
+
+      <!-- Notification Bell -->
+      <button class="btn-action" id="btn-notif-feed" title="Recent Alert History" style="position: relative;">
+        <span>📜</span>
+        <span>Alerts</span>
+        <span class="tab-badge" id="alert-counter" style="background:var(--gold); color:#071227; display:none;">0</span>
+      </button>
+
+      <!-- Public Site Link -->
+      <a href="/" target="_blank" class="btn-action" title="Open client website">
+        <span>Visit Site ↗</span>
+      </a>
+
+      <!-- Quick Manual Booking -->
+      <button class="btn-gold" id="btn-new-booking">
+        <span>+ New Booking</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Sanctum Body -->
+  <main class="sanctum-body">
+    <!-- KPI Overview Cards -->
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">Total Consultations</span>
+          <span class="kpi-icon">📜</span>
+        </div>
+        <div class="kpi-value" id="kpi-total">0</div>
+        <div class="kpi-sub" id="kpi-total-sub">Active in registry</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">Pending Reviews</span>
+          <span class="kpi-icon" style="color:var(--gold);">⚡</span>
+        </div>
+        <div class="kpi-value" style="color:var(--gold);" id="kpi-pending">0</div>
+        <div class="kpi-sub">Awaiting Muhurta confirmation</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">Confirmed Sessions</span>
+          <span class="kpi-icon" style="color:var(--green);">✦</span>
+        </div>
+        <div class="kpi-value" style="color:var(--green);" id="kpi-confirmed">0</div>
+        <div class="kpi-sub">Ready with meeting link</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">Energy Exchange (Est)</span>
+          <span class="kpi-icon">💎</span>
+        </div>
+        <div class="kpi-value" id="kpi-revenue">$0</div>
+        <div class="kpi-sub" id="kpi-revenue-inr">≈ ₹0 INR</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-label">Today's Muhurtas</span>
+          <span class="kpi-icon">☀️</span>
+        </div>
+        <div class="kpi-value" id="kpi-today">0</div>
+        <div class="kpi-sub">Scheduled for today</div>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs Bar -->
+    <section class="tabs-bar">
+      <div class="tabs-group">
+        <button class="tab-btn active" data-tab="all">
+          <span>All Consultations</span>
+          <span class="tab-badge" id="badge-all">0</span>
+        </button>
+        <button class="tab-btn" data-tab="pending">
+          <span>Pending</span>
+          <span class="tab-badge" id="badge-pending">0</span>
+        </button>
+        <button class="tab-btn" data-tab="confirmed">
+          <span>Confirmed</span>
+          <span class="tab-badge" id="badge-confirmed">0</span>
+        </button>
+        <button class="tab-btn" data-tab="completed">
+          <span>Completed</span>
+          <span class="tab-badge" id="badge-completed">0</span>
+        </button>
+        <button class="tab-btn" data-tab="cancelled">
+          <span>Cancelled</span>
+        </button>
+        <button class="tab-btn" data-tab="notifications">
+          <span>🔔 Notifications & Settings</span>
+        </button>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button class="btn-action" id="btn-export-csv" title="Export to CSV">
+          <span>📥 Export CSV</span>
+        </button>
+        <button class="btn-action" id="btn-refresh" title="Refresh registry">
+          <span>🔄 Sync</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Controls & Search Bar (Visible in table view) -->
+    <section class="filter-bar" id="filter-controls">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="search-input" placeholder="Search by devotee name, phone, email, or Pass # (e.g. TA-78412)...">
+      </div>
+
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <select class="filter-select" id="filter-astro">
+          <option value="">All Master Astrologers</option>
+          <option value="Pt. Radhe Krishna Shastri">Pt. Radhe Krishna Shastri</option>
+          <option value="Dr. Gayatri Devi">Dr. Gayatri Devi</option>
+          <option value="Acharya Devvrat Sharma">Acharya Devvrat Sharma</option>
+          <option value="Acharya Vidyadhar Joshi">Acharya Vidyadhar Joshi</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Main Bookings Table View -->
+    <section class="table-container" id="view-bookings-table">
+      <div class="table-responsive">
+        <table class="sanctum-table">
+          <thead>
+            <tr>
+              <th>Pass Ref</th>
+              <th>Devotee / Contact</th>
+              <th>Consultation Focus</th>
+              <th>Assigned Astrologer</th>
+              <th>Preferred Muhurta</th>
+              <th>Medium</th>
+              <th>Status</th>
+              <th style="text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="bookings-tbody">
+            <!-- Populated via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="empty-state" style="display: none;">
+        <div class="empty-icon">🕉</div>
+        <div style="font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 6px;">No consultations found</div>
+        <p>No bookings match the selected criteria.</p>
+      </div>
+    </section>
+
+    <!-- Notifications & Settings Panel (Shown when that tab is clicked) -->
+    <section class="table-container" id="view-settings-panel" style="display: none; padding: 28px;">
+      <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px;">
+        <div>
+          <h2 style="font-family: var(--font-serif); font-size: 22px; color: var(--gold); margin-bottom: 6px;">
+            🔔 Astrologer Alert Channels & Notification Integrations
+          </h2>
+          <p style="color: var(--text-muted); font-size: 14px;">
+            Configure how you receive real-time notifications whenever someone books a consultation on TrishulAstro.
+          </p>
+        </div>
+
+        <!-- Quick Test Card -->
+        <div style="background: rgba(245, 199, 103, 0.05); border: 1px solid var(--border-gold); border-radius: 12px; padding: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+          <div>
+            <div style="font-weight: 600; color: #fff; margin-bottom: 4px; font-size: 15px;">Live Alert Channel Diagnostic</div>
+            <div style="color: var(--text-muted); font-size: 13px;">Test your live SSE chime, desktop notification, and webhook dispatch in 1 click.</div>
+          </div>
+          <button class="btn-gold" id="btn-test-alert">
+            <span>⚡ Send Test Live Alert</span>
+          </button>
+        </div>
+
+        <!-- Settings Form -->
+        <form id="settings-form" style="display: flex; flex-direction: column; gap: 20px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px;">
+            <div class="form-group">
+              <label class="form-label" for="setting-email">Owner / Astrologer Notification Email</label>
+              <input type="email" class="form-control" id="setting-email" placeholder="e.g. your-email@domain.com" required>
+              <small style="color:var(--text-muted); font-size:11px;">Where new session booking alerts and client details are sent.</small>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="setting-pin">Sanctum Admin PIN Code</label>
+              <input type="password" class="form-control" id="setting-pin" placeholder="••••" required>
+              <small style="color:var(--text-muted); font-size:11px;">Security PIN to access this Admin Console (Default: 1088).</small>
+            </div>
+          </div>
+
+          <!-- Webhook for Discord/Slack/Telegram Mobile Alerts -->
+          <div class="form-group">
+            <label class="form-label" for="setting-webhook">
+              Discord / Slack / Telegram Webhook URL (Instant Mobile Push)
+            </label>
+            <input type="url" class="form-control" id="setting-webhook" placeholder="https://discord.com/api/webhooks/... or https://hooks.slack.com/...">
+            <small style="color:var(--text-muted); font-size:11px;">
+              Paste a Discord or Slack Webhook URL to get instant notifications on your phone whenever a client books a session!
+            </small>
+          </div>
+
+          <!-- Custom SMTP Configuration (Optional) -->
+          <details style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 14px;">
+            <summary style="cursor: pointer; font-weight: 600; color: var(--cyan); font-size: 13px;">
+              ⚙ Optional: Custom SMTP Email Server Settings (Gmail / Outlook / SendGrid)
+            </summary>
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-top: 14px;">
+              <div class="form-group">
+                <label class="form-label">SMTP Host</label>
+                <input type="text" class="form-control" id="setting-smtp-host" placeholder="smtp.gmail.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label">SMTP Port</label>
+                <input type="number" class="form-control" id="setting-smtp-port" placeholder="587">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px;">
+              <div class="form-group">
+                <label class="form-label">SMTP Username / Email</label>
+                <input type="text" class="form-control" id="setting-smtp-user" placeholder="user@gmail.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label">SMTP App Password</label>
+                <input type="password" class="form-control" id="setting-smtp-pass" placeholder="••••••••">
+              </div>
+            </div>
+          </details>
+
+          <div>
+            <button type="submit" class="btn-gold" id="btn-save-settings">
+              <span>Save Configuration</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Notification History Log Table -->
+        <div style="margin-top: 16px;">
+          <h3 style="font-family: var(--font-serif); font-size: 17px; color: #fff; margin-bottom: 12px;">
+            Recent Notification Audit History
+          </h3>
+          <div class="table-responsive" style="border: 1px solid var(--border-subtle); border-radius: 8px;">
+            <table class="sanctum-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Channel</th>
+                  <th>Recipient / Target</th>
+                  <th>Alert Title</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="notifs-tbody">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Drawer for Kundli Details & Status Management -->
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<div class="drawer" id="booking-drawer">
+  <div class="drawer-header">
+    <div>
+      <div class="drawer-title" id="drawer-ref">Pass #TA-00000</div>
+      <div style="font-size:12px; color:var(--text-muted);" id="drawer-created">Booked on --</div>
+    </div>
+    <button class="drawer-close" id="drawer-close" type="button">&times;</button>
+  </div>
+
+  <div class="drawer-content">
+    <!-- Devotee Contact Box -->
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgba(255,255,255,0.03); padding: 14px 18px; border-radius: 10px; border: 1px solid var(--border-subtle);">
+      <div>
+        <div style="font-size: 16px; font-weight: 600; color: #fff;" id="drawer-client-name">Devotee Name</div>
+        <div style="font-size: 12px; color: var(--text-muted);" id="drawer-client-contact">email • phone</div>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <a href="#" target="_blank" class="btn-icon wa" id="drawer-wa-btn" title="Chat on WhatsApp">💬</a>
+        <a href="#" class="btn-icon" id="drawer-mail-btn" title="Send Email">✉</a>
+      </div>
+    </div>
+
+    <!-- Vedic Kundli Calculation Box -->
+    <div class="box-kundli">
+      <div class="box-kundli-title">
+        <span>✦ Devotee Vedic Birth Parameters</span>
+        <span style="color:var(--gold); font-size:11px;">Janam Kundli Data</span>
+      </div>
+      <div class="grid-kundli">
+        <div>
+          <div class="kundli-item-label">Date of Birth</div>
+          <div class="kundli-item-val" id="drawer-dob">--</div>
+        </div>
+        <div>
+          <div class="kundli-item-label">Exact Time of Birth</div>
+          <div class="kundli-item-val" id="drawer-tob">--</div>
+        </div>
+        <div style="grid-column: span 2;">
+          <div class="kundli-item-label">Place of Birth</div>
+          <div class="kundli-item-val" id="drawer-city">--</div>
+        </div>
+        <div>
+          <div class="kundli-item-label">Calculated Sun Sign (approx)</div>
+          <div class="kundli-item-val" style="color:var(--cyan);" id="drawer-calc-sign">--</div>
+        </div>
+        <div>
+          <div class="kundli-item-label">Ruling Graha</div>
+          <div class="kundli-item-val" style="color:var(--gold);" id="drawer-calc-ruler">--</div>
+        </div>
+        <div style="grid-column: span 2;">
+          <div class="kundli-item-label">Auspicious Gemstone Recommendation</div>
+          <div class="kundli-item-val" id="drawer-calc-gem">--</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Session Focus & Questions -->
+    <div class="form-group">
+      <label class="form-label">Devotee Questions & Focus Areas</label>
+      <div style="background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: #e2e8f0; line-height: 1.5;" id="drawer-topic">
+        --
+      </div>
+    </div>
+
+    <!-- Status & Meeting Link Update Form -->
+    <form id="drawer-update-form" style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="form-group">
+        <label class="form-label" for="drawer-status">Consultation Status</label>
+        <select class="form-control" id="drawer-status">
+          <option value="pending">Pending (Reviewing Muhurta)</option>
+          <option value="confirmed">Confirmed (Meeting Link Ready)</option>
+          <option value="completed">Completed (Consultation Delivered)</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="drawer-meet-link">
+          Google Meet / Zoom Consultation Link
+        </label>
+        <div style="display: flex; gap: 8px;">
+          <input type="url" class="form-control" id="drawer-meet-link" placeholder="https://meet.google.com/xxx-xxxx-xxx" style="flex:1;">
+          <button type="button" class="btn-action" id="btn-open-meet" title="Open Meet Link" style="display:none;">Open</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="drawer-notes">
+          Private Astrologer Notes (Kundli observations & remedies)
+        </label>
+        <textarea class="form-control" id="drawer-notes" placeholder="Enter chart observations, Mahadasha timing, recommended mantras, or gemstone notes..."></textarea>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 8px;">
+        <button type="submit" class="btn-gold" style="flex: 1; justify-content: center;">
+          <span>Update Consultation Record</span>
+        </button>
+        <button type="button" class="btn-action" id="btn-delete-booking" style="color:var(--red);" title="Delete booking">
+          <span>Delete</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal for New Manual Booking -->
+<div class="drawer-overlay" id="manual-modal-overlay"></div>
+<div class="drawer" id="manual-booking-modal" style="right: -600px; max-width: 600px;">
+  <div class="drawer-header">
+    <div class="drawer-title">New Consultation Entry</div>
+    <button class="drawer-close" id="manual-modal-close" type="button">&times;</button>
+  </div>
+  <div class="drawer-content">
+    <form id="manual-booking-form" style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="form-group">
+        <label class="form-label">Devotee Full Name</label>
+        <input type="text" class="form-control" id="m-name" required placeholder="e.g. Vikramaditya Rao">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-control" id="m-email" required placeholder="vikram@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone / WhatsApp</label>
+          <input type="tel" class="form-control" id="m-phone" required placeholder="+91 98765 43210">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="form-group">
+          <label class="form-label">Date of Birth</label>
+          <input type="date" class="form-control" id="m-dob" value="1995-05-15" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Time of Birth</label>
+          <input type="time" class="form-control" id="m-tob" value="09:30" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Place of Birth (City, Country)</label>
+        <input type="text" class="form-control" id="m-city" placeholder="e.g. New Delhi, India" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Consultation Package</label>
+        <select class="form-control" id="m-service">
+          <option value="Complete Janam Kundli & Life Path ($120)">📜 Complete Janam Kundli & Life Path ($120)</option>
+          <option value="Career, Wealth & Business Yoga ($85)">💎 Career, Wealth & Business Yoga ($85)</option>
+          <option value="Love, Marriage & Kundli Milan ($85)">❤️ Love, Marriage & Kundli Milan ($85)</option>
+          <option value="Urgent Prashna Kundli ($65)">⚡ Urgent Prashna Kundli ($65)</option>
+          <option value="Planetary Gemstones & Remedies ($55)">✨ Planetary Gemstones & Remedies ($55)</option>
+          <option value="Vastu Shastra & Space Energy ($110)">🏛️ Vastu Shastra & Space Energy ($110)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Assigned Master Astrologer</label>
+        <select class="form-control" id="m-astro">
+          <option value="Pt. Radhe Krishna Shastri (28+ yrs exp • Banaras Vedic Scholar)">Pt. Radhe Krishna Shastri</option>
+          <option value="Dr. Gayatri Devi (22+ yrs exp • Ph.D. Vedic Sciences)">Dr. Gayatri Devi</option>
+          <option value="Acharya Devvrat Sharma (19+ yrs exp • Gold Medalist)">Acharya Devvrat Sharma</option>
+          <option value="Acharya Vidyadhar Joshi (16+ yrs exp • Prashna & Vastu)">Acharya Vidyadhar Joshi</option>
+        </select>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="form-group">
+          <label class="form-label">Preferred Date</label>
+          <input type="date" class="form-control" id="m-date" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Preferred Slot</label>
+          <select class="form-control" id="m-slot">
+            <option value="10:00 AM - 11:00 AM (Morning Muhurta)">10:00 AM - 11:00 AM (Morning)</option>
+            <option value="02:00 PM - 03:00 PM (Afternoon Muhurta)">02:00 PM - 03:00 PM (Afternoon)</option>
+            <option value="06:00 PM - 07:00 PM (Evening Sandhya)">06:00 PM - 07:00 PM (Evening)</option>
+            <option value="08:00 PM - 09:00 PM (Night Muhurta)">08:00 PM - 09:00 PM (Night)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Devotee Questions / Topics</label>
+        <textarea class="form-control" id="m-topic" placeholder="Special questions or concerns..."></textarea>
+      </div>
+
+      <button type="submit" class="btn-gold" style="margin-top: 10px;">
+        <span>Create Consultation Entry</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Floating Real-Time Toast Notification -->
+<div class="toast-popup" id="toast-popup">
+  <div class="toast-icon">⚡</div>
+  <div class="toast-text" id="toast-text">
+    <strong>New Booking Alert!</strong><br>
+    <span id="toast-sub">Devotee session received.</span>
+  </div>
+  <button class="toast-close" id="toast-close">&times;</button>
+</div>
+
+<!-- JavaScript Logic -->
+<script>
+  /* ══════════════════════════════════════════════════════════════════
+     STATE MANAGEMENT
+     ══════════════════════════════════════════════════════════════════ */
+  let allBookings = [];
+  let currentFilter = 'all';
+  let searchQuery = '';
+  let astroFilter = '';
+  let activeBooking = null;
+  let soundEnabled = true;
+  let desktopNotifEnabled = false;
+
+  // Set default manual date to tomorrow
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  document.getElementById('m-date').value = tomorrow.toISOString().split('T')[0];
+
+  /* ══════════════════════════════════════════════════════════════════
+     WEB AUDIO API: AUSPICIOUS TIBETAN TEMPLE BELL CHIME
+     ══════════════════════════════════════════════════════════════════ */
+  let audioCtx = null;
+  function playTempleChime() {
+    if (!soundEnabled) return;
+    try {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      const now = audioCtx.currentTime;
+      // Frequencies corresponding to harmonic singing bowl chime (432Hz root, 864Hz octave, 1296Hz fifth)
+      const freqs = [432, 864, 1296];
+      const gains = [0.25, 0.12, 0.06];
+
+      freqs.forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(gains[idx], now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.2);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now);
+        osc.stop(now + 3.3);
+      });
+    } catch (e) {
+      console.warn('Web Audio chime could not play:', e);
+    }
+  }
+
+  // Audio Toggle
+  const audioBtn = document.getElementById('btn-audio-toggle');
+  audioBtn.addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    audioBtn.classList.toggle('active', soundEnabled);
+    document.getElementById('sound-text').textContent = soundEnabled ? 'Chime: ON' : 'Chime: OFF';
+    if (soundEnabled) playTempleChime();
+  });
+
+  /* ══════════════════════════════════════════════════════════════════
+     HTML5 BROWSER DESKTOP NOTIFICATIONS
+     ══════════════════════════════════════════════════════════════════ */
+  const desktopBtn = document.getElementById('btn-desktop-notif');
+  if ('Notification' in window && Notification.permission === 'granted') {
+    desktopNotifEnabled = true;
+    desktopBtn.classList.add('active');
+  }
+
+  desktopBtn.addEventListener('click', () => {
+    if (!('Notification' in window)) {
+      alert('This browser does not support desktop notifications.');
+      return;
+    }
+    if (Notification.permission === 'granted') {
+      desktopNotifEnabled = !desktopNotifEnabled;
+      desktopBtn.classList.toggle('active', desktopNotifEnabled);
+    } else {
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          desktopNotifEnabled = true;
+          desktopBtn.classList.add('active');
+          new Notification('TrishulAstro Sanctum', {
+            body: 'Desktop notifications successfully enabled for new bookings!',
+            icon: 'assets/favicon.svg'
+          });
+        }
+      });
+    }
+  });
+
+  function triggerDesktopNotification(booking) {
+    if (!desktopNotifEnabled || !('Notification' in window) || Notification.permission !== 'granted') return;
+    try {
+      const n = new Notification(`⚡ New Booking: ${booking.client_name}`, {
+        body: `${booking.service_name} • ${booking.preferred_date} (${booking.preferred_time_slot})\nPass #${booking.reference_code}`,
+        icon: 'assets/favicon.svg'
+      });
+      n.onclick = () => {
+        window.focus();
+        openBookingDrawer(booking.id);
+      };
+    } catch (e) {
+      console.warn('Desktop notification error:', e);
+    }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+     SERVER-SENT EVENTS (SSE) REAL-TIME STREAM
+     ══════════════════════════════════════════════════════════════════ */
+  let eventSource = null;
+  function connectSSE() {
+    eventSource = new EventSource('/api/events');
+
+    eventSource.onopen = () => {
+      document.getElementById('live-pulse').style.background = 'var(--green)';
+      document.getElementById('live-status-text').textContent = 'LIVE SSE SYNCED';
+    };
+
+    eventSource.addEventListener('new_booking', (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        const booking = data.booking;
+        
+        // 1. Play temple bell chime
+        playTempleChime();
+
+        // 2. Desktop notification
+        triggerDesktopNotification(booking);
+
+        // 3. Show Toast
+        showToast(
+          `⚡ New Booking Received: #${booking.reference_code}`,
+          `${booking.client_name} • ${booking.service_name} (${booking.preferred_date})`
+        );
+
+        // 4. Reload data
+        loadData(booking.id);
+        loadNotifications();
+      } catch (err) {
+        console.error('SSE new_booking error:', err);
+      }
+    });
+
+    eventSource.addEventListener('booking_updated', (e) => {
+      loadData();
+    });
+
+    eventSource.addEventListener('test_alert', (e) => {
+      const data = JSON.parse(e.data);
+      playTempleChime();
+      showToast('🔔 Test Notification Delivered', data.message);
+      loadNotifications();
+    });
+
+    eventSource.onerror = () => {
+      document.getElementById('live-pulse').style.background = 'var(--red)';
+      document.getElementById('live-status-text').textContent = 'RECONNECTING...';
+    };
+  }
+
+  connectSSE();
+
+  /* ══════════════════════════════════════════════════════════════════
+     DATA FETCHING & RENDERING
+     ══════════════════════════════════════════════════════════════════ */
+  async function loadData(highlightId = null) {
+    try {
+      const [bookingsRes, statsRes] = await Promise.all([
+        fetch('/api/bookings'),
+        fetch('/api/stats')
+      ]);
+
+      const bookingsData = await bookingsRes.json();
+      const statsData = await statsRes.json();
+
+      if (bookingsData.success) {
+        allBookings = bookingsData.bookings;
+        renderTable(highlightId);
+      }
+
+      if (statsData.success) {
+        renderStats(statsData.stats);
+      }
+    } catch (err) {
+      console.error('Error fetching dashboard data:', err);
+    }
+  }
+
+  function renderStats(stats) {
+    document.getElementById('kpi-total').textContent = stats.total;
+    document.getElementById('kpi-pending').textContent = stats.pending;
+    document.getElementById('kpi-confirmed').textContent = stats.confirmed;
+    document.getElementById('kpi-revenue').textContent = `$${stats.estRevenue}`;
+    document.getElementById('kpi-revenue-inr').textContent = `≈ ₹${(stats.estRevenue * 83).toLocaleString('en-IN')} INR`;
+    document.getElementById('kpi-today').textContent = stats.todaySessions;
+
+    // Badges
+    document.getElementById('badge-all').textContent = stats.total;
+    document.getElementById('badge-pending').textContent = stats.pending;
+    document.getElementById('badge-confirmed').textContent = stats.confirmed;
+    document.getElementById('badge-completed').textContent = stats.completed;
+  }
+
+  function renderTable(highlightId = null) {
+    const tbody = document.getElementById('bookings-tbody');
+    const emptyState = document.getElementById('empty-state');
+    tbody.innerHTML = '';
+
+    const filtered = allBookings.filter(b => {
+      // Tab filter
+      if (currentFilter !== 'all' && b.status !== currentFilter) return false;
+
+      // Astrologer filter
+      if (astroFilter && !b.astrologer_name.includes(astroFilter)) return false;
+
+      // Search query
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        const match = b.client_name.toLowerCase().includes(q) ||
+                      b.client_email.toLowerCase().includes(q) ||
+                      b.client_phone.toLowerCase().includes(q) ||
+                      b.reference_code.toLowerCase().includes(q) ||
+                      b.service_name.toLowerCase().includes(q);
+        if (!match) return false;
+      }
+
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      emptyState.style.display = 'block';
+      return;
+    }
+    emptyState.style.display = 'none';
+
+    filtered.forEach(b => {
+      const tr = document.createElement('tr');
+      if (highlightId && b.id === highlightId) {
+        tr.classList.add('row-new');
+      }
+
+      // Format date
+      const dateDisplay = b.preferred_date || 'TBD';
+      const slotDisplay = b.preferred_time_slot.split('(')[0].trim();
+
+      // Clean astrologer name
+      const astroShort = b.astrologer_name.split('(')[0].trim();
+
+      // Status badge class
+      const badgeClass = `badge-${b.status}`;
+
+      tr.innerHTML = `
+        <td>
+          <span style="font-family:monospace; font-weight:700; color:var(--gold); font-size:13px;">${b.reference_code}</span>
+          <div style="font-size:11px; color:var(--text-muted);">${new Date(b.created_at).toLocaleDateString()}</div>
+        </td>
+        <td>
+          <div class="client-title">${escapeHTML(b.client_name)}</div>
+          <div class="client-sub">
+            <span>${escapeHTML(b.client_phone)}</span> • <span>${escapeHTML(b.client_email)}</span>
+          </div>
+        </td>
+        <td>
+          <div style="font-weight:600; color:#fff;">${escapeHTML(b.service_name.split('(')[0])}</div>
+          <div style="font-size:11px; color:var(--gold);">$${b.service_price} USD</div>
+        </td>
+        <td>
+          <div style="color:var(--cyan); font-size:12px; font-weight:500;">${escapeHTML(astroShort)}</div>
+        </td>
+        <td>
+          <div style="font-weight:500; color:#fff;">${dateDisplay}</div>
+          <div style="font-size:11px; color:var(--text-muted);">${slotDisplay}</div>
+        </td>
+        <td>
+          <span style="font-size:12px; color:#cbd5e1;">${escapeHTML(b.consultation_mode.split(' ')[0])}</span>
+        </td>
+        <td>
+          <span class="badge ${badgeClass}">${b.status}</span>
+        </td>
+        <td style="text-align: right;">
+          <div class="row-actions" style="justify-content: flex-end;">
+            <button class="btn-icon" onclick="openBookingDrawer(${b.id})" title="View Kundli & Details">👁️</button>
+            <a href="https://wa.me/${encodeURIComponent(b.client_phone.replace(/[^0-9]/g, ''))}?text=${encodeURIComponent('Namaste ' + b.client_name + ', Pt. Radhe Krishna Shastri from TrishulAstro regarding your consultation #' + b.reference_code)}" target="_blank" class="btn-icon wa" title="WhatsApp Message">💬</a>
+            ${b.status === 'pending' ? `<button class="btn-icon confirm" onclick="quickConfirm(${b.id})" title="Quick Confirm">✓</button>` : ''}
+          </div>
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  function escapeHTML(str) {
+    if (!str) return '';
+    return str.replace(/[&<>'"]/g, tag => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+    }[tag] || tag));
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+     TABS & FILTER HANDLERS
+     ══════════════════════════════════════════════════════════════════ */
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const tab = btn.dataset.tab;
+      if (tab === 'notifications') {
+        document.getElementById('view-bookings-table').style.display = 'none';
+        document.getElementById('filter-controls').style.display = 'none';
+        document.getElementById('view-settings-panel').style.display = 'block';
+        loadSettings();
+        loadNotifications();
+      } else {
+        document.getElementById('view-bookings-table').style.display = 'block';
+        document.getElementById('filter-controls').style.display = 'flex';
+        document.getElementById('view-settings-panel').style.display = 'none';
+        currentFilter = tab;
+        renderTable();
+      }
+    });
+  });
+
+  // Search input with debounce
+  document.getElementById('search-input').addEventListener('input', (e) => {
+    searchQuery = e.target.value.trim();
+    renderTable();
+  });
+
+  // Astrologer filter
+  document.getElementById('filter-astro').addEventListener('change', (e) => {
+    astroFilter = e.target.value;
+    renderTable();
+  });
+
+  // Sync button
+  document.getElementById('btn-refresh').addEventListener('click', () => {
+    loadData();
+    showToast('🔄 Synchronized', 'Registry updated with server data.');
+  });
+
+  /* ══════════════════════════════════════════════════════════════════
+     DRAWER (KUNDLI & BOOKING DETAILS)
+     ══════════════════════════════════════════════════════════════════ */
+  const drawer = document.getElementById('booking-drawer');
+  const drawerOverlay = document.getElementById('drawer-overlay');
+  const drawerClose = document.getElementById('drawer-close');
+
+  async function openBookingDrawer(bookingId) {
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}`);
+      const data = await res.json();
+      if (!data.success) return;
+
+      const b = data.booking;
+      const astro = data.astrologicalAnalysis;
+      activeBooking = b;
+
+      document.getElementById('drawer-ref').textContent = `Pass #${b.reference_code}`;
+      document.getElementById('drawer-created').textContent = `Booked ${new Date(b.created_at).toLocaleString()} • Assigned to ${b.astrologer_name.split('(')[0]}`;
+      document.getElementById('drawer-client-name').textContent = b.client_name;
+      document.getElementById('drawer-client-contact').textContent = `${b.client_email} • ${b.client_phone}`;
+
+      // WhatsApp & Mail links
+      const cleanPhone = b.client_phone.replace(/[^0-9]/g, '');
+      const waMsg = encodeURIComponent(`Namaste ${b.client_name},\nGreetings from TrishulAstro! Regarding your consultation #${b.reference_code} for ${b.service_name}.\nYour preferred Muhurta is ${b.preferred_date} (${b.preferred_time_slot}).`);
+      document.getElementById('drawer-wa-btn').href = `https://wa.me/${cleanPhone}?text=${waMsg}`;
+      document.getElementById('drawer-mail-btn').href = `mailto:${b.client_email}?subject=TrishulAstro Consultation %23${b.reference_code}`;
+
+      // Kundli parameters
+      document.getElementById('drawer-dob').textContent = b.client_dob;
+      document.getElementById('drawer-tob').textContent = b.client_tob;
+      document.getElementById('drawer-city').textContent = b.client_city;
+      document.getElementById('drawer-calc-sign').textContent = astro.approxSunSign || 'Mesha';
+      document.getElementById('drawer-calc-ruler').textContent = astro.rulingGraha || 'Surya';
+      document.getElementById('drawer-calc-gem').textContent = astro.auspiciousGemstone || 'Ruby';
+
+      // Query topic
+      document.getElementById('drawer-topic').textContent = b.query_topic || 'Standard Janam Kundli & comprehensive chart analysis.';
+
+      // Form values
+      document.getElementById('drawer-status').value = b.status;
+      document.getElementById('drawer-meet-link').value = b.meeting_link || '';
+      document.getElementById('drawer-notes').value = b.admin_notes || '';
+
+      const btnOpenMeet = document.getElementById('btn-open-meet');
+      if (b.meeting_link && b.meeting_link.startsWith('http')) {
+        btnOpenMeet.style.display = 'inline-flex';
+        btnOpenMeet.onclick = () => window.open(b.meeting_link, '_blank');
+      } else {
+        btnOpenMeet.style.display = 'none';
+      }
+
+      drawer.classList.add('open');
+      drawerOverlay.classList.add('open');
+    } catch (err) {
+      console.error('Error opening drawer:', err);
+    }
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove('open');
+    drawerOverlay.classList.remove('open');
+    activeBooking = null;
+  }
+
+  drawerClose.addEventListener('click', closeDrawer);
+  drawerOverlay.addEventListener('click', closeDrawer);
+
+  // Update Booking in Drawer
+  document.getElementById('drawer-update-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!activeBooking) return;
+
+    const status = document.getElementById('drawer-status').value;
+    const meeting_link = document.getElementById('drawer-meet-link').value.trim();
+    const admin_notes = document.getElementById('drawer-notes').value.trim();
+
+    try {
+      const res = await fetch(`/api/bookings/${activeBooking.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status, meeting_link, admin_notes })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        showToast('✓ Record Saved', `Pass #${activeBooking.reference_code} updated.`);
+        closeDrawer();
+        loadData();
+      }
+    } catch (err) {
+      alert('Error updating record: ' + err.message);
+    }
+  });
+
+  // Delete booking
+  document.getElementById('btn-delete-booking').addEventListener('click', async () => {
+    if (!activeBooking) return;
+    if (!confirm(`Are you sure you want to remove Pass #${activeBooking.reference_code} from registry?`)) return;
+
+    try {
+      const res = await fetch(`/api/bookings/${activeBooking.id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        showToast('Booking Removed', 'Pass deleted.');
+        closeDrawer();
+        loadData();
+      }
+    } catch (err) {
+      alert('Delete error: ' + err.message);
+    }
+  });
+
+  // Quick Confirm from table row
+  async function quickConfirm(id) {
+    try {
+      const res = await fetch(`/api/bookings/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'confirmed' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('✦ Consultation Confirmed', `Booking confirmed. You can now add a meeting link.`);
+        loadData();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+     MANUAL NEW BOOKING MODAL
+     ══════════════════════════════════════════════════════════════════ */
+  const manualModal = document.getElementById('manual-booking-modal');
+  const manualOverlay = document.getElementById('manual-modal-overlay');
+  const manualClose = document.getElementById('manual-modal-close');
+
+  document.getElementById('btn-new-booking').addEventListener('click', () => {
+    manualModal.classList.add('open');
+    manualOverlay.classList.add('open');
+  });
+
+  function closeManualModal() {
+    manualModal.classList.remove('open');
+    manualOverlay.classList.remove('open');
+  }
+
+  manualClose.addEventListener('click', closeManualModal);
+  manualOverlay.addEventListener('click', closeManualModal);
+
+  document.getElementById('manual-booking-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const payload = {
+      client_name: document.getElementById('m-name').value,
+      client_email: document.getElementById('m-email').value,
+      client_phone: document.getElementById('m-phone').value,
+      client_dob: document.getElementById('m-dob').value,
+      client_tob: document.getElementById('m-tob').value,
+      client_city: document.getElementById('m-city').value,
+      service_name: document.getElementById('m-service').value,
+      astrologer_name: document.getElementById('m-astro').value,
+      preferred_date: document.getElementById('m-date').value,
+      preferred_time_slot: document.getElementById('m-slot').value,
+      query_topic: document.getElementById('m-topic').value
+    };
+
+    try {
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        closeManualModal();
+        document.getElementById('manual-booking-form').reset();
+        showToast('⚡ Sacred Pass Generated', `New consultation #${data.booking.reference_code} added.`);
+        loadData(data.booking.id);
+      } else {
+        alert(data.error || 'Failed to create booking');
+      }
+    } catch (err) {
+      alert('Error creating booking: ' + err.message);
+    }
+  });
+
+  /* ══════════════════════════════════════════════════════════════════
+     NOTIFICATIONS & SETTINGS MANAGEMENT
+     ══════════════════════════════════════════════════════════════════ */
+  async function loadSettings() {
+    try {
+      const res = await fetch('/api/settings');
+      const data = await res.json();
+      if (data.success) {
+        const s = data.settings;
+        document.getElementById('setting-email').value = s.admin_email || '';
+        document.getElementById('setting-pin').value = s.admin_pin || '1088';
+        document.getElementById('setting-webhook').value = s.webhook_url || '';
+        document.getElementById('setting-smtp-host').value = s.smtp_host || '';
+        document.getElementById('setting-smtp-port').value = s.smtp_port || '587';
+        document.getElementById('setting-smtp-user').value = s.smtp_user || '';
+        document.getElementById('setting-smtp-pass').value = s.smtp_pass || '';
+      }
+    } catch (err) {
+      console.error('Settings load error:', err);
+    }
+  }
+
+  document.getElementById('settings-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const payload = {
+      admin_email: document.getElementById('setting-email').value.trim(),
+      admin_pin: document.getElementById('setting-pin').value.trim(),
+      webhook_url: document.getElementById('setting-webhook').value.trim(),
+      smtp_host: document.getElementById('setting-smtp-host').value.trim(),
+      smtp_port: document.getElementById('setting-smtp-port').value.trim(),
+      smtp_user: document.getElementById('setting-smtp-user').value.trim(),
+      smtp_pass: document.getElementById('setting-smtp-pass').value.trim()
+    };
+
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('✓ Settings Saved', 'Notification channels and settings updated.');
+      }
+    } catch (err) {
+      alert('Error saving settings: ' + err.message);
+    }
+  });
+
+  // Test Notification Button
+  document.getElementById('btn-test-alert').addEventListener('click', async () => {
+    try {
+      const btn = document.getElementById('btn-test-alert');
+      btn.disabled = true;
+      btn.innerHTML = '<span>⚡ Sending Alert...</span>';
+
+      const res = await fetch('/api/notifications/test', { method: 'POST' });
+      const data = await res.json();
+
+      btn.disabled = false;
+      btn.innerHTML = '<span>⚡ Send Test Live Alert</span>';
+
+      if (data.success) {
+        showToast('🔔 Test Alert Dispatched', 'Check your dashboard chime and logs below.');
+        loadNotifications();
+      }
+    } catch (err) {
+      alert('Test alert error: ' + err.message);
+    }
+  });
+
+  async function loadNotifications() {
+    try {
+      const res = await fetch('/api/notifications');
+      const data = await res.json();
+      if (data.success) {
+        const tbody = document.getElementById('notifs-tbody');
+        tbody.innerHTML = '';
+
+        if (data.notifications.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:20px;">No alerts logged yet.</td></tr>';
+          return;
+        }
+
+        data.notifications.forEach(n => {
+          const tr = document.createElement('tr');
+          const chanClass = `chan-${n.channel}`;
+
+          tr.innerHTML = `
+            <td style="font-size:12px; color:var(--text-muted);">${new Date(n.created_at).toLocaleTimeString()}</td>
+            <td><span class="notif-channel-badge ${chanClass}">${n.channel}</span></td>
+            <td style="color:#fff; font-size:12px;">${escapeHTML(n.recipient)}</td>
+            <td>
+              <div style="font-weight:600; color:#fff;">${escapeHTML(n.title)}</div>
+              <div style="font-size:11px; color:var(--text-muted);">${escapeHTML(n.content)}</div>
+            </td>
+            <td>
+              <span class="badge ${n.status === 'sent' ? 'badge-confirmed' : n.status === 'simulated' ? 'badge-pending' : 'badge-cancelled'}">${n.status}</span>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    } catch (err) {
+      console.error('Notifications load error:', err);
+    }
+  }
+
+  // Quick Notification bell button opens settings tab
+  document.getElementById('btn-notif-feed').addEventListener('click', () => {
+    document.querySelector('.tab-btn[data-tab="notifications"]').click();
+  });
+
+  /* ══════════════════════════════════════════════════════════════════
+     EXPORT CSV
+     ══════════════════════════════════════════════════════════════════ */
+  document.getElementById('btn-export-csv').addEventListener('click', () => {
+    if (allBookings.length === 0) {
+      alert('No booking records available to export.');
+      return;
+    }
+
+    const headers = ['Reference', 'Client Name', 'Email', 'Phone', 'DOB', 'TOB', 'City', 'Service', 'Price USD', 'Astrologer', 'Date', 'Slot', 'Mode', 'Status', 'Meeting Link', 'Created At'];
+    const rows = allBookings.map(b => [
+      b.reference_code,
+      `"${b.client_name.replace(/"/g, '""')}"`,
+      b.client_email,
+      b.client_phone,
+      b.client_dob,
+      b.client_tob,
+      `"${b.client_city.replace(/"/g, '""')}"`,
+      `"${b.service_name.replace(/"/g, '""')}"`,
+      b.service_price,
+      `"${b.astrologer_name.replace(/"/g, '""')}"`,
+      b.preferred_date,
+      `"${b.preferred_time_slot.replace(/"/g, '""')}"`,
+      b.consultation_mode,
+      b.status,
+      b.meeting_link,
+      b.created_at
+    ]);
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `trishulastro_bookings_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+
+  /* ══════════════════════════════════════════════════════════════════
+     TOAST POPUP NOTIFICATION
+     ══════════════════════════════════════════════════════════════════ */
+  let toastTimer = null;
+  function showToast(title, subtitle) {
+    const toast = document.getElementById('toast-popup');
+    const titleEl = document.getElementById('toast-text');
+    titleEl.innerHTML = `<strong>${title}</strong><br><span style="font-size:12px; color:#cbd5e1;">${subtitle}</span>`;
+    toast.classList.add('visible');
+
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.classList.remove('visible');
+    }, 5500);
+  }
+
+  document.getElementById('toast-close').addEventListener('click', () => {
+    document.getElementById('toast-popup').classList.remove('visible');
+  });
+
+  // Initial load
+  loadData();
+</script>
+
+</body>
+</html>

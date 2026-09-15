@@ -962,6 +962,8 @@
     <div><span class="pulse-dot"></span> <span class="badge">Shukra Hora Active</span> Abhijit Muhurta Open for Planetary Consultations</div>
     <div style="opacity:0.65;">•</div>
     <div>48,000+ Seekers Guided Worldwide</div>
+    <div style="opacity:0.65;">•</div>
+    <div><a href="/admin" target="_blank" style="color:var(--gold); text-decoration:none; font-weight:600; display:inline-flex; align-items:center; gap:4px;"><span>⚜</span> Astrologer Sanctum (Admin)</a></div>
   </aside>
 
   <!-- ==========================================================================
@@ -1696,6 +1698,7 @@
           <li><a href="#kundli">Free Kundli</a></li>
           <li><a href="#remedies">Gemstones</a></li>
           <li><a href="#faq">FAQs</a></li>
+          <li><a href="/admin" target="_blank" style="color:var(--gold); font-weight:600;">⚜ Astrologer Sanctum (Admin)</a></li>
         </ul>
       </div>
     </div>
@@ -1715,7 +1718,7 @@
       <div class="modal-sub">1-on-1 Personalized Vedic Consultation & Janam Kundli Analysis</div>
 
       <form id="booking-form">
-        <div class="form-group" style="margin-bottom:16px;">
+        <div class="form-group" style="margin-bottom:14px;">
           <label for="consult-service">Select Consultation Focus</label>
           <select class="form-control" id="consult-service" required>
             <option value="Complete Janam Kundli & Life Path ($120)">📜 Complete Janam Kundli & Life Path (60 Mins)</option>
@@ -1727,7 +1730,7 @@
           </select>
         </div>
 
-        <div class="form-group" style="margin-bottom:16px;">
+        <div class="form-group" style="margin-bottom:14px;">
           <label for="consult-astrologer">Assigned Master Astrologer</label>
           <select class="form-control" id="consult-astrologer" required>
             <option value="Pt. Radhe Krishna Shastri (28+ yrs exp • Banaras Vedic Scholar)">Pt. Radhe Krishna Shastri (28+ yrs exp • Banaras Vedic Scholar)</option>
@@ -1737,18 +1740,49 @@
           </select>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
           <div class="form-group">
             <label for="client-name">Your Full Name</label>
-            <input type="text" class="form-control" id="client-name" placeholder="Full name" required>
+            <input type="text" class="form-control" id="client-name" placeholder="Devotee name" required>
           </div>
+          <div class="form-group">
+            <label for="client-email">Email Address</label>
+            <input type="email" class="form-control" id="client-email" placeholder="devotee@example.com" required>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
           <div class="form-group">
             <label for="client-phone">Phone / WhatsApp</label>
             <input type="tel" class="form-control" id="client-phone" placeholder="+1 (555) 000-0000" required>
           </div>
+          <div class="form-group">
+            <label for="consult-mode">Consultation Medium</label>
+            <select class="form-control" id="consult-mode" required>
+              <option value="Google Meet Video Call">🎥 Google Meet HD Video Call</option>
+              <option value="WhatsApp Video Call">📱 WhatsApp Video Call</option>
+              <option value="Phone / Voice Consultation">📞 Phone / Voice Consultation</option>
+            </select>
+          </div>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+          <div class="form-group">
+            <label for="consult-date">Preferred Date</label>
+            <input type="date" class="form-control" id="consult-date" required>
+          </div>
+          <div class="form-group">
+            <label for="consult-slot">Preferred Muhurta Slot</label>
+            <select class="form-control" id="consult-slot" required>
+              <option value="10:00 AM - 11:00 AM (Morning Muhurta)">☀️ 10:00 AM - 11:00 AM (Morning)</option>
+              <option value="02:00 PM - 03:00 PM (Afternoon Muhurta)">🌤️ 02:00 PM - 03:00 PM (Afternoon)</option>
+              <option value="06:00 PM - 07:00 PM (Evening Sandhya)">🌅 06:00 PM - 07:00 PM (Evening Sandhya)</option>
+              <option value="08:00 PM - 09:00 PM (Night Muhurta)">🌙 08:00 PM - 09:00 PM (Night)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
           <div class="form-group">
             <label for="client-dob">Date of Birth</label>
             <input type="date" class="form-control" id="client-dob" value="1996-05-12" required>
@@ -1759,13 +1793,84 @@
           </div>
         </div>
 
-        <div class="form-group" style="margin-bottom:22px;">
+        <div class="form-group" style="margin-bottom:14px;">
           <label for="client-city">Place of Birth (City, Country)</label>
-          <input type="text" class="form-control" id="client-city" placeholder="e.g. Mumbai, India" required>
+          <input type="text" class="form-control" id="client-city" placeholder="e.g. Varanasi, India" required>
         </div>
 
-        <button type="submit" class="btn-pill" id="btn-confirm-session">CONFIRM & ISSUE VEDIC APPOINTMENT PASS</button>
+        <div class="form-group" style="margin-bottom:20px;">
+          <label for="client-topic">Focus Areas & Questions (Optional)</label>
+          <input type="text" class="form-control" id="client-topic" placeholder="e.g. Career promotion, marriage timing, Sade Sati remedy...">
+        </div>
+
+        <button type="submit" class="btn-pill" id="btn-confirm-session" style="width: 100%;">
+          CONFIRM & TRANSMIT TO SANCTUM
+        </button>
       </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       VEDIC APPOINTMENT PASS MODAL
+       ========================================================================== -->
+  <div class="modal-overlay" id="modal-pass" role="dialog" aria-modal="true" aria-labelledby="pass-title">
+    <div class="modal-card" style="border: 2px solid var(--gold); box-shadow: 0 0 50px rgba(245, 199, 103, 0.25);">
+      <button class="modal-close" id="close-pass" type="button" aria-label="Close pass">&times;</button>
+      
+      <div style="text-align: center; margin-bottom: 20px;">
+        <div style="font-size: 32px; color: var(--gold); margin-bottom: 4px;">ॐ</div>
+        <h2 class="modal-title" id="pass-title" style="font-size: 24px; color: #fff;">Sacred Vedic Appointment Pass</h2>
+        <div style="display: inline-block; background: rgba(245, 199, 103, 0.15); border: 1px solid var(--gold); color: var(--gold); padding: 4px 16px; border-radius: 20px; font-weight: 700; font-size: 14px; letter-spacing: 1.5px; margin-top: 8px;" id="pass-ref">
+          PASS REF: TA-00000
+        </div>
+      </div>
+
+      <div style="background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+        <span style="font-size: 20px;">⚡</span>
+        <div style="font-size: 13px; color: #4ade80;">
+          <strong>Astrologer Alerted in Real-Time:</strong> Your consultation request and Janam Kundli parameters have been transmitted to the Master Astrologer's sanctum.
+        </div>
+      </div>
+
+      <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 18px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; font-size: 13.5px;">
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;">
+          <span style="color: rgba(255,255,255,0.6);">Devotee Name:</span>
+          <span style="font-weight: 600; color: #fff;" id="pass-client-name">--</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;">
+          <span style="color: rgba(255,255,255,0.6);">Consultation Focus:</span>
+          <span style="font-weight: 600; color: var(--gold);" id="pass-service">--</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;">
+          <span style="color: rgba(255,255,255,0.6);">Assigned Astrologer:</span>
+          <span style="color: #fff;" id="pass-astro">--</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;">
+          <span style="color: rgba(255,255,255,0.6);">Preferred Muhurta Date:</span>
+          <span style="font-weight: 600; color: var(--cyan);" id="pass-date">--</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;">
+          <span style="color: rgba(255,255,255,0.6);">Time Window / Slot:</span>
+          <span style="color: #fff;" id="pass-slot">--</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: rgba(255,255,255,0.6);">Consultation Medium:</span>
+          <span style="color: #fff;" id="pass-mode">--</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <a href="#" target="_blank" class="btn-pill" id="btn-add-calendar" style="flex: 1; text-align: center; text-decoration: none; padding: 12px 18px; font-size: 13px;">
+          📅 ADD TO GOOGLE CALENDAR
+        </a>
+        <button type="button" class="btn-pill" id="btn-print-pass" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: #fff; padding: 12px 20px; font-size: 13px;">
+          🖨️ PRINT PASS
+        </button>
+      </div>
+
+      <div style="text-align: center; margin-top: 18px; font-size: 12px; color: rgba(255,255,255,0.5);">
+        A confirmation pass and session link will also be dispatched via WhatsApp / Email.
+      </div>
     </div>
   </div>
 
@@ -2239,13 +2344,100 @@
       if (name) document.getElementById('client-name').value = name;
     });
 
-    document.getElementById('booking-form').addEventListener('submit', (e) => {
+    // Initialize default appointment date to tomorrow
+    const consultDateInput = document.getElementById('consult-date');
+    if (consultDateInput && !consultDateInput.value) {
+      const tmrw = new Date();
+      tmrw.setDate(tmrw.getDate() + 1);
+      consultDateInput.value = tmrw.toISOString().split('T')[0];
+    }
+
+    // Vedic Appointment Pass Modal Handlers
+    const modalPass = document.getElementById('modal-pass');
+    const closePass = document.getElementById('close-pass');
+
+    function openPassModal(booking) {
+      document.getElementById('pass-ref').textContent = `PASS REF: ${booking.reference_code}`;
+      document.getElementById('pass-client-name').textContent = booking.client_name;
+      document.getElementById('pass-service').textContent = booking.service_name;
+      document.getElementById('pass-astro').textContent = booking.astrologer_name.split('(')[0];
+      document.getElementById('pass-date').textContent = booking.preferred_date;
+      document.getElementById('pass-slot').textContent = booking.preferred_time_slot;
+      document.getElementById('pass-mode').textContent = booking.consultation_mode;
+
+      // Google Calendar link
+      const startDT = (booking.preferred_date || '2026-09-16').replace(/-/g, '') + 'T100000Z';
+      const endDT = (booking.preferred_date || '2026-09-16').replace(/-/g, '') + 'T110000Z';
+      const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('TrishulAstro: ' + booking.service_name)}&dates=${startDT}/${endDT}&details=${encodeURIComponent('Sacred Consultation Pass #' + booking.reference_code + '\nScholar: ' + booking.astrologer_name + '\nDevotee: ' + booking.client_name)}&location=Online+Sanctum`;
+      document.getElementById('btn-add-calendar').href = calUrl;
+
+      // Print button
+      document.getElementById('btn-print-pass').onclick = () => window.print();
+
+      modalPass.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePassModal() {
+      modalPass.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    if (closePass) closePass.addEventListener('click', closePassModal);
+    if (modalPass) {
+      modalPass.addEventListener('click', (e) => {
+        if (e.target === modalPass) closePassModal();
+      });
+    }
+
+    // Real Asynchronous Backend Submission
+    document.getElementById('booking-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const name = document.getElementById('client-name').value.trim();
-      const service = document.getElementById('consult-service').value.split('(')[0].trim();
-      const ref = 'TA-' + Math.floor(10000 + Math.random() * 90000);
-      closeBookingModal();
-      showToast(`Divine Pass #${ref} generated for ${name}! Details dispatched via WhatsApp/Email.`);
+      const submitBtn = document.getElementById('btn-confirm-session');
+      const originalText = submitBtn.textContent;
+
+      const payload = {
+        client_name: document.getElementById('client-name').value.trim(),
+        client_email: document.getElementById('client-email').value.trim(),
+        client_phone: document.getElementById('client-phone').value.trim(),
+        consultation_mode: document.getElementById('consult-mode').value,
+        preferred_date: document.getElementById('consult-date').value,
+        preferred_time_slot: document.getElementById('consult-slot').value,
+        client_dob: document.getElementById('client-dob').value,
+        client_tob: document.getElementById('client-tob').value,
+        client_city: document.getElementById('client-city').value.trim(),
+        service_name: document.getElementById('consult-service').value,
+        astrologer_name: document.getElementById('consult-astrologer').value,
+        query_topic: (document.getElementById('client-topic').value || '').trim()
+      };
+
+      try {
+        submitBtn.disabled = true;
+        submitBtn.textContent = '✦ TRANSMITTING TO SACRED SANCTUM...';
+
+        const res = await fetch('/api/bookings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+
+        if (data.success && data.booking) {
+          closeBookingModal();
+          openPassModal(data.booking);
+          showToast(`⚡ Divine Pass #${data.booking.reference_code} issued! Astrologer notified in real-time.`);
+        } else {
+          alert(data.error || 'Unable to register booking. Please re-check required fields.');
+        }
+      } catch (err) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+        console.error('Booking submission error:', err);
+        alert('Sacred connection error: ' + err.message);
+      }
     });
 
     /* ══════════════════════════════════════════════════════════════════

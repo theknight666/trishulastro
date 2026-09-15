@@ -1,3 +1,4 @@
-server.js
-validate.js
+node_modules/
 *.log
+trishulastro.db
+.DS_Store

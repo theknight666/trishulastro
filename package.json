@@ -1,0 +1,16 @@
+{
+  "name": "trishulastro",
+  "version": "1.0.0",
+  "description": "Sacred Vedic Astrology Consultation Platform & Real-Time Booking Backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "jpeg-js": "^0.4.4",
+    "nodemailer": "^10.0.10",
+    "pngjs": "^7.0.0"
+  }
+}
