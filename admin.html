@@ -3,782 +3,636 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TrishulAstro Sanctum — Astrologer Management Console</title>
+  <title>TrishulAstro • Admin Console</title>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&family=Prata&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg-base: #06070a;
-      --bg-surface: #0e0f17;
-      --bg-surface-elevated: #151722;
-      --bg-card: rgba(18, 20, 30, 0.75);
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-gold: rgba(245, 199, 103, 0.35);
-      --gold: #f5c767;
-      --gold-light: #ffdf9e;
-      --cyan: #79dce8;
-      --green: #4ade80;
-      --red: #f87171;
-      --text-main: #f8fafc;
+      --bg: #090a0f;
+      --surface: #10121a;
+      --surface-hover: #151822;
+      --surface-elevated: #1a1e2b;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(255, 255, 255, 0.25);
+      --text: #f8fafc;
       --text-muted: #94a3b8;
-      --font-serif: 'Prata', Georgia, serif;
-      --font-body: 'Hanken Grotesk', system-ui, sans-serif;
-      --font-logo: 'Poppins', sans-serif;
+      --text-dim: #64748b;
+      --accent: #d4af37;
+      --accent-muted: rgba(212, 175, 55, 0.12);
+      --green: #22c55e;
+      --green-bg: rgba(34, 197, 94, 0.1);
+      --amber: #f59e0b;
+      --amber-bg: rgba(245, 158, 11, 0.1);
+      --blue: #38bdf8;
+      --blue-bg: rgba(56, 189, 248, 0.1);
+      --red: #ef4444;
+      --red-bg: rgba(239, 68, 68, 0.1);
+      --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
     }
 
     body {
-      background-color: var(--bg-base);
-      background-image: 
-        radial-gradient(circle at 15% 10%, rgba(121, 220, 232, 0.04) 0%, transparent 40%),
-        radial-gradient(circle at 85% 20%, rgba(245, 199, 103, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 50% 80%, rgba(14, 165, 233, 0.03) 0%, transparent 60%);
-      background-attachment: fixed;
-      color: var(--text-main);
-      font-family: var(--font-body);
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
       line-height: 1.5;
     }
 
     /* Scrollbar */
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg-base); }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.14); border-radius: 3px; }
 
-    /* Layout Containers */
-    .sanctum-app { display: flex; flex-direction: column; min-height: 100vh; }
-
-    /* Top Navigation Bar */
-    .top-nav {
-      position: sticky; top: 0; z-index: 90;
-      background: rgba(8, 9, 14, 0.88);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border-subtle);
-      padding: 12px 28px;
+    /* Top Navigation */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(9, 10, 15, 0.9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
       display: flex; align-items: center; justify-content: space-between; gap: 16px;
     }
-    .brand-wrap { display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; }
-    .brand-icon {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: linear-gradient(135deg, rgba(245, 199, 103, 0.2), rgba(121, 220, 232, 0.1));
-      border: 1px solid var(--gold);
+    .brand {
+      display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;
+    }
+    .brand-logo {
+      width: 28px; height: 28px; border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border);
       display: flex; align-items: center; justify-content: center;
-      font-size: 20px; color: var(--gold);
-      box-shadow: 0 0 16px rgba(245, 199, 103, 0.25);
+      color: #fff;
     }
-    .brand-title { font-family: var(--font-serif); font-size: 20px; font-weight: 600; letter-spacing: 1.5px; color: #fff; }
-    .brand-sub { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--cyan); }
-
-    .nav-actions { display: flex; align-items: center; gap: 14px; }
-
-    /* Live SSE Pill */
-    .live-pill {
-      display: flex; align-items: center; gap: 8px;
-      background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3);
-      padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
-      color: var(--green); letter-spacing: 0.5px;
+    .brand-title {
+      font-size: 14px; font-weight: 600; letter-spacing: -0.2px; color: #fff;
     }
-    .live-pulse {
-      width: 8px; height: 8px; border-radius: 50%; background: var(--green);
-      box-shadow: 0 0 8px var(--green); animation: pulse-anim 2s infinite;
-    }
-    @keyframes pulse-anim {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.3); opacity: 0.6; }
+    .brand-badge {
+      font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;
+      color: var(--text-dim); background: rgba(255, 255, 255, 0.04);
+      padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border);
     }
 
-    /* Buttons & Toggles */
-    .btn-action {
-      background: var(--bg-surface-elevated);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-main);
-      padding: 8px 16px; border-radius: 8px;
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
+
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--green); font-weight: 500;
+      padding: 4px 10px; border-radius: 20px; background: var(--green-bg);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+    .pulse-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+    }
+
+    /* Buttons */
+    .btn {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text-muted); padding: 7px 12px; border-radius: 6px;
       font-size: 13px; font-weight: 500; cursor: pointer;
-      display: inline-flex; align-items: center; gap: 8px;
-      transition: all 0.2s ease; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      text-decoration: none; transition: all 0.15s ease;
+      font-family: inherit; line-height: 1;
     }
-    .btn-action:hover {
-      background: rgba(255, 255, 255, 0.08);
+    .btn:hover {
+      background: var(--surface-hover); color: var(--text);
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+    .btn.active {
+      background: rgba(255, 255, 255, 0.08); color: #fff;
       border-color: rgba(255, 255, 255, 0.2);
     }
-    .btn-action.active {
-      background: rgba(245, 199, 103, 0.15);
-      border-color: var(--gold);
-      color: var(--gold);
+    .btn-primary {
+      background: #fff; color: #000; font-weight: 600;
+      border: 1px solid #fff;
     }
-    .btn-gold {
-      background: linear-gradient(135deg, var(--gold) 0%, #d4a339 100%);
-      color: #071227; font-weight: 600; border: none;
-      padding: 9px 20px; border-radius: 8px; cursor: pointer;
-      font-size: 13px; letter-spacing: 0.5px; transition: all 0.2s ease;
-      display: inline-flex; align-items: center; gap: 8px;
-      box-shadow: 0 4px 14px rgba(245, 199, 103, 0.25);
+    .btn-primary:hover {
+      background: #e2e8f0; border-color: #e2e8f0; color: #000;
     }
-    .btn-gold:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(245, 199, 103, 0.4);
+    .btn-sm { padding: 5px 9px; font-size: 12px; border-radius: 5px; }
+
+    /* Icons */
+    .icon {
+      width: 14px; height: 14px; stroke: currentColor; stroke-width: 2;
+      stroke-linecap: round; stroke-linejoin: round; fill: none; flex-shrink: 0;
     }
 
-    /* Main Container */
-    .sanctum-body {
-      max-width: 1440px; margin: 0 auto; width: 100%;
-      padding: 24px 28px; flex: 1; display: flex; flex-direction: column; gap: 24px;
+    /* Container */
+    .container {
+      max-width: 1360px; margin: 0 auto; width: 100%;
+      padding: 24px; display: flex; flex-direction: column; gap: 20px;
     }
 
-    /* KPI Cards Grid */
-    .kpi-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 16px;
+    /* KPI Row */
+    .kpi-row {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
     }
-    .kpi-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px; padding: 18px 20px;
-      backdrop-filter: blur(12px);
-      transition: all 0.25s ease;
-      position: relative; overflow: hidden;
+    .kpi-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 16px 18px;
     }
-    .kpi-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
+    .kpi-title {
+      font-size: 12px; font-weight: 500; color: var(--text-dim); margin-bottom: 6px;
     }
-    .kpi-card:hover {
-      border-color: var(--border-gold);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    .kpi-num {
+      font-size: 24px; font-weight: 600; color: #fff; letter-spacing: -0.4px;
     }
-    .kpi-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-    .kpi-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
-    .kpi-icon { font-size: 18px; color: var(--gold); }
-    .kpi-value { font-family: var(--font-serif); font-size: 30px; font-weight: 600; color: #fff; line-height: 1; }
-    .kpi-sub { font-size: 11px; color: var(--cyan); margin-top: 6px; }
 
-    /* Navigation Tabs Bar */
+    /* Tabs Bar */
     .tabs-bar {
       display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 1px solid var(--border-subtle);
-      gap: 12px; flex-wrap: wrap; padding-bottom: 4px;
+      border-bottom: 1px solid var(--border); gap: 12px; flex-wrap: wrap;
+      padding-bottom: 2px;
     }
-    .tabs-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .tab-btn {
-      background: transparent; border: none; color: var(--text-muted);
-      padding: 10px 18px; font-size: 14px; font-weight: 500; cursor: pointer;
-      border-radius: 8px; transition: all 0.2s; position: relative;
-      display: inline-flex; align-items: center; gap: 8px;
+    .tabs-list { display: flex; gap: 4px; }
+    .tab-item {
+      background: none; border: none; color: var(--text-muted);
+      padding: 8px 12px; font-size: 13px; font-weight: 500; cursor: pointer;
+      border-radius: 6px; font-family: inherit; transition: all 0.15s ease;
+      display: inline-flex; align-items: center; gap: 6px;
     }
-    .tab-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.04); }
-    .tab-btn.active {
-      color: var(--gold); background: rgba(245, 199, 103, 0.08); font-weight: 600;
+    .tab-item:hover { color: var(--text); background: rgba(255, 255, 255, 0.03); }
+    .tab-item.active {
+      color: #fff; background: rgba(255, 255, 255, 0.08); font-weight: 600;
     }
-    .tab-btn.active::after {
-      content: ''; position: absolute; bottom: -5px; left: 16px; right: 16px;
-      height: 2px; background: var(--gold); border-radius: 2px;
+    .count-pill {
+      font-size: 11px; padding: 1px 6px; border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08); color: var(--text-muted);
     }
-    .tab-badge {
-      background: rgba(255, 255, 255, 0.1); color: #fff;
-      font-size: 11px; padding: 2px 7px; border-radius: 12px; font-weight: 600;
-    }
-    .tab-btn.active .tab-badge {
-      background: var(--gold); color: #071227;
-    }
+    .tab-item.active .count-pill { background: rgba(255, 255, 255, 0.15); color: #fff; }
 
-    /* Controls & Filter Bar */
-    .filter-bar {
+    /* Controls Bar */
+    .controls-bar {
       display: flex; align-items: center; justify-content: space-between;
-      gap: 16px; flex-wrap: wrap;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      padding: 14px 18px; border-radius: 12px;
+      gap: 12px; flex-wrap: wrap;
     }
-    .search-box {
-      flex: 1; min-width: 260px; position: relative;
+    .search-wrap {
+      flex: 1; min-width: 260px; position: relative; display: flex; align-items: center;
+    }
+    .search-icon {
+      position: absolute; left: 12px; pointer-events: none; color: var(--text-dim);
     }
     .search-input {
-      width: 100%; background: var(--bg-base);
-      border: 1px solid var(--border-subtle); border-radius: 8px;
-      padding: 10px 14px 10px 38px; color: #fff; font-size: 13px;
-      outline: none; transition: border-color 0.2s;
+      width: 100%; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 8px 12px 8px 36px; font-size: 13px; color: #fff; outline: none;
+      font-family: inherit; transition: border-color 0.15s ease;
     }
-    .search-input:focus { border-color: var(--cyan); }
-    .search-icon {
-      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-      color: var(--text-muted); font-size: 14px;
-    }
-    .filter-select {
-      background: var(--bg-base); border: 1px solid var(--border-subtle);
-      color: #fff; border-radius: 8px; padding: 10px 14px; font-size: 13px;
-      outline: none; cursor: pointer;
+    .search-input:focus { border-color: var(--border-focus); }
+    .search-input::placeholder { color: var(--text-dim); }
+
+    .select-control {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 6px; padding: 8px 12px; font-size: 13px; color: var(--text);
+      outline: none; font-family: inherit; cursor: pointer;
     }
 
-    /* Bookings Table */
-    .table-container {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px; overflow: hidden;
-      backdrop-filter: blur(12px);
+    /* Table */
+    .table-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; overflow: hidden;
     }
-    .table-responsive { width: 100%; overflow-x: auto; }
-    .sanctum-table {
-      width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;
-    }
-    .sanctum-table th {
+    .table-wrap { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    th {
       background: rgba(255, 255, 255, 0.02);
-      padding: 14px 18px; color: var(--text-muted);
-      font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 1px;
-      border-bottom: 1px solid var(--border-subtle);
+      padding: 10px 16px; color: var(--text-dim);
+      font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border);
     }
-    .sanctum-table td {
-      padding: 16px 18px; border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    td {
+      padding: 12px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.03);
       vertical-align: middle;
     }
-    .sanctum-table tr:hover td { background: rgba(255, 255, 255, 0.02); }
-    .sanctum-table tr.row-new td {
-      background: rgba(245, 199, 103, 0.05);
-      animation: highlight-row 3s ease-out;
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255, 255, 255, 0.015); }
+
+    .ref-code {
+      font-family: var(--font-mono); font-weight: 500; color: #cbd5e1;
+      font-size: 12px; background: rgba(255, 255, 255, 0.05); padding: 3px 6px; border-radius: 4px;
     }
-    @keyframes highlight-row {
-      0% { background: rgba(245, 199, 103, 0.25); }
-      100% { background: rgba(245, 199, 103, 0.05); }
-    }
+    .client-name { font-weight: 600; color: #fff; font-size: 13px; }
+    .client-sub { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
 
     /* Badges */
     .badge {
       display: inline-flex; align-items: center; gap: 5px;
-      padding: 4px 10px; border-radius: 14px; font-size: 11px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.5px;
+      font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px;
     }
-    .badge-pending {
-      background: rgba(245, 199, 103, 0.15); border: 1px solid rgba(245, 199, 103, 0.35);
-      color: var(--gold);
-    }
-    .badge-confirmed {
-      background: rgba(74, 222, 128, 0.15); border: 1px solid rgba(74, 222, 128, 0.35);
-      color: var(--green);
-    }
-    .badge-completed {
-      background: rgba(121, 220, 232, 0.15); border: 1px solid rgba(121, 220, 232, 0.35);
-      color: var(--cyan);
-    }
-    .badge-cancelled {
-      background: rgba(248, 113, 113, 0.15); border: 1px solid rgba(248, 113, 113, 0.35);
-      color: var(--red);
-    }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .badge-pending { background: var(--amber-bg); color: var(--amber); }
+    .badge-pending .badge-dot { background: var(--amber); }
+    .badge-confirmed { background: var(--green-bg); color: var(--green); }
+    .badge-confirmed .badge-dot { background: var(--green); }
+    .badge-completed { background: var(--blue-bg); color: var(--blue); }
+    .badge-completed .badge-dot { background: var(--blue); }
+    .badge-cancelled { background: var(--red-bg); color: var(--red); }
+    .badge-cancelled .badge-dot { background: var(--red); }
 
-    .client-title { font-weight: 600; color: #fff; font-size: 14px; margin-bottom: 2px; }
-    .client-sub { font-size: 12px; color: var(--text-muted); display: flex; gap: 8px; align-items: center; }
+    /* Action buttons in row */
+    .action-group { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
 
-    /* Quick action buttons in table */
-    .row-actions { display: flex; align-items: center; gap: 6px; }
-    .btn-icon {
-      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-subtle);
-      color: var(--text-muted); width: 32px; height: 32px; border-radius: 6px;
-      display: inline-flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: all 0.2s; font-size: 13px; text-decoration: none;
+    /* Drawer */
+    .drawer-backdrop {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px); z-index: 100;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
     }
-    .btn-icon:hover { color: #fff; background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.3); }
-    .btn-icon.wa:hover { color: #25d366; border-color: #25d366; background: rgba(37, 211, 102, 0.1); }
-    .btn-icon.confirm:hover { color: var(--green); border-color: var(--green); background: rgba(74, 222, 128, 0.1); }
-
-    /* Drawer / Side Modal for Kundli Details */
-    .drawer-overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px); z-index: 100;
-      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-    }
-    .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+    .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
     .drawer {
-      position: fixed; top: 0; right: -580px; width: 100%; max-width: 580px; height: 100vh;
-      background: #0d0f17; border-left: 1px solid var(--border-gold);
-      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8); z-index: 101;
+      position: fixed; top: 0; right: -540px; width: 100%; max-width: 480px; height: 100vh;
+      background: var(--surface); border-left: 1px solid var(--border);
+      box-shadow: -8px 0 30px rgba(0, 0, 0, 0.6); z-index: 101;
       display: flex; flex-direction: column;
-      transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      overflow: hidden;
+      transition: right 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .drawer.open { right: 0; }
-    .drawer-header {
-      padding: 20px 24px; border-bottom: 1px solid var(--border-subtle);
+    .drawer-head {
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
       display: flex; align-items: center; justify-content: space-between;
-      background: rgba(255, 255, 255, 0.02);
     }
-    .drawer-title { font-family: var(--font-serif); font-size: 18px; color: var(--gold); }
+    .drawer-title { font-size: 15px; font-weight: 600; color: #fff; }
     .drawer-close {
-      background: none; border: none; color: var(--text-muted); font-size: 22px;
-      cursor: pointer; padding: 4px 8px; border-radius: 4px;
+      background: none; border: none; color: var(--text-dim); font-size: 20px;
+      cursor: pointer; padding: 4px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
     }
-    .drawer-close:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
-    .drawer-content { padding: 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 20px; }
+    .drawer-close:hover { color: #fff; }
+    .drawer-body { padding: 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 16px; }
 
-    .box-kundli {
-      background: rgba(245, 199, 103, 0.04);
-      border: 1px solid var(--border-gold);
-      border-radius: 10px; padding: 18px;
+    .card-block {
+      background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border);
+      border-radius: 6px; padding: 14px; display: flex; flex-direction: column; gap: 8px;
     }
-    .box-kundli-title {
-      font-size: 12px; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 1px; color: var(--cyan); margin-bottom: 12px;
-      display: flex; align-items: center; justify-content: space-between;
+    .card-block-title {
+      font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.5px;
+      margin-bottom: 2px;
     }
-    .grid-kundli {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;
-    }
-    .kundli-item-label { color: var(--text-muted); font-size: 11px; margin-bottom: 2px; }
-    .kundli-item-val { color: #fff; font-weight: 500; }
+    .info-row { display: flex; justify-content: space-between; font-size: 13px; }
+    .info-label { color: var(--text-dim); }
+    .info-val { color: #fff; font-weight: 500; }
 
-    /* Form controls in drawer & modals */
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-    .form-control {
-      background: var(--bg-base); border: 1px solid var(--border-subtle);
-      border-radius: 8px; padding: 10px 14px; color: #fff; font-size: 13px;
-      outline: none; transition: border-color 0.2s; font-family: inherit;
+    /* Form inputs */
+    .field-group { display: flex; flex-direction: column; gap: 5px; }
+    .field-label { font-size: 12px; font-weight: 500; color: var(--text-dim); }
+    .field-input {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 6px; padding: 8px 12px; color: #fff; font-size: 13px;
+      outline: none; font-family: inherit; transition: border-color 0.15s ease;
     }
-    .form-control:focus { border-color: var(--gold); }
-    textarea.form-control { min-height: 80px; resize: vertical; }
+    .field-input:focus { border-color: var(--border-focus); }
+    textarea.field-input { min-height: 70px; resize: vertical; }
 
-    /* Notification Drawer */
-    .notif-item {
-      padding: 14px; border-radius: 8px; background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 4px;
-      font-size: 13px;
+    /* Login Gate */
+    .gate-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: #090a0f;
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
     }
-    .notif-item-header { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
-    .notif-channel-badge { font-weight: 600; text-transform: uppercase; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
-    .chan-sse { background: rgba(121, 220, 232, 0.15); color: var(--cyan); }
-    .chan-email { background: rgba(245, 199, 103, 0.15); color: var(--gold); }
-    .chan-webhook { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+    .gate-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .gate-card {
+      width: 100%; max-width: 360px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 28px 24px; text-align: left;
+    }
+    .gate-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+    }
+    .gate-logo {
+      width: 32px; height: 32px; border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+    }
+    .gate-title { font-size: 15px; font-weight: 600; color: #fff; }
+    .gate-sub { font-size: 12px; color: var(--text-dim); }
+    .gate-error {
+      background: var(--red-bg); border: 1px solid rgba(239, 68, 68, 0.3); color: var(--red);
+      font-size: 12px; padding: 8px 12px; border-radius: 6px; margin-bottom: 14px; display: none;
+    }
 
-    /* Toast alert banner */
-    .toast-popup {
-      position: fixed; bottom: 28px; right: 28px; z-index: 200;
-      background: #11131c; border: 1px solid var(--gold);
-      border-radius: 12px; padding: 16px 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(245, 199, 103, 0.2);
-      display: flex; align-items: center; gap: 14px;
-      transform: translateY(100px); opacity: 0; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      max-width: 440px;
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 20px; right: 20px; z-index: 300;
+      background: var(--surface-elevated); border: 1px solid var(--border);
+      border-radius: 6px; padding: 10px 14px;
+      display: flex; align-items: center; gap: 8px; font-size: 13px; color: #fff;
+      transform: translateY(40px); opacity: 0; transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
     }
-    .toast-popup.visible { transform: translateY(0); opacity: 1; }
-    .toast-icon { font-size: 24px; color: var(--gold); }
-    .toast-text { font-size: 13px; color: #fff; line-height: 1.4; }
-    .toast-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; margin-left: 8px; }
+    .toast.show { transform: translateY(0); opacity: 1; }
 
     /* Empty state */
-    .empty-state {
-      padding: 60px 20px; text-align: center; color: var(--text-muted);
-    }
-    .empty-icon { font-size: 40px; margin-bottom: 12px; color: var(--gold); opacity: 0.7; }
+    .empty { padding: 48px 16px; text-align: center; color: var(--text-dim); font-size: 13px; }
 
-    /* Fullscreen Login Gate */
-    .login-gate-overlay {
-      position: fixed; inset: 0; z-index: 1000;
-      background: radial-gradient(circle at 50% 30%, rgba(20, 24, 38, 0.98), #06070a 90%);
-      backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
-      display: flex; align-items: center; justify-content: center; padding: 20px;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
-    }
-    .login-gate-overlay.hidden {
-      opacity: 0; visibility: hidden; pointer-events: none;
-    }
-    .login-card {
-      width: 100%; max-width: 440px;
-      background: #0e1019; border: 1px solid var(--border-gold);
-      border-radius: 24px; padding: 40px 32px;
-      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.95), 0 0 40px rgba(245, 199, 103, 0.15);
-      text-align: center; position: relative;
-      animation: gate-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    @keyframes gate-enter {
-      0% { transform: scale(0.92) translateY(24px); opacity: 0; }
-      100% { transform: scale(1) translateY(0); opacity: 1; }
-    }
-    .login-logo {
-      width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 16px;
-      background: linear-gradient(135deg, rgba(245, 199, 103, 0.25), rgba(121, 220, 232, 0.1));
-      border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center;
-      font-size: 30px; color: var(--gold); box-shadow: 0 0 26px rgba(245, 199, 103, 0.35);
-    }
-    .login-title { font-family: var(--font-serif); font-size: 22px; color: #fff; margin-bottom: 4px; letter-spacing: 1px; }
-    .login-sub { font-size: 11px; color: var(--cyan); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 24px; }
-    .login-error {
-      background: rgba(248, 113, 113, 0.12); border: 1px solid var(--red); color: var(--red);
-      font-size: 12.5px; padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; display: none;
-    }
-    .login-error.shake {
-      animation: shake 0.4s ease;
-    }
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-6px); }
-      40%, 80% { transform: translateX(6px); }
-    }
-
-    /* Responsive */
     @media (max-width: 768px) {
-      .top-nav { padding: 12px 16px; }
-      .sanctum-body { padding: 16px; }
+      .topbar { padding: 12px 16px; }
+      .container { padding: 16px; }
       .drawer { max-width: 100%; }
-      .brand-title { font-size: 16px; }
     }
   </style>
 </head>
 <body>
 
-<!-- Fullscreen Admin Authentication Gate -->
-<div class="login-gate-overlay" id="login-gate">
-  <div class="login-card">
-    <div class="login-logo">ॐ</div>
-    <h2 class="login-title">TRISHULASTRO SANCTUM</h2>
-    <div class="login-sub">Sacred Astrologer Authentication</div>
+<!-- Login Gate -->
+<div class="gate-overlay" id="login-gate">
+  <div class="gate-card">
+    <div class="gate-header">
+      <div class="gate-logo">
+        <svg class="icon" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <div>
+        <div class="gate-title">TrishulAstro Console</div>
+        <div class="gate-sub">Enter credentials to continue</div>
+      </div>
+    </div>
 
-    <div class="login-error" id="login-error-msg"></div>
+    <div class="gate-error" id="login-error"></div>
 
-    <form id="login-form" style="display:flex; flex-direction:column; gap:16px; text-align:left;">
-      <div class="form-group">
-        <label class="form-label" for="login-password">Master Password or PIN</label>
-        <div style="position:relative;">
-          <input type="password" class="form-control" id="login-password" placeholder="Enter password (default: trishul1088)" required style="width:100%; padding-right:42px;">
-          <button type="button" id="btn-toggle-pwd" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:16px;" title="Show/Hide Password">👁️</button>
+    <form id="login-form" style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="field-group">
+        <label class="field-label" for="pwd-input">Admin Password</label>
+        <div style="position: relative; display: flex; align-items: center;">
+          <input type="password" class="field-input" id="pwd-input" placeholder="Password" required style="width: 100%; padding-right: 36px;">
+          <button type="button" id="btn-toggle-pwd" style="position: absolute; right: 8px; background: none; border: none; color: var(--text-dim); cursor: pointer; padding: 4px; display: flex; align-items: center;" title="Show/Hide">
+            <svg class="icon" id="eye-icon" viewBox="0 0 24 24">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
         </div>
       </div>
 
-      <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--text-muted);">
-        <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-          <input type="checkbox" id="login-remember" checked>
-          <span>Remember on this device</span>
+      <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-dim);">
+        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+          <input type="checkbox" id="chk-remember" checked>
+          <span>Remember session</span>
         </label>
-        <span style="color:var(--gold); font-size:11px;">Default: trishul1088</span>
       </div>
 
-      <button type="submit" class="btn-gold" id="btn-submit-login" style="width:100%; justify-content:center; padding:12px; margin-top:8px; font-size:14px;">
-        <span>✦ Unlock Sanctum Console</span>
+      <button type="submit" class="btn btn-primary" id="btn-sign-in" style="width: 100%; justify-content: center; padding: 9px; margin-top: 4px;">
+        Sign In
       </button>
     </form>
   </div>
 </div>
 
-<div class="sanctum-app" id="sanctum-app-root">
-  <!-- Top Navigation Header -->
-  <header class="top-nav">
-    <a href="/admin" class="brand-wrap">
-      <div class="brand-icon">ॐ</div>
-      <div>
-        <div class="brand-title">TRISHULASTRO SANCTUM</div>
-        <div class="brand-sub">Master Astrologer Command Console</div>
+<!-- Admin Application -->
+<div id="admin-app">
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo">
+        <svg class="icon" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9"/>
+          <line x1="12" y1="3" x2="12" y2="21"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+        </svg>
       </div>
-    </a>
+      <span class="brand-title">TrishulAstro</span>
+      <span class="brand-badge">Console</span>
+    </div>
 
     <div class="nav-actions">
-      <!-- Live SSE Connection Pill -->
-      <div class="live-pill" id="live-indicator">
-        <span class="live-pulse" id="live-pulse"></span>
-        <span id="live-status-text">LIVE SSE SYNCED</span>
+      <!-- Live Status -->
+      <div class="status-pill">
+        <span class="pulse-dot"></span>
+        <span id="live-text">Live</span>
       </div>
 
-      <!-- Web Audio Chime Toggle -->
-      <button class="btn-action active" id="btn-audio-toggle" title="Toggle auspicious temple chime on new booking">
-        <span id="sound-icon">🔔</span>
-        <span id="sound-text">Chime: ON</span>
+      <!-- Sound Toggle -->
+      <button class="btn active" id="btn-sound" title="Toggle audio chime">
+        <svg class="icon" viewBox="0 0 24 24">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+        <span id="sound-lbl">Chime</span>
       </button>
 
-      <!-- Desktop Notifications -->
-      <button class="btn-action" id="btn-desktop-notif" title="Enable OS desktop notifications">
-        <span>📣</span>
-        <span>Desktop Push</span>
-      </button>
-
-      <!-- Notification Bell -->
-      <button class="btn-action" id="btn-notif-feed" title="Recent Alert History" style="position: relative;">
-        <span>📜</span>
-        <span>Alerts</span>
-        <span class="tab-badge" id="alert-counter" style="background:var(--gold); color:#071227; display:none;">0</span>
+      <!-- Desktop Notifications Toggle -->
+      <button class="btn" id="btn-desktop" title="Browser desktop notifications">
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
       </button>
 
       <!-- Public Site Link -->
-      <a href="/" target="_blank" class="btn-action" title="Open client website">
-        <span>Visit Site ↗</span>
+      <a href="/" target="_blank" class="btn" title="Open client website">
+        <span>Site</span>
+        <svg class="icon" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
       </a>
 
-      <!-- Quick Manual Booking -->
-      <button class="btn-gold" id="btn-new-booking">
+      <!-- New Booking -->
+      <button class="btn btn-primary" id="btn-new">
         <span>+ New Booking</span>
       </button>
 
-      <!-- Logout / Lock -->
-      <button class="btn-action" id="btn-logout" title="Lock & Logout Sanctum Console">
-        <span>🔒</span>
-        <span>Lock</span>
+      <!-- Logout -->
+      <button class="btn" id="btn-logout" title="Sign out">
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
       </button>
     </div>
   </header>
 
-  <!-- Sanctum Body -->
-  <main class="sanctum-body">
-    <!-- KPI Overview Cards -->
-    <section class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <span class="kpi-label">Total Consultations</span>
-          <span class="kpi-icon">📜</span>
-        </div>
-        <div class="kpi-value" id="kpi-total">0</div>
-        <div class="kpi-sub" id="kpi-total-sub">Active in registry</div>
+  <!-- Main Container -->
+  <main class="container">
+    <!-- KPI Row -->
+    <section class="kpi-row">
+      <div class="kpi-box">
+        <div class="kpi-title">Total Bookings</div>
+        <div class="kpi-num" id="kpi-total">0</div>
       </div>
-
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <span class="kpi-label">Pending Reviews</span>
-          <span class="kpi-icon" style="color:var(--gold);">⚡</span>
-        </div>
-        <div class="kpi-value" style="color:var(--gold);" id="kpi-pending">0</div>
-        <div class="kpi-sub">Awaiting Muhurta confirmation</div>
+      <div class="kpi-box">
+        <div class="kpi-title">Pending Action</div>
+        <div class="kpi-num" style="color: var(--amber);" id="kpi-pending">0</div>
       </div>
-
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <span class="kpi-label">Confirmed Sessions</span>
-          <span class="kpi-icon" style="color:var(--green);">✦</span>
-        </div>
-        <div class="kpi-value" style="color:var(--green);" id="kpi-confirmed">0</div>
-        <div class="kpi-sub">Ready with meeting link</div>
+      <div class="kpi-box">
+        <div class="kpi-title">Confirmed</div>
+        <div class="kpi-num" style="color: var(--green);" id="kpi-confirmed">0</div>
       </div>
-
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <span class="kpi-label">Energy Exchange (Est)</span>
-          <span class="kpi-icon">💎</span>
-        </div>
-        <div class="kpi-value" id="kpi-revenue">$0</div>
-        <div class="kpi-sub" id="kpi-revenue-inr">≈ ₹0 INR</div>
-      </div>
-
-      <div class="kpi-card">
-        <div class="kpi-header">
-          <span class="kpi-label">Today's Muhurtas</span>
-          <span class="kpi-icon">☀️</span>
-        </div>
-        <div class="kpi-value" id="kpi-today">0</div>
-        <div class="kpi-sub">Scheduled for today</div>
+      <div class="kpi-box">
+        <div class="kpi-title">Est. Revenue</div>
+        <div class="kpi-num" id="kpi-revenue">$0</div>
       </div>
     </section>
 
-    <!-- Navigation Tabs Bar -->
+    <!-- Tabs Navigation -->
     <section class="tabs-bar">
-      <div class="tabs-group">
-        <button class="tab-btn active" data-tab="all">
-          <span>All Consultations</span>
-          <span class="tab-badge" id="badge-all">0</span>
+      <div class="tabs-list">
+        <button class="tab-item active" data-tab="all">
+          <span>All</span>
+          <span class="count-pill" id="cnt-all">0</span>
         </button>
-        <button class="tab-btn" data-tab="pending">
+        <button class="tab-item" data-tab="pending">
           <span>Pending</span>
-          <span class="tab-badge" id="badge-pending">0</span>
+          <span class="count-pill" id="cnt-pending">0</span>
         </button>
-        <button class="tab-btn" data-tab="confirmed">
+        <button class="tab-item" data-tab="confirmed">
           <span>Confirmed</span>
-          <span class="tab-badge" id="badge-confirmed">0</span>
+          <span class="count-pill" id="cnt-confirmed">0</span>
         </button>
-        <button class="tab-btn" data-tab="completed">
+        <button class="tab-item" data-tab="completed">
           <span>Completed</span>
-          <span class="tab-badge" id="badge-completed">0</span>
+          <span class="count-pill" id="cnt-completed">0</span>
         </button>
-        <button class="tab-btn" data-tab="cancelled">
+        <button class="tab-item" data-tab="cancelled">
           <span>Cancelled</span>
         </button>
-        <button class="tab-btn" data-tab="notifications">
-          <span>🔔 Notifications & Settings</span>
+        <button class="tab-item" data-tab="settings">
+          <span>Settings</span>
         </button>
       </div>
 
-      <div style="display: flex; gap: 8px;">
-        <button class="btn-action" id="btn-export-csv" title="Export to CSV">
-          <span>📥 Export CSV</span>
+      <div style="display: flex; gap: 6px;">
+        <button class="btn btn-sm" id="btn-export" title="Export CSV">
+          <svg class="icon" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Export CSV
         </button>
-        <button class="btn-action" id="btn-refresh" title="Refresh registry">
-          <span>🔄 Sync</span>
+        <button class="btn btn-sm" id="btn-refresh" title="Sync data">
+          <svg class="icon" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+            <polyline points="23 4 23 10 17 10"/>
+            <polyline points="1 20 1 14 7 14"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+          Sync
         </button>
       </div>
     </section>
 
-    <!-- Controls & Search Bar (Visible in table view) -->
-    <section class="filter-bar" id="filter-controls">
-      <div class="search-box">
-        <span class="search-icon">🔍</span>
-        <input type="text" class="search-input" id="search-input" placeholder="Search by devotee name, phone, email, or Pass # (e.g. TA-78412)...">
+    <!-- Controls (Search & Astrologer Filter) -->
+    <section class="controls-bar" id="controls-section">
+      <div class="search-wrap">
+        <svg class="icon search-icon" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" class="search-input" id="search-input" placeholder="Search by name, phone, email, or Pass # (e.g. TA-78412)...">
       </div>
-
-      <div style="display: flex; gap: 10px; align-items: center;">
-        <select class="filter-select" id="filter-astro">
-          <option value="">All Master Astrologers</option>
-          <option value="Pt. Radhe Krishna Shastri">Pt. Radhe Krishna Shastri</option>
-          <option value="Dr. Gayatri Devi">Dr. Gayatri Devi</option>
-          <option value="Acharya Devvrat Sharma">Acharya Devvrat Sharma</option>
-          <option value="Acharya Vidyadhar Joshi">Acharya Vidyadhar Joshi</option>
-        </select>
-      </div>
+      <select class="select-control" id="filter-astro">
+        <option value="">All Astrologers</option>
+        <option value="Pt. Radhe Krishna Shastri">Pt. Radhe Krishna Shastri</option>
+        <option value="Dr. Gayatri Devi">Dr. Gayatri Devi</option>
+        <option value="Acharya Devvrat Sharma">Acharya Devvrat Sharma</option>
+        <option value="Acharya Vidyadhar Joshi">Acharya Vidyadhar Joshi</option>
+      </select>
     </section>
 
-    <!-- Main Bookings Table View -->
-    <section class="table-container" id="view-bookings-table">
-      <div class="table-responsive">
-        <table class="sanctum-table">
+    <!-- Bookings Table View -->
+    <section class="table-card" id="table-view">
+      <div class="table-wrap">
+        <table>
           <thead>
             <tr>
-              <th>Pass Ref</th>
-              <th>Devotee / Contact</th>
-              <th>Consultation Focus</th>
-              <th>Assigned Astrologer</th>
-              <th>Preferred Muhurta</th>
-              <th>Medium</th>
+              <th>Ref</th>
+              <th>Client</th>
+              <th>Service</th>
+              <th>Astrologer</th>
+              <th>Date & Slot</th>
+              <th>Mode</th>
               <th>Status</th>
-              <th style="text-align: right;">Actions</th>
+              <th style="text-align: right;">Action</th>
             </tr>
           </thead>
-          <tbody id="bookings-tbody">
-            <!-- Populated via JavaScript -->
+          <tbody id="tbody-bookings">
+            <!-- Populated via JS -->
           </tbody>
         </table>
       </div>
-      <div class="empty-state" id="empty-state" style="display: none;">
-        <div class="empty-icon">🕉</div>
-        <div style="font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 6px;">No consultations found</div>
-        <p>No bookings match the selected criteria.</p>
+      <div class="empty" id="empty-state" style="display: none;">
+        No bookings found matching current criteria.
       </div>
     </section>
 
-    <!-- Notifications & Settings Panel (Shown when that tab is clicked) -->
-    <section class="table-container" id="view-settings-panel" style="display: none; padding: 28px;">
-      <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px;">
+    <!-- Settings & Integrations View -->
+    <section class="table-card" id="settings-view" style="display: none; padding: 24px;">
+      <div style="max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px;">
         <div>
-          <h2 style="font-family: var(--font-serif); font-size: 22px; color: var(--gold); margin-bottom: 6px;">
-            🔔 Astrologer Alert Channels & Notification Integrations
-          </h2>
-          <p style="color: var(--text-muted); font-size: 14px;">
-            Configure how you receive real-time notifications whenever someone books a consultation on TrishulAstro.
-          </p>
+          <h2 style="font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 4px;">Notifications & System Settings</h2>
+          <p style="font-size: 13px; color: var(--text-dim);">Configure notification targets, security credentials, and alert diagnostics.</p>
         </div>
 
-        <!-- Quick Test Card -->
-        <div style="background: rgba(245, 199, 103, 0.05); border: 1px solid var(--border-gold); border-radius: 12px; padding: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; gap: 12px; flex-wrap: wrap;">
           <div>
-            <div style="font-weight: 600; color: #fff; margin-bottom: 4px; font-size: 15px;">Live Alert Channel Diagnostic</div>
-            <div style="color: var(--text-muted); font-size: 13px;">Test your live SSE chime, desktop notification, and webhook dispatch in 1 click.</div>
+            <div style="font-size: 13px; font-weight: 600; color: #fff;">Notification Diagnostic</div>
+            <div style="font-size: 12px; color: var(--text-dim);">Send a test alert to verify audio chime and webhooks.</div>
           </div>
-          <button class="btn-gold" id="btn-test-alert">
-            <span>⚡ Send Test Live Alert</span>
-          </button>
+          <button class="btn btn-sm btn-primary" id="btn-test-alert">Send Test Alert</button>
         </div>
 
-        <!-- Settings Form -->
-        <form id="settings-form" style="display: flex; flex-direction: column; gap: 20px;">
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px;">
-            <div class="form-group">
-              <label class="form-label" for="setting-email">Owner / Astrologer Notification Email</label>
-              <input type="email" class="form-control" id="setting-email" placeholder="e.g. your-email@domain.com" required>
-              <small style="color:var(--text-muted); font-size:11px;">Where new session booking alerts and client details are sent.</small>
+        <form id="form-settings" style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
+            <div class="field-group">
+              <label class="field-label" for="cfg-email">Notification Email</label>
+              <input type="email" class="field-input" id="cfg-email" placeholder="admin@domain.com" required>
             </div>
-
-            <div class="form-group">
-              <label class="form-label" for="setting-pin">Sanctum Admin PIN Code</label>
-              <input type="password" class="form-control" id="setting-pin" placeholder="••••" required>
-              <small style="color:var(--text-muted); font-size:11px;">Security PIN to access this Admin Console (Default: 1088).</small>
+            <div class="field-group">
+              <label class="field-label" for="cfg-webhook">Discord / Slack Webhook URL</label>
+              <input type="url" class="field-input" id="cfg-webhook" placeholder="https://discord.com/api/webhooks/...">
             </div>
           </div>
-
-          <!-- Webhook for Discord/Slack/Telegram Mobile Alerts -->
-          <div class="form-group">
-            <label class="form-label" for="setting-webhook">
-              Discord / Slack / Telegram Webhook URL (Instant Mobile Push)
-            </label>
-            <input type="url" class="form-control" id="setting-webhook" placeholder="https://discord.com/api/webhooks/... or https://hooks.slack.com/...">
-            <small style="color:var(--text-muted); font-size:11px;">
-              Paste a Discord or Slack Webhook URL to get instant notifications on your phone whenever a client books a session!
-            </small>
-          </div>
-
-          <!-- Custom SMTP Configuration (Optional) -->
-          <details style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 14px;">
-            <summary style="cursor: pointer; font-weight: 600; color: var(--cyan); font-size: 13px;">
-              ⚙ Optional: Custom SMTP Email Server Settings (Gmail / Outlook / SendGrid)
-            </summary>
-            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-top: 14px;">
-              <div class="form-group">
-                <label class="form-label">SMTP Host</label>
-                <input type="text" class="form-control" id="setting-smtp-host" placeholder="smtp.gmail.com">
-              </div>
-              <div class="form-group">
-                <label class="form-label">SMTP Port</label>
-                <input type="number" class="form-control" id="setting-smtp-port" placeholder="587">
-              </div>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px;">
-              <div class="form-group">
-                <label class="form-label">SMTP Username / Email</label>
-                <input type="text" class="form-control" id="setting-smtp-user" placeholder="user@gmail.com">
-              </div>
-              <div class="form-group">
-                <label class="form-label">SMTP App Password</label>
-                <input type="password" class="form-control" id="setting-smtp-pass" placeholder="••••••••">
-              </div>
-            </div>
-          </details>
 
           <div>
-            <button type="submit" class="btn-gold" id="btn-save-settings">
-              <span>Save Configuration</span>
-            </button>
+            <button type="submit" class="btn btn-primary" id="btn-save-cfg">Save Settings</button>
           </div>
         </form>
 
-        <!-- Password & Security Management -->
-        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-gold); border-radius: 12px; padding: 22px;">
-          <h3 style="font-family: var(--font-serif); font-size: 17px; color: var(--gold); margin-bottom: 4px;">
-            🔒 Sanctum Master Password & Security
-          </h3>
-          <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 16px;">
-            Change the sacred password used to unlock this Astrologer Sanctum console.
-          </p>
-
-          <form id="change-password-form" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; align-items: end;">
-            <div class="form-group">
-              <label class="form-label" for="cp-current">Current Password</label>
-              <input type="password" class="form-control" id="cp-current" required placeholder="Current password">
+        <!-- Change Password Section -->
+        <div style="border-top: 1px solid var(--border); padding-top: 20px;">
+          <h3 style="font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 12px;">Update Password</h3>
+          <form id="form-change-pwd" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: end;">
+            <div class="field-group">
+              <label class="field-label" for="pwd-current">Current Password</label>
+              <input type="password" class="field-input" id="pwd-current" required placeholder="Current password">
             </div>
-            <div class="form-group">
-              <label class="form-label" for="cp-new">New Password</label>
-              <input type="password" class="form-control" id="cp-new" required placeholder="Min 4 characters">
+            <div class="field-group">
+              <label class="field-label" for="pwd-new">New Password</label>
+              <input type="password" class="field-input" id="pwd-new" required placeholder="New password">
             </div>
             <div>
-              <button type="submit" class="btn-gold" id="btn-update-pwd" style="width: 100%; justify-content: center;">
-                <span>Update Password</span>
-              </button>
+              <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Update</button>
             </div>
           </form>
         </div>
 
-        <!-- Notification History Log Table -->
-        <div style="margin-top: 16px;">
-          <h3 style="font-family: var(--font-serif); font-size: 17px; color: #fff; margin-bottom: 12px;">
-            Recent Notification Audit History
-          </h3>
-          <div class="table-responsive" style="border: 1px solid var(--border-subtle); border-radius: 8px;">
-            <table class="sanctum-table">
+        <!-- Notification History -->
+        <div style="border-top: 1px solid var(--border); padding-top: 20px;">
+          <h3 style="font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 12px;">Recent Notification Logs</h3>
+          <div class="table-wrap" style="border: 1px solid var(--border); border-radius: 6px;">
+            <table>
               <thead>
                 <tr>
-                  <th>Timestamp</th>
+                  <th>Time</th>
                   <th>Channel</th>
-                  <th>Recipient / Target</th>
-                  <th>Alert Title</th>
+                  <th>Recipient</th>
+                  <th>Title</th>
                   <th>Status</th>
                 </tr>
               </thead>
-              <tbody id="notifs-tbody">
+              <tbody id="tbody-notifs">
                 <!-- Populated via JS -->
               </tbody>
             </table>
@@ -789,607 +643,519 @@
   </main>
 </div>
 
-<!-- Drawer for Kundli Details & Status Management -->
-<div class="drawer-overlay" id="drawer-overlay"></div>
+<!-- Booking Detail Drawer -->
+<div class="drawer-backdrop" id="drawer-backdrop"></div>
 <div class="drawer" id="booking-drawer">
-  <div class="drawer-header">
+  <div class="drawer-head">
     <div>
-      <div class="drawer-title" id="drawer-ref">Pass #TA-00000</div>
-      <div style="font-size:12px; color:var(--text-muted);" id="drawer-created">Booked on --</div>
+      <div class="drawer-title" id="drawer-title">Booking Details</div>
+      <div style="font-size: 12px; color: var(--text-dim);" id="drawer-sub">--</div>
     </div>
-    <button class="drawer-close" id="drawer-close" type="button">&times;</button>
+    <button class="drawer-close" id="drawer-close" type="button">
+      <svg class="icon" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
   </div>
 
-  <div class="drawer-content">
-    <!-- Devotee Contact Box -->
-    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgba(255,255,255,0.03); padding: 14px 18px; border-radius: 10px; border: 1px solid var(--border-subtle);">
-      <div>
-        <div style="font-size: 16px; font-weight: 600; color: #fff;" id="drawer-client-name">Devotee Name</div>
-        <div style="font-size: 12px; color: var(--text-muted);" id="drawer-client-contact">email • phone</div>
-      </div>
-      <div style="display: flex; gap: 8px;">
-        <a href="#" target="_blank" class="btn-icon wa" id="drawer-wa-btn" title="Chat on WhatsApp">💬</a>
-        <a href="#" class="btn-icon" id="drawer-mail-btn" title="Send Email">✉</a>
-      </div>
-    </div>
-
-    <!-- Vedic Kundli Calculation Box -->
-    <div class="box-kundli">
-      <div class="box-kundli-title">
-        <span>✦ Devotee Vedic Birth Parameters</span>
-        <span style="color:var(--gold); font-size:11px;">Janam Kundli Data</span>
-      </div>
-      <div class="grid-kundli">
+  <div class="drawer-body">
+    <!-- Client Info -->
+    <div class="card-block">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-          <div class="kundli-item-label">Date of Birth</div>
-          <div class="kundli-item-val" id="drawer-dob">--</div>
+          <div style="font-size: 14px; font-weight: 600; color: #fff;" id="d-name">--</div>
+          <div style="font-size: 12px; color: var(--text-dim); margin-top: 2px;" id="d-contact">--</div>
         </div>
-        <div>
-          <div class="kundli-item-label">Exact Time of Birth</div>
-          <div class="kundli-item-val" id="drawer-tob">--</div>
-        </div>
-        <div style="grid-column: span 2;">
-          <div class="kundli-item-label">Place of Birth</div>
-          <div class="kundli-item-val" id="drawer-city">--</div>
-        </div>
-        <div>
-          <div class="kundli-item-label">Calculated Sun Sign (approx)</div>
-          <div class="kundli-item-val" style="color:var(--cyan);" id="drawer-calc-sign">--</div>
-        </div>
-        <div>
-          <div class="kundli-item-label">Ruling Graha</div>
-          <div class="kundli-item-val" style="color:var(--gold);" id="drawer-calc-ruler">--</div>
-        </div>
-        <div style="grid-column: span 2;">
-          <div class="kundli-item-label">Auspicious Gemstone Recommendation</div>
-          <div class="kundli-item-val" id="drawer-calc-gem">--</div>
-        </div>
+        <a href="#" target="_blank" class="btn btn-sm" id="d-wa-btn">
+          <span>WhatsApp</span>
+        </a>
       </div>
     </div>
 
-    <!-- Session Focus & Questions -->
-    <div class="form-group">
-      <label class="form-label">Devotee Questions & Focus Areas</label>
-      <div style="background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: #e2e8f0; line-height: 1.5;" id="drawer-topic">
+    <!-- Appointment Record -->
+    <div class="card-block">
+      <div class="card-block-title">Appointment Schedule</div>
+      <div class="info-row">
+        <span class="info-label">Service</span>
+        <span class="info-val" id="d-service">--</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Astrologer</span>
+        <span class="info-val" id="d-astro">--</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Date</span>
+        <span class="info-val" id="d-date">--</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Time Slot</span>
+        <span class="info-val" id="d-slot">--</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Mode</span>
+        <span class="info-val" id="d-mode">--</span>
+      </div>
+    </div>
+
+    <!-- Birth Record -->
+    <div class="card-block">
+      <div class="card-block-title">Client Birth Data</div>
+      <div class="info-row">
+        <span class="info-label">Date of Birth</span>
+        <span class="info-val" id="d-dob">--</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Time of Birth</span>
+        <span class="info-val" id="d-tob">--</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Place of Birth</span>
+        <span class="info-val" id="d-city">--</span>
+      </div>
+    </div>
+
+    <!-- Client Query -->
+    <div class="field-group">
+      <label class="field-label">Client Query / Consultation Topic</label>
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; font-size: 13px; color: #cbd5e1; line-height: 1.5;" id="d-topic">
         --
       </div>
     </div>
 
-    <!-- Status & Meeting Link Update Form -->
-    <form id="drawer-update-form" style="display: flex; flex-direction: column; gap: 14px;">
-      <div class="form-group">
-        <label class="form-label" for="drawer-status">Consultation Status</label>
-        <select class="form-control" id="drawer-status">
-          <option value="pending">Pending (Reviewing Muhurta)</option>
-          <option value="confirmed">Confirmed (Meeting Link Ready)</option>
-          <option value="completed">Completed (Consultation Delivered)</option>
+    <!-- Management Form -->
+    <form id="form-drawer-update" style="display: flex; flex-direction: column; gap: 12px; margin-top: 4px;">
+      <div class="field-group">
+        <label class="field-label" for="d-status">Status</label>
+        <select class="field-input" id="d-status">
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="completed">Completed</option>
           <option value="cancelled">Cancelled</option>
         </select>
       </div>
 
-      <div class="form-group">
-        <label class="form-label" for="drawer-meet-link">
-          Google Meet / Zoom Consultation Link
-        </label>
-        <div style="display: flex; gap: 8px;">
-          <input type="url" class="form-control" id="drawer-meet-link" placeholder="https://meet.google.com/xxx-xxxx-xxx" style="flex:1;">
-          <button type="button" class="btn-action" id="btn-open-meet" title="Open Meet Link" style="display:none;">Open</button>
+      <div class="field-group">
+        <label class="field-label" for="d-meet">Meeting Link (Google Meet / Zoom)</label>
+        <div style="display: flex; gap: 6px;">
+          <input type="url" class="field-input" id="d-meet" placeholder="https://meet.google.com/..." style="flex: 1;">
+          <button type="button" class="btn btn-sm" id="btn-open-meet" style="display: none;">Open</button>
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label" for="drawer-notes">
-          Private Astrologer Notes (Kundli observations & remedies)
-        </label>
-        <textarea class="form-control" id="drawer-notes" placeholder="Enter chart observations, Mahadasha timing, recommended mantras, or gemstone notes..."></textarea>
+      <div class="field-group">
+        <label class="field-label" for="d-notes">Internal Notes</label>
+        <textarea class="field-input" id="d-notes" placeholder="Consultation notes, remedies, follow-up items..."></textarea>
       </div>
 
-      <div style="display: flex; gap: 10px; margin-top: 8px;">
-        <button type="submit" class="btn-gold" style="flex: 1; justify-content: center;">
-          <span>Update Consultation Record</span>
-        </button>
-        <button type="button" class="btn-action" id="btn-delete-booking" style="color:var(--red);" title="Delete booking">
-          <span>Delete</span>
-        </button>
+      <div style="display: flex; gap: 8px; margin-top: 4px;">
+        <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center;">Save Changes</button>
+        <button type="button" class="btn" id="btn-delete" style="color: var(--red);">Delete</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- Modal for New Manual Booking -->
-<div class="drawer-overlay" id="manual-modal-overlay"></div>
-<div class="drawer" id="manual-booking-modal" style="right: -600px; max-width: 600px;">
-  <div class="drawer-header">
+<!-- Modal: New Manual Booking -->
+<div class="drawer-backdrop" id="modal-backdrop"></div>
+<div class="drawer" id="manual-modal" style="right: -540px;">
+  <div class="drawer-head">
     <div class="drawer-title">New Consultation Entry</div>
-    <button class="drawer-close" id="manual-modal-close" type="button">&times;</button>
+    <button class="drawer-close" id="modal-close" type="button">
+      <svg class="icon" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
   </div>
-  <div class="drawer-content">
-    <form id="manual-booking-form" style="display: flex; flex-direction: column; gap: 14px;">
-      <div class="form-group">
-        <label class="form-label">Devotee Full Name</label>
-        <input type="text" class="form-control" id="m-name" required placeholder="e.g. Vikramaditya Rao">
+  <div class="drawer-body">
+    <form id="form-manual" style="display: flex; flex-direction: column; gap: 12px;">
+      <div class="field-group">
+        <label class="field-label">Client Name</label>
+        <input type="text" class="field-input" id="m-name" required placeholder="Full name">
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input type="email" class="form-control" id="m-email" required placeholder="vikram@example.com">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div class="field-group">
+          <label class="field-label">Email</label>
+          <input type="email" class="field-input" id="m-email" required placeholder="client@example.com">
         </div>
-        <div class="form-group">
-          <label class="form-label">Phone / WhatsApp</label>
-          <input type="tel" class="form-control" id="m-phone" required placeholder="+91 98765 43210">
-        </div>
-      </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-        <div class="form-group">
-          <label class="form-label">Date of Birth</label>
-          <input type="date" class="form-control" id="m-dob" value="1995-05-15" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Time of Birth</label>
-          <input type="time" class="form-control" id="m-tob" value="09:30" required>
+        <div class="field-group">
+          <label class="field-label">Phone / WhatsApp</label>
+          <input type="tel" class="field-input" id="m-phone" required placeholder="+1 555 000 0000">
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Place of Birth (City, Country)</label>
-        <input type="text" class="form-control" id="m-city" placeholder="e.g. New Delhi, India" required>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div class="field-group">
+          <label class="field-label">Date of Birth</label>
+          <input type="date" class="field-input" id="m-dob" value="1995-05-15" required>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Time of Birth</label>
+          <input type="time" class="field-input" id="m-tob" value="09:30" required>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Consultation Package</label>
-        <select class="form-control" id="m-service">
-          <option value="Complete Janam Kundli & Life Path ($120)">📜 Complete Janam Kundli & Life Path ($120)</option>
-          <option value="Career, Wealth & Business Yoga ($85)">💎 Career, Wealth & Business Yoga ($85)</option>
-          <option value="Love, Marriage & Kundli Milan ($85)">❤️ Love, Marriage & Kundli Milan ($85)</option>
-          <option value="Urgent Prashna Kundli ($65)">⚡ Urgent Prashna Kundli ($65)</option>
-          <option value="Planetary Gemstones & Remedies ($55)">✨ Planetary Gemstones & Remedies ($55)</option>
-          <option value="Vastu Shastra & Space Energy ($110)">🏛️ Vastu Shastra & Space Energy ($110)</option>
+      <div class="field-group">
+        <label class="field-label">Place of Birth</label>
+        <input type="text" class="field-input" id="m-city" placeholder="City, Country" required>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Service</label>
+        <select class="field-input" id="m-service">
+          <option value="Complete Janam Kundli Reading">Complete Janam Kundli Reading ($120)</option>
+          <option value="Career & Business Consultation">Career & Business Consultation ($85)</option>
+          <option value="Kundli Milan Consultation">Kundli Milan Consultation ($85)</option>
+          <option value="Prashna Kundli Consultation">Prashna Kundli Consultation ($65)</option>
+          <option value="Gemstones & Remedies Analysis">Gemstones & Remedies Analysis ($55)</option>
+          <option value="Vastu Consultation">Vastu Consultation ($110)</option>
         </select>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Assigned Master Astrologer</label>
-        <select class="form-control" id="m-astro">
-          <option value="Pt. Radhe Krishna Shastri (28+ yrs exp • Banaras Vedic Scholar)">Pt. Radhe Krishna Shastri</option>
-          <option value="Dr. Gayatri Devi (22+ yrs exp • Ph.D. Vedic Sciences)">Dr. Gayatri Devi</option>
-          <option value="Acharya Devvrat Sharma (19+ yrs exp • Gold Medalist)">Acharya Devvrat Sharma</option>
-          <option value="Acharya Vidyadhar Joshi (16+ yrs exp • Prashna & Vastu)">Acharya Vidyadhar Joshi</option>
+      <div class="field-group">
+        <label class="field-label">Astrologer</label>
+        <select class="field-input" id="m-astro">
+          <option value="Pt. Radhe Krishna Shastri">Pt. Radhe Krishna Shastri</option>
+          <option value="Dr. Gayatri Devi">Dr. Gayatri Devi</option>
+          <option value="Acharya Devvrat Sharma">Acharya Devvrat Sharma</option>
+          <option value="Acharya Vidyadhar Joshi">Acharya Vidyadhar Joshi</option>
         </select>
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-        <div class="form-group">
-          <label class="form-label">Preferred Date</label>
-          <input type="date" class="form-control" id="m-date" required>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div class="field-group">
+          <label class="field-label">Appointment Date</label>
+          <input type="date" class="field-input" id="m-date" required>
         </div>
-        <div class="form-group">
-          <label class="form-label">Preferred Slot</label>
-          <select class="form-control" id="m-slot">
-            <option value="10:00 AM - 11:00 AM (Morning Muhurta)">10:00 AM - 11:00 AM (Morning)</option>
-            <option value="02:00 PM - 03:00 PM (Afternoon Muhurta)">02:00 PM - 03:00 PM (Afternoon)</option>
-            <option value="06:00 PM - 07:00 PM (Evening Sandhya)">06:00 PM - 07:00 PM (Evening)</option>
-            <option value="08:00 PM - 09:00 PM (Night Muhurta)">08:00 PM - 09:00 PM (Night)</option>
+        <div class="field-group">
+          <label class="field-label">Slot</label>
+          <select class="field-input" id="m-slot">
+            <option value="10:00 AM - 11:00 AM">10:00 AM - 11:00 AM</option>
+            <option value="02:00 PM - 03:00 PM">02:00 PM - 03:00 PM</option>
+            <option value="06:00 PM - 07:00 PM">06:00 PM - 07:00 PM</option>
+            <option value="08:00 PM - 09:00 PM">08:00 PM - 09:00 PM</option>
           </select>
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Devotee Questions / Topics</label>
-        <textarea class="form-control" id="m-topic" placeholder="Special questions or concerns..."></textarea>
+      <div class="field-group">
+        <label class="field-label">Client Query / Notes</label>
+        <textarea class="field-input" id="m-topic" placeholder="Specific questions..."></textarea>
       </div>
 
-      <button type="submit" class="btn-gold" style="margin-top: 10px;">
-        <span>Create Consultation Entry</span>
-      </button>
+      <button type="submit" class="btn btn-primary" style="justify-content: center; margin-top: 6px;">Create Entry</button>
     </form>
   </div>
 </div>
 
-<!-- Floating Real-Time Toast Notification -->
-<div class="toast-popup" id="toast-popup">
-  <div class="toast-icon">⚡</div>
-  <div class="toast-text" id="toast-text">
-    <strong>New Booking Alert!</strong><br>
-    <span id="toast-sub">Devotee session received.</span>
-  </div>
-  <button class="toast-close" id="toast-close">&times;</button>
+<!-- Toast -->
+<div class="toast" id="toast-el">
+  <span id="toast-msg">Notification</span>
 </div>
 
-<!-- JavaScript Logic -->
 <script>
-  /* ══════════════════════════════════════════════════════════════════
-     STATE MANAGEMENT
-     ══════════════════════════════════════════════════════════════════ */
   let allBookings = [];
-  let currentFilter = 'all';
+  let currentTab = 'all';
   let searchQuery = '';
   let astroFilter = '';
   let activeBooking = null;
   let soundEnabled = true;
   let desktopNotifEnabled = false;
 
-  // Set default manual date to tomorrow
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  document.getElementById('m-date').value = tomorrow.toISOString().split('T')[0];
+  // Default appointment date to tomorrow
+  const tmrw = new Date();
+  tmrw.setDate(tmrw.getDate() + 1);
+  document.getElementById('m-date').value = tmrw.toISOString().split('T')[0];
 
   /* ══════════════════════════════════════════════════════════════════
-     WEB AUDIO API: AUSPICIOUS TIBETAN TEMPLE BELL CHIME
+     AUDIO CHIME (Clean harmonic ping)
      ══════════════════════════════════════════════════════════════════ */
   let audioCtx = null;
-  function playTempleChime() {
+  function playChime() {
     if (!soundEnabled) return;
     try {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
 
       const now = audioCtx.currentTime;
-      // Frequencies corresponding to harmonic singing bowl chime (432Hz root, 864Hz octave, 1296Hz fifth)
-      const freqs = [432, 864, 1296];
-      const gains = [0.25, 0.12, 0.06];
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
 
-      freqs.forEach((freq, idx) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, now); // D5 tone
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
 
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now);
-
-        gain.gain.setValueAtTime(gains[idx], now);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.2);
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        osc.start(now);
-        osc.stop(now + 3.3);
-      });
-    } catch (e) {
-      console.warn('Web Audio chime could not play:', e);
-    }
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.9);
+    } catch (e) {}
   }
 
-  // Audio Toggle
-  const audioBtn = document.getElementById('btn-audio-toggle');
-  audioBtn.addEventListener('click', () => {
+  const btnSound = document.getElementById('btn-sound');
+  btnSound.addEventListener('click', function() {
     soundEnabled = !soundEnabled;
-    audioBtn.classList.toggle('active', soundEnabled);
-    document.getElementById('sound-text').textContent = soundEnabled ? 'Chime: ON' : 'Chime: OFF';
-    if (soundEnabled) playTempleChime();
+    this.classList.toggle('active', soundEnabled);
+    document.getElementById('sound-lbl').textContent = soundEnabled ? 'Chime' : 'Muted';
+    if (soundEnabled) playChime();
   });
 
   /* ══════════════════════════════════════════════════════════════════
-     HTML5 BROWSER DESKTOP NOTIFICATIONS
+     DESKTOP NOTIFICATIONS
      ══════════════════════════════════════════════════════════════════ */
-  const desktopBtn = document.getElementById('btn-desktop-notif');
+  const desktopBtn = document.getElementById('btn-desktop');
   if ('Notification' in window && Notification.permission === 'granted') {
     desktopNotifEnabled = true;
     desktopBtn.classList.add('active');
   }
 
   desktopBtn.addEventListener('click', () => {
-    if (!('Notification' in window)) {
-      alert('This browser does not support desktop notifications.');
-      return;
-    }
+    if (!('Notification' in window)) return;
     if (Notification.permission === 'granted') {
       desktopNotifEnabled = !desktopNotifEnabled;
       desktopBtn.classList.toggle('active', desktopNotifEnabled);
     } else {
-      Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
+      Notification.requestPermission().then(p => {
+        if (p === 'granted') {
           desktopNotifEnabled = true;
           desktopBtn.classList.add('active');
-          new Notification('TrishulAstro Sanctum', {
-            body: 'Desktop notifications successfully enabled for new bookings!',
-            icon: 'assets/favicon.svg'
-          });
         }
       });
     }
   });
 
-  function triggerDesktopNotification(booking) {
+  function triggerDesktopNotification(b) {
     if (!desktopNotifEnabled || !('Notification' in window) || Notification.permission !== 'granted') return;
     try {
-      const n = new Notification(`⚡ New Booking: ${booking.client_name}`, {
-        body: `${booking.service_name} • ${booking.preferred_date} (${booking.preferred_time_slot})\nPass #${booking.reference_code}`,
+      new Notification(`New Booking: ${b.client_name}`, {
+        body: `${b.service_name} • ${b.preferred_date} (${b.preferred_time_slot})`,
         icon: 'assets/favicon.svg'
       });
-      n.onclick = () => {
-        window.focus();
-        openBookingDrawer(booking.id);
-      };
-    } catch (e) {
-      console.warn('Desktop notification error:', e);
-    }
+    } catch (e) {}
   }
 
   /* ══════════════════════════════════════════════════════════════════
-     SERVER-SENT EVENTS (SSE) REAL-TIME STREAM
+     REAL-TIME SSE & SYNC
      ══════════════════════════════════════════════════════════════════ */
-  let eventSource = null;
   function connectSSE() {
-    eventSource = new EventSource('/api/events');
-
-    eventSource.onopen = () => {
-      document.getElementById('live-pulse').style.background = 'var(--green)';
-      document.getElementById('live-status-text').textContent = 'LIVE SSE SYNCED';
-    };
-
-    eventSource.addEventListener('new_booking', (e) => {
-      try {
-        const data = JSON.parse(e.data);
-        const booking = data.booking;
-        
-        // 1. Play temple bell chime
-        playTempleChime();
-
-        // 2. Desktop notification
-        triggerDesktopNotification(booking);
-
-        // 3. Show Toast
-        showToast(
-          `⚡ New Booking Received: #${booking.reference_code}`,
-          `${booking.client_name} • ${booking.service_name} (${booking.preferred_date})`
-        );
-
-        // 4. Reload data
-        loadData(booking.id);
+    try {
+      const es = new EventSource('/api/events');
+      es.onopen = () => {
+        document.getElementById('live-text').textContent = 'Live';
+      };
+      es.addEventListener('new_booking', (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          playChime();
+          triggerDesktopNotification(data.booking);
+          showToast(`New booking: ${data.booking.client_name}`);
+          loadData();
+          loadNotifications();
+        } catch (err) {}
+      });
+      es.addEventListener('booking_updated', () => loadData());
+      es.addEventListener('test_alert', () => {
+        playChime();
+        showToast('Test notification received.');
         loadNotifications();
-      } catch (err) {
-        console.error('SSE new_booking error:', err);
-      }
-    });
-
-    eventSource.addEventListener('booking_updated', (e) => {
-      loadData();
-    });
-
-    eventSource.addEventListener('test_alert', (e) => {
-      const data = JSON.parse(e.data);
-      playTempleChime();
-      showToast('🔔 Test Notification Delivered', data.message);
-      loadNotifications();
-    });
-
-    eventSource.onerror = () => {
-      document.getElementById('live-pulse').style.background = 'var(--red)';
-      document.getElementById('live-status-text').textContent = 'RECONNECTING...';
-    };
+      });
+      es.onerror = () => {
+        document.getElementById('live-text').textContent = 'Syncing';
+      };
+    } catch (e) {}
   }
 
-  connectSSE();
-
   /* ══════════════════════════════════════════════════════════════════
-     DATA FETCHING & RENDERING
+     DATA LOADING & RENDERING
      ══════════════════════════════════════════════════════════════════ */
-  async function loadData(highlightId = null) {
+  async function loadData() {
     try {
-      const [bookingsRes, statsRes] = await Promise.all([
+      const [bRes, sRes] = await Promise.all([
         fetch('/api/bookings'),
         fetch('/api/stats')
       ]);
+      const bData = await bRes.json();
+      const sData = await sRes.json();
 
-      const bookingsData = await bookingsRes.json();
-      const statsData = await statsRes.json();
-
-      if (bookingsData.success) {
-        allBookings = bookingsData.bookings;
-        renderTable(highlightId);
+      if (bData.success) {
+        allBookings = bData.bookings;
+        renderTable();
       }
-
-      if (statsData.success) {
-        renderStats(statsData.stats);
+      if (sData.success) {
+        renderStats(sData.stats);
       }
-    } catch (err) {
-      console.error('Error fetching dashboard data:', err);
-    }
+    } catch (e) {}
   }
 
-  function renderStats(stats) {
-    document.getElementById('kpi-total').textContent = stats.total;
-    document.getElementById('kpi-pending').textContent = stats.pending;
-    document.getElementById('kpi-confirmed').textContent = stats.confirmed;
-    document.getElementById('kpi-revenue').textContent = `$${stats.estRevenue}`;
-    document.getElementById('kpi-revenue-inr').textContent = `≈ ₹${(stats.estRevenue * 83).toLocaleString('en-IN')} INR`;
-    document.getElementById('kpi-today').textContent = stats.todaySessions;
+  function renderStats(s) {
+    document.getElementById('kpi-total').textContent = s.total;
+    document.getElementById('kpi-pending').textContent = s.pending;
+    document.getElementById('kpi-confirmed').textContent = s.confirmed;
+    document.getElementById('kpi-revenue').textContent = `$${s.estRevenue}`;
 
-    // Badges
-    document.getElementById('badge-all').textContent = stats.total;
-    document.getElementById('badge-pending').textContent = stats.pending;
-    document.getElementById('badge-confirmed').textContent = stats.confirmed;
-    document.getElementById('badge-completed').textContent = stats.completed;
+    document.getElementById('cnt-all').textContent = s.total;
+    document.getElementById('cnt-pending').textContent = s.pending;
+    document.getElementById('cnt-confirmed').textContent = s.confirmed;
+    document.getElementById('cnt-completed').textContent = s.completed;
   }
 
-  function renderTable(highlightId = null) {
-    const tbody = document.getElementById('bookings-tbody');
-    const emptyState = document.getElementById('empty-state');
+  function renderTable() {
+    const tbody = document.getElementById('tbody-bookings');
+    const empty = document.getElementById('empty-state');
     tbody.innerHTML = '';
 
-    const filtered = allBookings.filter(b => {
-      // Tab filter
-      if (currentFilter !== 'all' && b.status !== currentFilter) return false;
-
-      // Astrologer filter
+    const list = allBookings.filter(b => {
+      if (currentTab !== 'all' && b.status !== currentTab) return false;
       if (astroFilter && !b.astrologer_name.includes(astroFilter)) return false;
-
-      // Search query
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
-        const match = b.client_name.toLowerCase().includes(q) ||
-                      b.client_email.toLowerCase().includes(q) ||
-                      b.client_phone.toLowerCase().includes(q) ||
-                      b.reference_code.toLowerCase().includes(q) ||
-                      b.service_name.toLowerCase().includes(q);
-        if (!match) return false;
+        return (b.client_name && b.client_name.toLowerCase().includes(q)) ||
+               (b.client_email && b.client_email.toLowerCase().includes(q)) ||
+               (b.client_phone && b.client_phone.toLowerCase().includes(q)) ||
+               (b.reference_code && b.reference_code.toLowerCase().includes(q)) ||
+               (b.service_name && b.service_name.toLowerCase().includes(q));
       }
-
       return true;
     });
 
-    if (filtered.length === 0) {
-      emptyState.style.display = 'block';
+    if (list.length === 0) {
+      empty.style.display = 'block';
       return;
     }
-    emptyState.style.display = 'none';
+    empty.style.display = 'none';
 
-    filtered.forEach(b => {
+    list.forEach(b => {
       const tr = document.createElement('tr');
-      if (highlightId && b.id === highlightId) {
-        tr.classList.add('row-new');
-      }
+      const cleanPhone = (b.client_phone || '').replace(/[^0-9]/g, '');
+      const waMsg = encodeURIComponent(`Hello ${b.client_name}, regarding your consultation #${b.reference_code} at TrishulAstro.`);
 
-      // Format date
-      const dateDisplay = b.preferred_date || 'TBD';
-      const slotDisplay = b.preferred_time_slot.split('(')[0].trim();
-
-      // Clean astrologer name
-      const astroShort = b.astrologer_name.split('(')[0].trim();
-
-      // Status badge class
-      const badgeClass = `badge-${b.status}`;
+      const cleanService = (b.service_name || '').split('(')[0].trim();
+      const cleanAstro = (b.astrologer_name || '').split('(')[0].trim();
+      const cleanSlot = (b.preferred_time_slot || '').split('(')[0].trim();
+      const cleanMode = (b.consultation_mode || '').replace(' Video Call', '').replace(' Call', '').trim();
 
       tr.innerHTML = `
+        <td><span class="ref-code">${b.reference_code}</span></td>
         <td>
-          <span style="font-family:monospace; font-weight:700; color:var(--gold); font-size:13px;">${b.reference_code}</span>
-          <div style="font-size:11px; color:var(--text-muted);">${new Date(b.created_at).toLocaleDateString()}</div>
+          <div class="client-name">${escapeHTML(b.client_name)}</div>
+          <div class="client-sub">${escapeHTML(b.client_phone)} • ${escapeHTML(b.client_email)}</div>
         </td>
         <td>
-          <div class="client-title">${escapeHTML(b.client_name)}</div>
-          <div class="client-sub">
-            <span>${escapeHTML(b.client_phone)}</span> • <span>${escapeHTML(b.client_email)}</span>
-          </div>
+          <div style="font-weight: 500; color: #fff;">${escapeHTML(cleanService)}</div>
+          <div style="font-size: 11px; color: var(--text-dim);">$${b.service_price}</div>
         </td>
+        <td style="color: var(--text-muted); font-size: 12px;">${escapeHTML(cleanAstro)}</td>
         <td>
-          <div style="font-weight:600; color:#fff;">${escapeHTML(b.service_name.split('(')[0])}</div>
-          <div style="font-size:11px; color:var(--gold);">$${b.service_price} USD</div>
+          <div style="font-weight: 500;">${b.preferred_date || 'TBD'}</div>
+          <div style="font-size: 11px; color: var(--text-dim);">${escapeHTML(cleanSlot)}</div>
         </td>
+        <td style="font-size: 12px; color: var(--text-muted);">${escapeHTML(cleanMode)}</td>
         <td>
-          <div style="color:var(--cyan); font-size:12px; font-weight:500;">${escapeHTML(astroShort)}</div>
-        </td>
-        <td>
-          <div style="font-weight:500; color:#fff;">${dateDisplay}</div>
-          <div style="font-size:11px; color:var(--text-muted);">${slotDisplay}</div>
-        </td>
-        <td>
-          <span style="font-size:12px; color:#cbd5e1;">${escapeHTML(b.consultation_mode.split(' ')[0])}</span>
-        </td>
-        <td>
-          <span class="badge ${badgeClass}">${b.status}</span>
+          <span class="badge badge-${b.status}">
+            <span class="badge-dot"></span>
+            ${b.status}
+          </span>
         </td>
         <td style="text-align: right;">
-          <div class="row-actions" style="justify-content: flex-end;">
-            <button class="btn-icon" onclick="openBookingDrawer(${b.id})" title="View Kundli & Details">👁️</button>
-            <a href="https://wa.me/${encodeURIComponent(b.client_phone.replace(/[^0-9]/g, ''))}?text=${encodeURIComponent('Namaste ' + b.client_name + ', Pt. Radhe Krishna Shastri from TrishulAstro regarding your consultation #' + b.reference_code)}" target="_blank" class="btn-icon wa" title="WhatsApp Message">💬</a>
-            ${b.status === 'pending' ? `<button class="btn-icon confirm" onclick="quickConfirm(${b.id})" title="Quick Confirm">✓</button>` : ''}
+          <div class="action-group">
+            <button class="btn btn-sm" onclick="openDrawer(${b.id})">Details</button>
+            <a href="https://wa.me/${cleanPhone}?text=${waMsg}" target="_blank" class="btn btn-sm">WhatsApp</a>
+            ${b.status === 'pending' ? `<button class="btn btn-sm btn-primary" onclick="quickConfirm(${b.id})">Confirm</button>` : ''}
           </div>
         </td>
       `;
-
       tbody.appendChild(tr);
     });
   }
 
-  function escapeHTML(str) {
-    if (!str) return '';
-    return str.replace(/[&<>'"]/g, tag => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-    }[tag] || tag));
+  function escapeHTML(s) {
+    if (!s) return '';
+    return s.replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t));
   }
 
   /* ══════════════════════════════════════════════════════════════════
      TABS & FILTER HANDLERS
      ══════════════════════════════════════════════════════════════════ */
-  document.querySelectorAll('.tab-btn').forEach(btn => {
+  document.querySelectorAll('.tab-item').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
       const tab = btn.dataset.tab;
-      if (tab === 'notifications') {
-        document.getElementById('view-bookings-table').style.display = 'none';
-        document.getElementById('filter-controls').style.display = 'none';
-        document.getElementById('view-settings-panel').style.display = 'block';
+      if (tab === 'settings') {
+        document.getElementById('table-view').style.display = 'none';
+        document.getElementById('controls-section').style.display = 'none';
+        document.getElementById('settings-view').style.display = 'block';
         loadSettings();
         loadNotifications();
       } else {
-        document.getElementById('view-bookings-table').style.display = 'block';
-        document.getElementById('filter-controls').style.display = 'flex';
-        document.getElementById('view-settings-panel').style.display = 'none';
-        currentFilter = tab;
+        document.getElementById('table-view').style.display = 'block';
+        document.getElementById('controls-section').style.display = 'flex';
+        document.getElementById('settings-view').style.display = 'none';
+        currentTab = tab;
         renderTable();
       }
     });
   });
 
-  // Search input with debounce
   document.getElementById('search-input').addEventListener('input', (e) => {
     searchQuery = e.target.value.trim();
     renderTable();
   });
 
-  // Astrologer filter
   document.getElementById('filter-astro').addEventListener('change', (e) => {
     astroFilter = e.target.value;
     renderTable();
   });
 
-  // Sync button
   document.getElementById('btn-refresh').addEventListener('click', () => {
     loadData();
-    showToast('🔄 Synchronized', 'Registry updated with server data.');
+    showToast('Data refreshed.');
   });
 
   /* ══════════════════════════════════════════════════════════════════
-     DRAWER (KUNDLI & BOOKING DETAILS)
+     DRAWER (DETAILS)
      ══════════════════════════════════════════════════════════════════ */
   const drawer = document.getElementById('booking-drawer');
-  const drawerOverlay = document.getElementById('drawer-overlay');
-  const drawerClose = document.getElementById('drawer-close');
+  const backdrop = document.getElementById('drawer-backdrop');
 
-  async function openBookingDrawer(bookingId) {
+  async function openDrawer(id) {
     try {
-      const res = await fetch(`/api/bookings/${bookingId}`);
+      const res = await fetch(`/api/bookings/${id}`);
       const data = await res.json();
       if (!data.success) return;
 
       const b = data.booking;
-      const astro = data.astrologicalAnalysis;
       activeBooking = b;
 
-      document.getElementById('drawer-ref').textContent = `Pass #${b.reference_code}`;
-      document.getElementById('drawer-created').textContent = `Booked ${new Date(b.created_at).toLocaleString()} • Assigned to ${b.astrologer_name.split('(')[0]}`;
-      document.getElementById('drawer-client-name').textContent = b.client_name;
-      document.getElementById('drawer-client-contact').textContent = `${b.client_email} • ${b.client_phone}`;
+      document.getElementById('drawer-title').textContent = `#${b.reference_code}`;
+      document.getElementById('drawer-sub').textContent = `${(b.service_name || '').split('(')[0]}`;
 
-      // WhatsApp & Mail links
-      const cleanPhone = b.client_phone.replace(/[^0-9]/g, '');
-      const waMsg = encodeURIComponent(`Namaste ${b.client_name},\nGreetings from TrishulAstro! Regarding your consultation #${b.reference_code} for ${b.service_name}.\nYour preferred Muhurta is ${b.preferred_date} (${b.preferred_time_slot}).`);
-      document.getElementById('drawer-wa-btn').href = `https://wa.me/${cleanPhone}?text=${waMsg}`;
-      document.getElementById('drawer-mail-btn').href = `mailto:${b.client_email}?subject=TrishulAstro Consultation %23${b.reference_code}`;
+      document.getElementById('d-name').textContent = b.client_name;
+      document.getElementById('d-contact').textContent = `${b.client_phone} • ${b.client_email}`;
 
-      // Kundli parameters
-      document.getElementById('drawer-dob').textContent = b.client_dob;
-      document.getElementById('drawer-tob').textContent = b.client_tob;
-      document.getElementById('drawer-city').textContent = b.client_city;
-      document.getElementById('drawer-calc-sign').textContent = astro.approxSunSign || 'Mesha';
-      document.getElementById('drawer-calc-ruler').textContent = astro.rulingGraha || 'Surya';
-      document.getElementById('drawer-calc-gem').textContent = astro.auspiciousGemstone || 'Ruby';
+      const cleanPhone = (b.client_phone || '').replace(/[^0-9]/g, '');
+      const waMsg = encodeURIComponent(`Hello ${b.client_name}, regarding your appointment #${b.reference_code} at TrishulAstro.`);
+      document.getElementById('d-wa-btn').href = `https://wa.me/${cleanPhone}?text=${waMsg}`;
 
-      // Query topic
-      document.getElementById('drawer-topic').textContent = b.query_topic || 'Standard Janam Kundli & comprehensive chart analysis.';
+      document.getElementById('d-service').textContent = (b.service_name || '').split('(')[0];
+      document.getElementById('d-astro').textContent = (b.astrologer_name || '').split('(')[0];
+      document.getElementById('d-date').textContent = b.preferred_date || '--';
+      document.getElementById('d-slot').textContent = (b.preferred_time_slot || '').split('(')[0];
+      document.getElementById('d-mode').textContent = b.consultation_mode || 'Google Meet';
 
-      // Form values
-      document.getElementById('drawer-status').value = b.status;
-      document.getElementById('drawer-meet-link').value = b.meeting_link || '';
-      document.getElementById('drawer-notes').value = b.admin_notes || '';
+      document.getElementById('d-dob').textContent = b.client_dob || '--';
+      document.getElementById('d-tob').textContent = b.client_tob || '--';
+      document.getElementById('d-city').textContent = b.client_city || '--';
+
+      document.getElementById('d-topic').textContent = b.query_topic || 'Standard consultation reading.';
+
+      document.getElementById('d-status').value = b.status;
+      document.getElementById('d-meet').value = b.meeting_link || '';
+      document.getElementById('d-notes').value = b.admin_notes || '';
 
       const btnOpenMeet = document.getElementById('btn-open-meet');
       if (b.meeting_link && b.meeting_link.startsWith('http')) {
@@ -1400,29 +1166,26 @@
       }
 
       drawer.classList.add('open');
-      drawerOverlay.classList.add('open');
-    } catch (err) {
-      console.error('Error opening drawer:', err);
-    }
+      backdrop.classList.add('open');
+    } catch (e) {}
   }
 
   function closeDrawer() {
     drawer.classList.remove('open');
-    drawerOverlay.classList.remove('open');
+    backdrop.classList.remove('open');
     activeBooking = null;
   }
 
-  drawerClose.addEventListener('click', closeDrawer);
-  drawerOverlay.addEventListener('click', closeDrawer);
+  document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+  backdrop.addEventListener('click', closeDrawer);
 
-  // Update Booking in Drawer
-  document.getElementById('drawer-update-form').addEventListener('submit', async (e) => {
+  document.getElementById('form-drawer-update').addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!activeBooking) return;
 
-    const status = document.getElementById('drawer-status').value;
-    const meeting_link = document.getElementById('drawer-meet-link').value.trim();
-    const admin_notes = document.getElementById('drawer-notes').value.trim();
+    const status = document.getElementById('d-status').value;
+    const meeting_link = document.getElementById('d-meet').value.trim();
+    const admin_notes = document.getElementById('d-notes').value.trim();
 
     try {
       const res = await fetch(`/api/bookings/${activeBooking.id}`, {
@@ -1430,77 +1193,60 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status, meeting_link, admin_notes })
       });
-
       const data = await res.json();
       if (data.success) {
-        showToast('✓ Record Saved', `Pass #${activeBooking.reference_code} updated.`);
+        showToast(`Booking #${activeBooking.reference_code} updated.`);
         closeDrawer();
         loadData();
       }
     } catch (err) {
-      alert('Error updating record: ' + err.message);
+      alert('Error: ' + err.message);
     }
   });
 
-  // Delete booking
-  document.getElementById('btn-delete-booking').addEventListener('click', async () => {
-    if (!activeBooking) return;
-    if (!confirm(`Are you sure you want to remove Pass #${activeBooking.reference_code} from registry?`)) return;
-
+  document.getElementById('btn-delete').addEventListener('click', async () => {
+    if (!activeBooking || !confirm(`Delete booking #${activeBooking.reference_code}?`)) return;
     try {
-      const res = await fetch(`/api/bookings/${activeBooking.id}`, { method: 'DELETE' });
-      const data = await res.json();
-      if (data.success) {
-        showToast('Booking Removed', 'Pass deleted.');
-        closeDrawer();
-        loadData();
-      }
-    } catch (err) {
-      alert('Delete error: ' + err.message);
-    }
+      await fetch(`/api/bookings/${activeBooking.id}`, { method: 'DELETE' });
+      showToast('Booking deleted.');
+      closeDrawer();
+      loadData();
+    } catch (e) {}
   });
 
-  // Quick Confirm from table row
   async function quickConfirm(id) {
     try {
-      const res = await fetch(`/api/bookings/${id}`, {
+      await fetch(`/api/bookings/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'confirmed' })
       });
-      const data = await res.json();
-      if (data.success) {
-        showToast('✦ Consultation Confirmed', `Booking confirmed. You can now add a meeting link.`);
-        loadData();
-      }
-    } catch (err) {
-      console.error(err);
-    }
+      showToast('Booking confirmed.');
+      loadData();
+    } catch (e) {}
   }
 
   /* ══════════════════════════════════════════════════════════════════
-     MANUAL NEW BOOKING MODAL
+     MANUAL BOOKING MODAL
      ══════════════════════════════════════════════════════════════════ */
-  const manualModal = document.getElementById('manual-booking-modal');
-  const manualOverlay = document.getElementById('manual-modal-overlay');
-  const manualClose = document.getElementById('manual-modal-close');
+  const mModal = document.getElementById('manual-modal');
+  const mBackdrop = document.getElementById('modal-backdrop');
 
-  document.getElementById('btn-new-booking').addEventListener('click', () => {
-    manualModal.classList.add('open');
-    manualOverlay.classList.add('open');
+  document.getElementById('btn-new').addEventListener('click', () => {
+    mModal.classList.add('open');
+    mBackdrop.classList.add('open');
   });
 
   function closeManualModal() {
-    manualModal.classList.remove('open');
-    manualOverlay.classList.remove('open');
+    mModal.classList.remove('open');
+    mBackdrop.classList.remove('open');
   }
 
-  manualClose.addEventListener('click', closeManualModal);
-  manualOverlay.addEventListener('click', closeManualModal);
+  document.getElementById('modal-close').addEventListener('click', closeManualModal);
+  mBackdrop.addEventListener('click', closeManualModal);
 
-  document.getElementById('manual-booking-form').addEventListener('submit', async (e) => {
+  document.getElementById('form-manual').addEventListener('submit', async (e) => {
     e.preventDefault();
-
     const payload = {
       client_name: document.getElementById('m-name').value,
       client_email: document.getElementById('m-email').value,
@@ -1524,51 +1270,35 @@
       const data = await res.json();
       if (data.success) {
         closeManualModal();
-        document.getElementById('manual-booking-form').reset();
-        showToast('⚡ Sacred Pass Generated', `New consultation #${data.booking.reference_code} added.`);
-        loadData(data.booking.id);
-      } else {
-        alert(data.error || 'Failed to create booking');
+        document.getElementById('form-manual').reset();
+        showToast(`Booking #${data.booking.reference_code} created.`);
+        loadData();
       }
     } catch (err) {
-      alert('Error creating booking: ' + err.message);
+      alert('Error: ' + err.message);
     }
   });
 
   /* ══════════════════════════════════════════════════════════════════
-     NOTIFICATIONS & SETTINGS MANAGEMENT
+     SETTINGS & PASSWORD
      ══════════════════════════════════════════════════════════════════ */
   async function loadSettings() {
     try {
       const res = await fetch('/api/settings');
       const data = await res.json();
       if (data.success) {
-        const s = data.settings;
-        document.getElementById('setting-email').value = s.admin_email || '';
-        document.getElementById('setting-pin').value = s.admin_pin || '1088';
-        document.getElementById('setting-webhook').value = s.webhook_url || '';
-        document.getElementById('setting-smtp-host').value = s.smtp_host || '';
-        document.getElementById('setting-smtp-port').value = s.smtp_port || '587';
-        document.getElementById('setting-smtp-user').value = s.smtp_user || '';
-        document.getElementById('setting-smtp-pass').value = s.smtp_pass || '';
+        document.getElementById('cfg-email').value = data.settings.admin_email || '';
+        document.getElementById('cfg-webhook').value = data.settings.webhook_url || '';
       }
-    } catch (err) {
-      console.error('Settings load error:', err);
-    }
+    } catch (e) {}
   }
 
-  document.getElementById('settings-form').addEventListener('submit', async (e) => {
+  document.getElementById('form-settings').addEventListener('submit', async (e) => {
     e.preventDefault();
     const payload = {
-      admin_email: document.getElementById('setting-email').value.trim(),
-      admin_pin: document.getElementById('setting-pin').value.trim(),
-      webhook_url: document.getElementById('setting-webhook').value.trim(),
-      smtp_host: document.getElementById('setting-smtp-host').value.trim(),
-      smtp_port: document.getElementById('setting-smtp-port').value.trim(),
-      smtp_user: document.getElementById('setting-smtp-user').value.trim(),
-      smtp_pass: document.getElementById('setting-smtp-pass').value.trim()
+      admin_email: document.getElementById('cfg-email').value.trim(),
+      webhook_url: document.getElementById('cfg-webhook').value.trim()
     };
-
     try {
       const res = await fetch('/api/settings', {
         method: 'POST',
@@ -1576,34 +1306,37 @@
         body: JSON.stringify(payload)
       });
       const data = await res.json();
-      if (data.success) {
-        showToast('✓ Settings Saved', 'Notification channels and settings updated.');
-      }
-    } catch (err) {
-      alert('Error saving settings: ' + err.message);
-    }
+      if (data.success) showToast('Settings saved.');
+    } catch (e) {}
   });
 
-  // Test Notification Button
+  document.getElementById('form-change-pwd').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const currentPassword = document.getElementById('pwd-current').value;
+    const newPassword = document.getElementById('pwd-new').value;
+
+    try {
+      const res = await fetch('/api/auth/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword, newPassword })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('Password updated successfully.');
+        document.getElementById('form-change-pwd').reset();
+      } else {
+        alert(data.error || 'Failed to update password.');
+      }
+    } catch (e) {}
+  });
+
   document.getElementById('btn-test-alert').addEventListener('click', async () => {
     try {
-      const btn = document.getElementById('btn-test-alert');
-      btn.disabled = true;
-      btn.innerHTML = '<span>⚡ Sending Alert...</span>';
-
-      const res = await fetch('/api/notifications/test', { method: 'POST' });
-      const data = await res.json();
-
-      btn.disabled = false;
-      btn.innerHTML = '<span>⚡ Send Test Live Alert</span>';
-
-      if (data.success) {
-        showToast('🔔 Test Alert Dispatched', 'Check your dashboard chime and logs below.');
-        loadNotifications();
-      }
-    } catch (err) {
-      alert('Test alert error: ' + err.message);
-    }
+      await fetch('/api/notifications/test', { method: 'POST' });
+      showToast('Test alert sent.');
+      loadNotifications();
+    } catch (e) {}
   });
 
   async function loadNotifications() {
@@ -1611,148 +1344,112 @@
       const res = await fetch('/api/notifications');
       const data = await res.json();
       if (data.success) {
-        const tbody = document.getElementById('notifs-tbody');
+        const tbody = document.getElementById('tbody-notifs');
         tbody.innerHTML = '';
-
         if (data.notifications.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:20px;">No alerts logged yet.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-dim); padding:16px;">No logs recorded yet.</td></tr>';
           return;
         }
-
         data.notifications.forEach(n => {
           const tr = document.createElement('tr');
-          const chanClass = `chan-${n.channel}`;
-
           tr.innerHTML = `
-            <td style="font-size:12px; color:var(--text-muted);">${new Date(n.created_at).toLocaleTimeString()}</td>
-            <td><span class="notif-channel-badge ${chanClass}">${n.channel}</span></td>
+            <td style="font-size:12px; color:var(--text-dim);">${new Date(n.created_at).toLocaleTimeString()}</td>
+            <td><span style="font-size:11px; text-transform:uppercase; font-weight:600;">${n.channel}</span></td>
             <td style="color:#fff; font-size:12px;">${escapeHTML(n.recipient)}</td>
             <td>
-              <div style="font-weight:600; color:#fff;">${escapeHTML(n.title)}</div>
-              <div style="font-size:11px; color:var(--text-muted);">${escapeHTML(n.content)}</div>
+              <div style="font-weight:500; color:#fff;">${escapeHTML(n.title)}</div>
+              <div style="font-size:11px; color:var(--text-dim);">${escapeHTML(n.content)}</div>
             </td>
-            <td>
-              <span class="badge ${n.status === 'sent' ? 'badge-confirmed' : n.status === 'simulated' ? 'badge-pending' : 'badge-cancelled'}">${n.status}</span>
-            </td>
+            <td><span class="badge badge-${n.status === 'sent' ? 'confirmed' : 'pending'}">${n.status}</span></td>
           `;
           tbody.appendChild(tr);
         });
       }
-    } catch (err) {
-      console.error('Notifications load error:', err);
-    }
+    } catch (e) {}
   }
 
-  // Quick Notification bell button opens settings tab
-  document.getElementById('btn-notif-feed').addEventListener('click', () => {
-    document.querySelector('.tab-btn[data-tab="notifications"]').click();
-  });
-
   /* ══════════════════════════════════════════════════════════════════
-     EXPORT CSV
+     CSV EXPORT
      ══════════════════════════════════════════════════════════════════ */
-  document.getElementById('btn-export-csv').addEventListener('click', () => {
-    if (allBookings.length === 0) {
-      alert('No booking records available to export.');
-      return;
-    }
-
+  document.getElementById('btn-export').addEventListener('click', () => {
+    if (allBookings.length === 0) return alert('No bookings to export.');
     const headers = ['Reference', 'Client Name', 'Email', 'Phone', 'DOB', 'TOB', 'City', 'Service', 'Price USD', 'Astrologer', 'Date', 'Slot', 'Mode', 'Status', 'Meeting Link', 'Created At'];
     const rows = allBookings.map(b => [
       b.reference_code,
-      `"${b.client_name.replace(/"/g, '""')}"`,
+      `"${(b.client_name || '').replace(/"/g, '""')}"`,
       b.client_email,
       b.client_phone,
       b.client_dob,
       b.client_tob,
-      `"${b.client_city.replace(/"/g, '""')}"`,
-      `"${b.service_name.replace(/"/g, '""')}"`,
+      `"${(b.client_city || '').replace(/"/g, '""')}"`,
+      `"${(b.service_name || '').replace(/"/g, '""')}"`,
       b.service_price,
-      `"${b.astrologer_name.replace(/"/g, '""')}"`,
+      `"${(b.astrologer_name || '').replace(/"/g, '""')}"`,
       b.preferred_date,
-      `"${b.preferred_time_slot.replace(/"/g, '""')}"`,
+      `"${(b.preferred_time_slot || '').replace(/"/g, '""')}"`,
       b.consultation_mode,
       b.status,
       b.meeting_link,
       b.created_at
     ]);
-
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `trishulastro_bookings_${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const csv = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const a = document.createElement('a');
+    a.href = encodeURI(csv);
+    a.download = `bookings_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   });
 
   /* ══════════════════════════════════════════════════════════════════
-     TOAST POPUP NOTIFICATION
+     TOAST
      ══════════════════════════════════════════════════════════════════ */
   let toastTimer = null;
-  function showToast(title, subtitle) {
-    const toast = document.getElementById('toast-popup');
-    const titleEl = document.getElementById('toast-text');
-    titleEl.innerHTML = `<strong>${title}</strong><br><span style="font-size:12px; color:#cbd5e1;">${subtitle}</span>`;
-    toast.classList.add('visible');
-
+  function showToast(msg) {
+    const t = document.getElementById('toast-el');
+    document.getElementById('toast-msg').textContent = msg;
+    t.classList.add('show');
     if (toastTimer) clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => {
-      toast.classList.remove('visible');
-    }, 5500);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
   }
 
-  document.getElementById('toast-close').addEventListener('click', () => {
-    document.getElementById('toast-popup').classList.remove('visible');
-  });
-
   /* ══════════════════════════════════════════════════════════════════
-     AUTHENTICATION & PASSWORD CONTROLLER
+     AUTHENTICATION & ACCESS
      ══════════════════════════════════════════════════════════════════ */
-  const loginGate = document.getElementById('login-gate');
-  const loginForm = document.getElementById('login-form');
-  const loginPasswordInput = document.getElementById('login-password');
-  const loginErrorMsg = document.getElementById('login-error-msg');
-  const btnTogglePwd = document.getElementById('btn-toggle-pwd');
-  const btnLogout = document.getElementById('btn-logout');
-  const changePwdForm = document.getElementById('change-password-form');
-  let isSanctumInitialized = false;
+  const gate = document.getElementById('login-gate');
+  const pwdInput = document.getElementById('pwd-input');
+  const gateErr = document.getElementById('login-error');
+  const btnToggle = document.getElementById('btn-toggle-pwd');
+  let isAppReady = false;
 
-  // Toggle password visibility
-  btnTogglePwd.addEventListener('click', () => {
-    if (loginPasswordInput.type === 'password') {
-      loginPasswordInput.type = 'text';
-      btnTogglePwd.textContent = '🙈';
+  btnToggle.addEventListener('click', () => {
+    if (pwdInput.type === 'password') {
+      pwdInput.type = 'text';
     } else {
-      loginPasswordInput.type = 'password';
-      btnTogglePwd.textContent = '👁️';
+      pwdInput.type = 'password';
     }
   });
 
-  // Check login state on load
   function checkAuth() {
     const token = sessionStorage.getItem('sanctum_token') || localStorage.getItem('sanctum_token');
     if (token) {
-      loginGate.classList.add('hidden');
-      initSanctum();
+      gate.classList.add('hidden');
+      initApp();
     } else {
-      loginGate.classList.remove('hidden');
-      setTimeout(() => loginPasswordInput.focus(), 150);
+      gate.classList.remove('hidden');
+      setTimeout(() => pwdInput.focus(), 150);
     }
   }
 
-  // Handle Login submission
-  loginForm.addEventListener('submit', async (e) => {
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const pwd = loginPasswordInput.value.trim();
-    const remember = document.getElementById('login-remember').checked;
-    const submitBtn = document.getElementById('btn-submit-login');
+    const pwd = pwdInput.value.trim();
+    const remember = document.getElementById('chk-remember').checked;
+    const btn = document.getElementById('btn-sign-in');
 
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span>✦ Verifying Sanctum Key...</span>';
-    loginErrorMsg.style.display = 'none';
-    loginErrorMsg.classList.remove('shake');
+    btn.disabled = true;
+    btn.textContent = 'Verifying...';
+    gateErr.style.display = 'none';
 
     try {
       const res = await fetch('/api/auth/login', {
@@ -1760,88 +1457,44 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password: pwd, pin: pwd })
       });
-
       const data = await res.json();
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = '<span>✦ Unlock Sanctum Console</span>';
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
 
       if (data.success && data.token) {
-        if (remember) {
-          localStorage.setItem('sanctum_token', data.token);
-        } else {
-          sessionStorage.setItem('sanctum_token', data.token);
-        }
-
-        loginGate.classList.add('hidden');
-        playTempleChime();
-        showToast('✦ Sanctum Unlocked', `Welcome, ${data.adminName || 'Master Astrologer'}.`);
-        initSanctum();
+        if (remember) localStorage.setItem('sanctum_token', data.token);
+        else sessionStorage.setItem('sanctum_token', data.token);
+        gate.classList.add('hidden');
+        initApp();
       } else {
-        loginErrorMsg.textContent = data.error || 'Incorrect Sanctum Password. Please re-enter.';
-        loginErrorMsg.style.display = 'block';
-        loginErrorMsg.classList.add('shake');
-        loginPasswordInput.select();
+        gateErr.textContent = data.error || 'Incorrect password.';
+        gateErr.style.display = 'block';
+        pwdInput.select();
       }
     } catch (err) {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = '<span>✦ Unlock Sanctum Console</span>';
-      loginErrorMsg.textContent = 'Connection error: ' + err.message;
-      loginErrorMsg.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
+      gateErr.textContent = 'Connection error: ' + err.message;
+      gateErr.style.display = 'block';
     }
   });
 
-  // Logout Handler
-  btnLogout.addEventListener('click', () => {
+  document.getElementById('btn-logout').addEventListener('click', () => {
     sessionStorage.removeItem('sanctum_token');
     localStorage.removeItem('sanctum_token');
-    loginGate.classList.remove('hidden');
-    loginPasswordInput.value = '';
-    loginErrorMsg.style.display = 'none';
-    showToast('🔒 Sanctum Locked', 'You have been logged out.');
+    gate.classList.remove('hidden');
+    pwdInput.value = '';
+    gateErr.style.display = 'none';
   });
 
-  // Change Password Handler in Settings tab
-  if (changePwdForm) {
-    changePwdForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const currentPassword = document.getElementById('cp-current').value;
-      const newPassword = document.getElementById('cp-new').value;
-
-      try {
-        const res = await fetch('/api/auth/change-password', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ currentPassword, newPassword })
-        });
-
-        const data = await res.json();
-        if (data.success) {
-          showToast('✓ Password Updated', 'Your new Sanctum password is now active.');
-          changePwdForm.reset();
-        } else {
-          alert(data.error || 'Could not update password.');
-        }
-      } catch (err) {
-        alert('Error updating password: ' + err.message);
-      }
-    });
-  }
-
-  // Initialize Sanctum dashboard once authenticated
-  function initSanctum() {
-    if (isSanctumInitialized) return;
-    isSanctumInitialized = true;
-
+  function initApp() {
+    if (isAppReady) return;
+    isAppReady = true;
     loadData();
-
-    // Vercel Serverless Reliability: Auto-poll every 15s in background
-    // Guarantees live updates even if serverless terminates SSE connection
-    setInterval(() => {
-      loadData();
-    }, 15000);
+    connectSSE();
+    setInterval(loadData, 15000); // 15s fallback polling
   }
 
-  // Start authentication check
   checkAuth();
 </script>
 
