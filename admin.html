@@ -630,6 +630,19 @@
             </table>
           </div>
         </div>
+
+        <!-- Data Management -->
+        <div style="border-top: 1px solid var(--border); padding-top: 20px;">
+          <h3 style="font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px;">Data Management</h3>
+          <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 12px;">Clear out test or dummy consultation bookings and reset data.</p>
+          <button type="button" class="btn" id="btn-clear-data" style="color: var(--red); border-color: rgba(239, 68, 68, 0.3);">
+            <svg class="icon" viewBox="0 0 24 24" style="width: 12px; height: 12px;">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+            Clear All Bookings
+          </button>
+        </div>
       </div>
     </section>
   </main>
@@ -1333,6 +1346,24 @@
         });
       }
     } catch (e) {}
+  }
+
+  const btnClearData = document.getElementById('btn-clear-data');
+  if (btnClearData) {
+    btnClearData.addEventListener('click', async () => {
+      if (!confirm('Are you sure you want to clear all consultation bookings and dummy data? This cannot be undone.')) return;
+      try {
+        const res = await fetch('/api/clear-dummy-data', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          showToast('All bookings and dummy data cleared.');
+          loadData();
+          loadNotifications();
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    });
   }
 
   /* ══════════════════════════════════════════════════════════════════

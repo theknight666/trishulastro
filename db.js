@@ -57,75 +57,8 @@ const DEFAULT_SETTINGS = {
   currency: 'USD'
 };
 
-// Seed Bookings
-const SEED_BOOKINGS = [
-  {
-    id: 1,
-    reference_code: 'TA-78412',
-    client_name: 'Aarav Singhania',
-    client_email: 'aarav.singhania@gmail.com',
-    client_phone: '+91 98201 44521',
-    client_dob: '1992-08-14',
-    client_tob: '06:45',
-    client_city: 'Mumbai, India',
-    service_name: 'Career & Business Consultation',
-    service_price: 85,
-    astrologer_name: 'Pt. Radhe Krishna Shastri',
-    preferred_date: new Date().toISOString().split('T')[0],
-    preferred_time_slot: '02:00 PM - 03:00 PM',
-    consultation_mode: 'Google Meet',
-    query_topic: 'Guidance on business expansion and investment timing.',
-    status: 'confirmed',
-    meeting_link: 'https://meet.google.com/ved-astr-xyz',
-    admin_notes: 'Client follow-up scheduled. Focus on 10th house transits.',
-    created_at: new Date(Date.now() - 3600000 * 5).toISOString(),
-    updated_at: new Date(Date.now() - 3600000 * 3).toISOString()
-  },
-  {
-    id: 2,
-    reference_code: 'TA-89204',
-    client_name: 'Priya Narang',
-    client_email: 'priya.narang@outlook.com',
-    client_phone: '+1 (415) 555-8392',
-    client_dob: '1995-11-23',
-    client_tob: '18:15',
-    client_city: 'San Francisco, USA',
-    service_name: 'Kundli Milan Consultation',
-    service_price: 85,
-    astrologer_name: 'Dr. Gayatri Devi',
-    preferred_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
-    preferred_time_slot: '06:00 PM - 07:00 PM',
-    consultation_mode: 'WhatsApp Video',
-    query_topic: 'Kundli compatibility analysis for marriage proposal.',
-    status: 'pending',
-    meeting_link: '',
-    admin_notes: '',
-    created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
-    updated_at: new Date(Date.now() - 3600000 * 2).toISOString()
-  },
-  {
-    id: 3,
-    reference_code: 'TA-63910',
-    client_name: 'Devendra Kulkarni',
-    client_email: 'dev.kulkarni@techcorp.io',
-    client_phone: '+91 97412 88902',
-    client_dob: '1988-03-09',
-    client_tob: '11:20',
-    client_city: 'Bengaluru, India',
-    service_name: 'Complete Janam Kundli Reading',
-    service_price: 120,
-    astrologer_name: 'Acharya Devvrat Sharma',
-    preferred_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
-    preferred_time_slot: '10:00 AM - 11:00 AM',
-    consultation_mode: 'Google Meet',
-    query_topic: 'Annual career progression and health indicators.',
-    status: 'pending',
-    meeting_link: '',
-    admin_notes: '',
-    created_at: new Date(Date.now() - 3600000 * 1).toISOString(),
-    updated_at: new Date(Date.now() - 3600000 * 1).toISOString()
-  }
-];
+// Seed Bookings (Empty for clean production)
+const SEED_BOOKINGS = [];
 
 // -------------------------------------------------------------
 // SQLITE IMPLEMENTATION
@@ -392,6 +325,32 @@ const dbHelpers = {
     } else {
       const data = readJSON();
       data.bookings = data.bookings.filter(b => String(b.id) !== String(id));
+      writeJSON(data);
+      return true;
+    }
+  },
+
+  clearAllBookings() {
+    if (useSqlite) {
+      db.prepare('DELETE FROM bookings').run();
+      try { db.prepare("DELETE FROM sqlite_sequence WHERE name = 'bookings'").run(); } catch (e) {}
+      return true;
+    } else {
+      const data = readJSON();
+      data.bookings = [];
+      writeJSON(data);
+      return true;
+    }
+  },
+
+  clearAllNotifications() {
+    if (useSqlite) {
+      db.prepare('DELETE FROM notifications').run();
+      try { db.prepare("DELETE FROM sqlite_sequence WHERE name = 'notifications'").run(); } catch (e) {}
+      return true;
+    } else {
+      const data = readJSON();
+      data.notifications = [];
       writeJSON(data);
       return true;
     }

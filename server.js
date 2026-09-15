@@ -217,6 +217,29 @@ apiRouter.delete('/bookings/:id', (req, res) => {
   }
 });
 
+// 6b. Clear All Bookings & Dummy Data
+apiRouter.delete('/bookings', (req, res) => {
+  try {
+    db.clearAllBookings();
+    db.clearAllNotifications();
+    notifications.broadcastSSE('booking_updated', { message: 'All bookings cleared' });
+    res.json({ success: true, message: 'All bookings and dummy data cleared.' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+apiRouter.post('/clear-dummy-data', (req, res) => {
+  try {
+    db.clearAllBookings();
+    db.clearAllNotifications();
+    notifications.broadcastSSE('booking_updated', { message: 'All dummy data cleared' });
+    res.json({ success: true, message: 'All dummy bookings and notification logs cleared.' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // 7. Executive Stats & Analytics
 apiRouter.get('/stats', (req, res) => {
   try {
