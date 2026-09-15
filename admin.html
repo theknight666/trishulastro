@@ -354,7 +354,7 @@
       </div>
       <div>
         <div class="gate-title">TrishulAstro Console</div>
-        <div class="gate-sub">Enter credentials to continue</div>
+        <div class="gate-sub">Enter password to continue</div>
       </div>
     </div>
 
@@ -362,9 +362,9 @@
 
     <form id="login-form" style="display: flex; flex-direction: column; gap: 14px;">
       <div class="field-group">
-        <label class="field-label" for="pwd-input">Admin Password</label>
+        <label class="field-label" for="pwd-input">Password</label>
         <div style="position: relative; display: flex; align-items: center;">
-          <input type="password" class="field-input" id="pwd-input" placeholder="Password" required style="width: 100%; padding-right: 36px;">
+          <input type="password" class="field-input" id="pwd-input" placeholder="Enter password" required autocomplete="current-password" style="width: 100%; padding-right: 36px;">
           <button type="button" id="btn-toggle-pwd" style="position: absolute; right: 8px; background: none; border: none; color: var(--text-dim); cursor: pointer; padding: 4px; display: flex; align-items: center;" title="Show/Hide">
             <svg class="icon" id="eye-icon" viewBox="0 0 24 24">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -523,7 +523,7 @@
       </div>
     </section>
 
-    <!-- Controls (Search & Astrologer Filter) -->
+    <!-- Controls (Search) -->
     <section class="controls-bar" id="controls-section">
       <div class="search-wrap">
         <svg class="icon search-icon" viewBox="0 0 24 24">
@@ -532,13 +532,6 @@
         </svg>
         <input type="text" class="search-input" id="search-input" placeholder="Search by name, phone, email, or Pass # (e.g. TA-78412)...">
       </div>
-      <select class="select-control" id="filter-astro">
-        <option value="">All Astrologers</option>
-        <option value="Pt. Radhe Krishna Shastri">Pt. Radhe Krishna Shastri</option>
-        <option value="Dr. Gayatri Devi">Dr. Gayatri Devi</option>
-        <option value="Acharya Devvrat Sharma">Acharya Devvrat Sharma</option>
-        <option value="Acharya Vidyadhar Joshi">Acharya Vidyadhar Joshi</option>
-      </select>
     </section>
 
     <!-- Bookings Table View -->
@@ -550,7 +543,6 @@
               <th>Ref</th>
               <th>Client</th>
               <th>Service</th>
-              <th>Astrologer</th>
               <th>Date & Slot</th>
               <th>Mode</th>
               <th>Status</th>
@@ -679,10 +671,6 @@
       <div class="info-row">
         <span class="info-label">Service</span>
         <span class="info-val" id="d-service">--</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Astrologer</span>
-        <span class="info-val" id="d-astro">--</span>
       </div>
       <div class="info-row">
         <span class="info-label">Date</span>
@@ -814,16 +802,6 @@
         </select>
       </div>
 
-      <div class="field-group">
-        <label class="field-label">Astrologer</label>
-        <select class="field-input" id="m-astro">
-          <option value="Pt. Radhe Krishna Shastri">Pt. Radhe Krishna Shastri</option>
-          <option value="Dr. Gayatri Devi">Dr. Gayatri Devi</option>
-          <option value="Acharya Devvrat Sharma">Acharya Devvrat Sharma</option>
-          <option value="Acharya Vidyadhar Joshi">Acharya Vidyadhar Joshi</option>
-        </select>
-      </div>
-
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
         <div class="field-group">
           <label class="field-label">Appointment Date</label>
@@ -859,7 +837,6 @@
   let allBookings = [];
   let currentTab = 'all';
   let searchQuery = '';
-  let astroFilter = '';
   let activeBooking = null;
   let soundEnabled = true;
   let desktopNotifEnabled = false;
@@ -1009,7 +986,6 @@
 
     const list = allBookings.filter(b => {
       if (currentTab !== 'all' && b.status !== currentTab) return false;
-      if (astroFilter && !b.astrologer_name.includes(astroFilter)) return false;
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
         return (b.client_name && b.client_name.toLowerCase().includes(q)) ||
@@ -1033,7 +1009,6 @@
       const waMsg = encodeURIComponent(`Hello ${b.client_name}, regarding your consultation #${b.reference_code} at TrishulAstro.`);
 
       const cleanService = (b.service_name || '').split('(')[0].trim();
-      const cleanAstro = (b.astrologer_name || '').split('(')[0].trim();
       const cleanSlot = (b.preferred_time_slot || '').split('(')[0].trim();
       const cleanMode = (b.consultation_mode || '').replace(' Video Call', '').replace(' Call', '').trim();
 
@@ -1047,7 +1022,6 @@
           <div style="font-weight: 500; color: #fff;">${escapeHTML(cleanService)}</div>
           <div style="font-size: 11px; color: var(--text-dim);">$${b.service_price}</div>
         </td>
-        <td style="color: var(--text-muted); font-size: 12px;">${escapeHTML(cleanAstro)}</td>
         <td>
           <div style="font-weight: 500;">${b.preferred_date || 'TBD'}</div>
           <div style="font-size: 11px; color: var(--text-dim);">${escapeHTML(cleanSlot)}</div>
@@ -1106,11 +1080,6 @@
     renderTable();
   });
 
-  document.getElementById('filter-astro').addEventListener('change', (e) => {
-    astroFilter = e.target.value;
-    renderTable();
-  });
-
   document.getElementById('btn-refresh').addEventListener('click', () => {
     loadData();
     showToast('Data refreshed.');
@@ -1142,7 +1111,6 @@
       document.getElementById('d-wa-btn').href = `https://wa.me/${cleanPhone}?text=${waMsg}`;
 
       document.getElementById('d-service').textContent = (b.service_name || '').split('(')[0];
-      document.getElementById('d-astro').textContent = (b.astrologer_name || '').split('(')[0];
       document.getElementById('d-date').textContent = b.preferred_date || '--';
       document.getElementById('d-slot').textContent = (b.preferred_time_slot || '').split('(')[0];
       document.getElementById('d-mode').textContent = b.consultation_mode || 'Google Meet';
@@ -1255,7 +1223,6 @@
       client_tob: document.getElementById('m-tob').value,
       client_city: document.getElementById('m-city').value,
       service_name: document.getElementById('m-service').value,
-      astrologer_name: document.getElementById('m-astro').value,
       preferred_date: document.getElementById('m-date').value,
       preferred_time_slot: document.getElementById('m-slot').value,
       query_topic: document.getElementById('m-topic').value
@@ -1373,7 +1340,7 @@
      ══════════════════════════════════════════════════════════════════ */
   document.getElementById('btn-export').addEventListener('click', () => {
     if (allBookings.length === 0) return alert('No bookings to export.');
-    const headers = ['Reference', 'Client Name', 'Email', 'Phone', 'DOB', 'TOB', 'City', 'Service', 'Price USD', 'Astrologer', 'Date', 'Slot', 'Mode', 'Status', 'Meeting Link', 'Created At'];
+    const headers = ['Reference', 'Client Name', 'Email', 'Phone', 'DOB', 'TOB', 'City', 'Service', 'Price USD', 'Date', 'Slot', 'Mode', 'Status', 'Meeting Link', 'Created At'];
     const rows = allBookings.map(b => [
       b.reference_code,
       `"${(b.client_name || '').replace(/"/g, '""')}"`,
@@ -1384,7 +1351,6 @@
       `"${(b.client_city || '').replace(/"/g, '""')}"`,
       `"${(b.service_name || '').replace(/"/g, '""')}"`,
       b.service_price,
-      `"${(b.astrologer_name || '').replace(/"/g, '""')}"`,
       b.preferred_date,
       `"${(b.preferred_time_slot || '').replace(/"/g, '""')}"`,
       b.consultation_mode,

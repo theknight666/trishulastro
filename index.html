@@ -1730,16 +1730,6 @@
           </select>
         </div>
 
-        <div class="form-group" style="margin-bottom:14px;">
-          <label for="consult-astrologer">Assigned Master Astrologer</label>
-          <select class="form-control" id="consult-astrologer" required>
-            <option value="Pt. Radhe Krishna Shastri (28+ yrs exp • Banaras Vedic Scholar)">Pt. Radhe Krishna Shastri (28+ yrs exp • Banaras Vedic Scholar)</option>
-            <option value="Dr. Gayatri Devi (22+ yrs exp • Ph.D. Vedic Sciences)">Dr. Gayatri Devi (22+ yrs exp • Ph.D. Vedic Sciences)</option>
-            <option value="Acharya Devvrat Sharma (19+ yrs exp • Gold Medalist)">Acharya Devvrat Sharma (19+ yrs exp • Gold Medalist)</option>
-            <option value="Acharya Vidyadhar Joshi (16+ yrs exp • Prashna & Vastu)">Acharya Vidyadhar Joshi (16+ yrs exp • Prashna & Vastu)</option>
-          </select>
-        </div>
-
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
           <div class="form-group">
             <label for="client-name">Your Full Name</label>
@@ -2281,7 +2271,6 @@
     const modalBooking = document.getElementById('modal-booking');
     const closeBooking = document.getElementById('close-booking');
     const consultServiceSelect = document.getElementById('consult-service');
-    const consultAstroSelect = document.getElementById('consult-astrologer');
 
     function showToast(text) {
       const toast = document.getElementById('toast-pill');
@@ -2290,9 +2279,8 @@
       setTimeout(() => { toast.style.display = 'none'; }, 3800);
     }
 
-    function openBooking(serviceName = null, astroName = null) {
+    function openBooking(serviceName = null) {
       if (serviceName) consultServiceSelect.value = serviceName;
-      if (astroName) consultAstroSelect.value = astroName;
       modalBooking.classList.add('is-open');
       document.body.style.overflow = 'hidden';
     }
@@ -2324,7 +2312,7 @@
 
     document.querySelectorAll('.trigger-book-astro').forEach(btn => {
       btn.addEventListener('click', () => {
-        openBooking('Complete Janam Kundli & Life Path ($120)', btn.dataset.astro);
+        openBooking('Complete Janam Kundli & Life Path ($120)');
       });
     });
 
@@ -2407,7 +2395,7 @@
         client_tob: document.getElementById('client-tob').value,
         client_city: document.getElementById('client-city').value.trim(),
         service_name: document.getElementById('consult-service').value,
-        astrologer_name: document.getElementById('consult-astrologer').value,
+        astrologer_name: 'Pt. Radhe Krishna Shastri',
         query_topic: (document.getElementById('client-topic').value || '').trim()
       };
 
