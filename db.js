@@ -17,12 +17,14 @@ if (isVercel) {
   }
 }
 
-// Try native node:sqlite (Node 22.5+ / Node 24)
+// Try native node:sqlite (Node 22.5+ / Node 24) when running locally
 let DatabaseSync = null;
-try {
-  DatabaseSync = require('node:sqlite').DatabaseSync;
-} catch (e) {
-  DatabaseSync = null;
+if (!isVercel) {
+  try {
+    DatabaseSync = require('node:sqlite').DatabaseSync;
+  } catch (e) {
+    DatabaseSync = null;
+  }
 }
 
 let db = null;
