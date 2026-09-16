@@ -755,6 +755,10 @@
     /* ==========================================================================
        6. RESPONSIVE BREAKPOINTS (FULL SITE MOBILE OPTIMIZATION)
        ========================================================================== */
+    body.nav-open {
+      overflow: hidden !important;
+    }
+
     @media (max-width: 1024px) {
       .top-ribbon{display:none}
       .navbar{
@@ -785,6 +789,9 @@
         opacity:0; visibility:hidden; transform:translateY(-12px);
         transition:opacity .28s ease, transform .28s cubic-bezier(.4,0,.2,1), visibility .28s;
         gap:4px;
+        max-height:calc(100dvh - 84px);
+        overflow-y:auto;
+        -webkit-overflow-scrolling:touch;
       }
       .navrow[data-open="true"] .links{
         opacity:1; visibility:visible; transform:translateY(0);
@@ -806,20 +813,20 @@
         margin:12px 0 6px; width:100%; display:flex; gap:10px;
       }
       .btn-sound, .currency-toggle{
-        flex:1; height:40px; justify-content:center; font-size:13px;
+        flex:1; height:42px; justify-content:center; font-size:13px;
       }
       .links a.enroll{
         margin:8px 0 0; width:100%; height:48px; border-radius:24px;
         font-size:15px; justify-content:center;
       }
       .graha-bar{
-        top:74px; width:calc(100% - 24px); max-width:540px;
+        top:72px; width:calc(100% - 24px); max-width:500px;
         overflow-x:auto; -webkit-overflow-scrolling:touch;
         scrollbar-width:none; padding:5px 8px; gap:6px;
       }
       .graha-bar::-webkit-scrollbar{display:none}
       .graha-pill{
-        padding:6px 12px; font-size:12px; flex-shrink:0;
+        padding:6px 12px; font-size:12px; flex-shrink:0; white-space:nowrap;
       }
       .remedies-hero-banner{grid-template-columns:1fr}
       .footer-inner{grid-template-columns:1fr 1fr}
@@ -827,88 +834,116 @@
 
     @media (max-width: 768px) {
       :root{
-        --planet-size: max(160vw, 720px);
+        --planet-size: max(150vw, 560px);
       }
       .planet-horizon-img{
-        bottom: calc(24vh - (var(--planet-size) * 0.95));
+        bottom: calc(20vh - (var(--planet-size) * 0.94));
       }
       .copy{
-        top:126px; display:flex; flex-direction:column; align-items:center;
-        padding:0 20px; transform:none;
+        top:128px; display:flex; flex-direction:column; align-items:center;
+        padding:0 16px; transform:none;
       }
       .col{position:static; width:100%; right:auto; text-align:center}
-      .eyebrow{font-size:12px; letter-spacing:3.5px; text-indent:3.5px}
-      h1.title{font-size:clamp(38px, 10.5vw, 54px); margin-top:6px; letter-spacing:1px}
-      .rule{margin:12px auto; height:3px; padding-right:0}
-      .rule span{width:64px; height:100%}
-      p.lede{margin:8px auto 0; font-size:14px; line-height:1.55; max-width:360px; padding:0 6px}
+      .eyebrow{font-size:11px; letter-spacing:3px; text-indent:3px}
+      h1.title{font-size:clamp(32px, 8.5vw, 46px); margin-top:4px; letter-spacing:1px}
+      .rule{margin:10px auto; height:3px; padding-right:0}
+      .rule span{width:56px; height:100%}
+      p.lede{margin:8px auto 0; font-size:13.5px; line-height:1.6; max-width:350px; padding:0}
       p.lede br{display:none}
-      .cta{top:auto; margin-top:18px; height:auto; position:static; display:flex; justify-content:center}
-      .cta a{width:190px; height:48px; font-size:14.5px; border-radius:24px}
-      .planet-l{
-        width:80px; height:80px; left:-36px; top:50%; transform:translateY(-50%);
-      }
-      .planet-r{
-        width:80px; height:80px; right:-36px; top:50%; transform:translateY(-50%);
-      }
-      .planet-l:hover{transform:translateY(-50%) translateX(3px)}
-      .planet-r:hover{transform:translateY(-50%) translateX(-3px)}
-      .label{font-size:10px; letter-spacing:1.5px}
-      .label.label-l{left:48px}
-      .label.label-r{right:48px}
-      .scroll{width:50px; height:50px; margin-left:-25px; bottom:18px}
-      .scroll svg{width:15px; height:19px}
+      .cta{top:auto; margin-top:16px; height:auto; position:static; display:flex; justify-content:center}
+      .cta a{width:200px; height:48px; font-size:14px; border-radius:24px}
+      .scroll{width:46px; height:46px; margin-left:-23px; bottom:14px}
+      .scroll svg{width:14px; height:18px}
 
       /* Sections on mobile */
-      .site-section{padding:65px 16px}
-      .sec-header{margin-bottom:34px}
-      .sec-title{font-size:clamp(25px, 7vw, 34px); line-height:1.25}
+      .site-section{padding:56px 16px}
+      .sec-header{margin-bottom:30px}
+      .sec-title{font-size:clamp(24px, 6.5vw, 32px); line-height:1.25}
       .sec-desc{font-size:14px; line-height:1.6}
-      .grid-cards{grid-template-columns:1fr; gap:18px}
-      .card{padding:24px 18px; border-radius:20px}
-      .card-title{font-size:20px}
+      .grid-cards{grid-template-columns:1fr; gap:16px}
+      .card{padding:22px 18px; border-radius:20px}
+      .card-title{font-size:19px}
       .card-desc{font-size:13.5px}
       .card-price .amount{font-size:24px}
 
+      /* Prevent iOS Safari auto-zoom on inputs */
+      input.form-control, select.form-control, textarea.form-control {
+        font-size: 16px !important;
+      }
+
       /* Horoscope on mobile */
-      .rashi-grid{gap:6px; margin-bottom:22px}
-      .rashi-pill{padding:6px 13px; font-size:12.5px}
-      .horo-card{padding:22px 16px; border-radius:20px}
+      .rashi-grid{
+        display:flex; overflow-x:auto; flex-wrap:nowrap; justify-content:flex-start;
+        -webkit-overflow-scrolling:touch; scrollbar-width:none;
+        padding:4px 6px 10px; gap:8px; margin-bottom:20px;
+      }
+      .rashi-grid::-webkit-scrollbar{display:none}
+      .rashi-pill{
+        flex-shrink:0; padding:7px 14px; font-size:12.5px; white-space:nowrap;
+      }
+      .horo-card{padding:20px 16px; border-radius:20px}
       .horo-header{flex-direction:column; align-items:flex-start; gap:8px}
-      .horo-title{font-size:21px}
-      .horo-forecast{font-size:14px; line-height:1.65; margin-bottom:22px}
-      .horo-metrics{grid-template-columns:1fr 1fr; gap:10px; margin-bottom:22px}
+      .horo-title{font-size:20px}
+      .horo-forecast{font-size:13.5px; line-height:1.65; margin-bottom:20px}
+      .horo-metrics{grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px}
       .horo-metric-box{padding:12px}
 
       /* Kundli on mobile */
-      .kundli-wrap{padding:22px 16px; border-radius:20px}
-      .form-grid{grid-template-columns:1fr; gap:14px}
-      .diamond-chart-svg{max-width:280px}
+      .kundli-wrap{padding:20px 14px; border-radius:18px}
+      .form-grid{grid-template-columns:1fr; gap:12px}
+      .diamond-chart-svg{max-width:270px}
+      .kundli-output{padding:18px 14px}
 
       /* Remedies on mobile */
       .remedies-hero-banner{grid-template-columns:1fr; border-radius:20px}
       .remedies-hero-img{min-height:180px; max-height:220px}
-      .remedies-hero-text{padding:22px 18px}
-      .remedies-hero-text h3{font-size:22px}
-      .remedies-table-wrap{padding:8px; border-radius:16px}
-      .remedies-table th, .remedies-table td{padding:12px 10px; font-size:13px}
+      .remedies-hero-text{padding:20px 16px}
+      .remedies-hero-text h3{font-size:21px}
+      .remedies-table-wrap{padding:6px; border-radius:16px; overflow-x:auto; -webkit-overflow-scrolling:touch}
+      .remedies-table th, .remedies-table td{padding:10px 12px; font-size:12.5px; white-space:nowrap}
 
       /* FAQ & Footer on mobile */
-      .faq-btn{padding:16px; font-size:15.5px}
-      .faq-body{padding:0 16px 16px; font-size:13.5px}
-      .site-footer{padding:50px 16px 24px}
-      .footer-inner{grid-template-columns:1fr; gap:32px}
-      .footer-bottom{flex-direction:column; gap:12px; text-align:center}
-      .modal-card{width:95vw; max-height:90vh; padding:24px 18px; border-radius:20px}
+      .faq-btn{padding:16px; font-size:15px}
+      .faq-body{padding:0 16px 16px; font-size:13px}
+      .site-footer{padding:44px 16px 20px}
+      .footer-inner{grid-template-columns:1fr; gap:28px}
+      .footer-bottom{flex-direction:column; gap:10px; text-align:center}
+
+      /* Modals on mobile */
+      .modal-overlay{padding:12px}
+      .modal-card{
+        width:min(96vw, 560px); max-height:92dvh; padding:22px 16px; border-radius:20px;
+        padding-bottom:max(20px, env(safe-area-inset-bottom, 20px));
+      }
+      .modal-close{top:14px; right:14px; width:36px; height:36px}
+      .modal-title{font-size:22px}
+      .modal-sub{font-size:12.5px; margin-bottom:18px}
+    }
+
+    @media (max-width: 600px) {
+      /* Hide edge-peeking side buttons on small screens to prevent overlap with headline */
+      .planet-l, .planet-r, .label.label-l, .label.label-r {
+        display: none !important;
+      }
+      #booking-form div[style*="grid-template-columns:1fr 1fr"],
+      #booking-form div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        margin-bottom: 10px !important;
+      }
+      #modal-pass div[style*="display: flex; gap: 12px; flex-wrap: wrap;"] {
+        flex-direction: column;
+        gap: 8px;
+      }
     }
 
     @media (max-width: 480px) {
       .logo-tagline{display:none}
-      .logo-name{font-size:16px}
-      .logo-emblem{width:32px; height:32px}
-      .logo-icon{width:24px; height:24px}
+      .logo-name{font-size:15px}
+      .logo-emblem{width:30px; height:30px}
+      .logo-icon{width:22px; height:22px}
       .horo-metrics{grid-template-columns:1fr}
-      .toast-pill{width:calc(100% - 32px); text-align:center; font-size:13px; padding:10px 16px}
+      .toast-pill{width:calc(100% - 28px); text-align:center; font-size:12.5px; padding:10px 14px; bottom:16px}
     }
 
     @media (max-height:660px){.scroll{display:none}}
@@ -2229,6 +2264,7 @@
       navrow.dataset.open = open ? 'true' : 'false';
       burger.setAttribute('aria-expanded', open ? 'true' : 'false');
       burger.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+      document.body.classList.toggle('nav-open', open);
     }
     setBurger(false);
 
